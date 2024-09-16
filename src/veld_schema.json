@@ -1,0 +1,66 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "x-veld": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "x-veld"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "x-veld": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "code"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "chain": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "chain"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "services": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "x-veld",
+        "services"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}
