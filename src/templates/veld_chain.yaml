@@ -1,0 +1,21 @@
+x-veld:
+  chain:
+    description: ""
+    topics:
+      - ""
+    additional:
+      foo:
+        bar:
+
+services:
+  veld:
+    extends:
+      file: ./veld_repo/veld_file.yaml
+      service: veld
+    volumes:
+      - ./data/in/:/veld/input/:z
+      - ./data/out/:/veld/output/:z
+    environment:
+      in_file: null
+      out_file: null
+      foo: null
