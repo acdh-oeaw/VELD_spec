@@ -39,7 +39,7 @@ services:
     build: .
     command: python /veld/code/train.py
     volumes:
-      - ./src/train/:/veld/code/:z
+      - ./src/:/veld/code/:z
       - ./data/in/:/veld/input/:z
       - ./data/out/:/veld/output/:z
     environment:
