@@ -5,4 +5,4 @@ services:
     command: python /app/main.py
     working_dir: /app/
     volumes:
-      - ./src:/app/
+      - ./:/app/

@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="VeldSpec",
-    version="0.1.1",
+    name="veld_spec",
+    version="0.1.3",
     author="Stefan Resch",
     author_email="stefan.resch@oeaw.aca.t",
     description="VELD specification",

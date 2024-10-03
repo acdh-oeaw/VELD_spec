@@ -3,7 +3,7 @@ import json
 import jsonschema
 
 
-def validate(veld_metadata):
+def main(veld_metadata):
     with open("./veld_schema.json", "r") as schema_file:
         schema_dict = json.load(schema_file)
         try:
@@ -15,4 +15,19 @@ def validate(veld_metadata):
     
 
 if __name__ == "__main__":
-    pass
+    main
+
+def __call__():
+    print(1)
+
+
+
+class MyModule:
+    def __call__(self):
+        self.main()
+
+    def main(self):
+        print("Hello from the module!")
+
+# Create an instance of MyModule that is callable
+validate = MyModule()
