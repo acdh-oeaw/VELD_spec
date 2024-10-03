@@ -1,4 +1,19 @@
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "about": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "null"
+        },
+        "topics": {
+          "type": "null"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
   "oneOf": [
     {
       "type": "object",
@@ -7,7 +22,14 @@
           "type": "object",
           "properties": {
             "data": {
-              "type": "null"
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/about"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -30,7 +52,14 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "type": "null"
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/about"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
@@ -41,12 +70,19 @@
             {
               "type": "object",
               "properties": {
-                "chain": {
-                  "type": "null"
+                "/veld/input/": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/about"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
-                "chain"
+                "/veld/input/"
               ],
               "additionalProperties": false
             }
