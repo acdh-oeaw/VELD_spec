@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="veld_spec",
-    version="0.1.3",
+    version="0.1.5",
     author="Stefan Resch",
     author_email="stefan.resch@oeaw.aca.t",
     description="VELD specification",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     url="https://github.com/acdh-oeaw/VELD_spec",
-    packages=find_packages(),
+    py_modules=["veld_spec"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
