@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "about": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "null"
+        },
+        "topics": {
+          "type": "null"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "x-veld": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/about"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "x-veld"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "x-veld": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/about"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "code"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "/veld/input/": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/about"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "/veld/input/"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "services": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "x-veld",
+        "services"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}
