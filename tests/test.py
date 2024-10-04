@@ -3,16 +3,16 @@ import unittest
 import jsonschema
 import yaml
 
-from main import validate
+from veld_spec import validate
 
 
-TEST_FILES_PATH = "./tests/test_veld_yaml_files/"
+TEST_FILES_PATH = "tests/veld_yaml_files/"
 
 
 class TestVeldMetadata(unittest.TestCase):
     
-    def validate_veldmetadata_file(self, veld_metadata_file_path):
-        with open(TEST_FILES_PATH + veld_metadata_file_path, "r") as veld_metadata_file:
+    def validate_veldmetadata_file(self, veld_metadata_file_name):
+        with open(TEST_FILES_PATH + veld_metadata_file_name, "r") as veld_metadata_file:
             veld_metadata = yaml.safe_load(veld_metadata_file)
             validate(veld_metadata)
     
@@ -30,20 +30,19 @@ class TestVeldMetadata(unittest.TestCase):
             pass
     
     def test_chain_barebone_valid(self):
-        self.validate_veldmetadata_file_valid("test_chain_barebone_valid.yaml")
+        self.validate_veldmetadata_file_valid("chain_barebone_valid.yaml")
     
     def test_chain_barebone_invalid(self):
-        self.validate_veldmetadata_file_invalid("test_chain_barebone_invalid.yaml")
+        self.validate_veldmetadata_file_invalid("chain_barebone_invalid.yaml")
     
     def test_code_barebone_valid(self):
-        self.validate_veldmetadata_file_valid("test_code_barebone_valid.yaml")
+        self.validate_veldmetadata_file_valid("code_barebone_valid.yaml")
     
     def test_code_barebone_invalid(self):
-        self.validate_veldmetadata_file_invalid("test_code_barebone_invalid.yaml")
+        self.validate_veldmetadata_file_invalid("code_barebone_invalid.yaml")
     
     def test_data_barebone_valid(self):
-        self.validate_veldmetadata_file_valid("test_data_barebone_valid.yaml")
+        self.validate_veldmetadata_file_valid("data_barebone_valid.yaml")
     
     def test_data_barebone_invalid(self):
-        self.validate_veldmetadata_file_invalid("test_data_barebone_invalid.yaml")
-        
+        self.validate_veldmetadata_file_invalid("data_barebone_invalid.yaml")
