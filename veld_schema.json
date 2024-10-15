@@ -70,7 +70,7 @@
             {
               "type": "object",
               "properties": {
-                "/veld/input/": {
+                "chain": {
                   "oneOf": [
                     {
                       "$ref": "#/definitions/about"
