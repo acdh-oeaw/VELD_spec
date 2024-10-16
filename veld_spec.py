@@ -3,48 +3,58 @@ import yaml
 
 def validate(veld_metadata):
     
-    def parse_data_block(data_block_str):
-        
-        def clean_str(data_block_str):
-            data_block_str_cleaned = ""
-            line = ""
-            for char in data_block_str:
-                if char in ["[", "]", "{", "}"]:
-                    char = "\\" + char
-                if char != "\n":
-                    line += char
-                else:
-                    if line != "" and ":" not in line:
-                        line += ":"
-                    line += "\n"
-                    data_block_str_cleaned += line
-                    line = ""
-            return data_block_str_cleaned
-            
+    def clean_str(data_block_str):
+        data_block_str_cleaned = ""
+        line = ""
+        for char in data_block_str:
+            if char in ["[", "]", "{", "}"]:
+                char = "\\" + char
+            if char != "\n":
+                line += char
+            else:
+                if line != "" and ":" not in line:
+                    line += ":"
+                line += "\n"
+                data_block_str_cleaned += line
+                line = ""
+        return data_block_str_cleaned
+    
+    def clean_dict_recursively(data_block_dict):
+        data_block_dict_clean = {}
+        for k, v in data_block_dict.items():
+            k = k.replace("\\", "")
+            if type(v) is dict:
+                v = clean_dict_recursively(v)
+            elif type(v) is str:
+                v = v.replace("\\", "")
+            else:
+                v = v
+            data_block_dict_clean[k] = v
+        return data_block_dict_clean
+    
+    def parse_data_block(data_block_header, data_block_str):
         data_block_str = clean_str(data_block_str)
-        d = yaml.safe_load(data_block_str)
-        return d
+        data_block_dict = yaml.safe_load(data_block_str)
+        data_block_dict = {data_block_header: data_block_dict}
+        data_block_dict = clean_dict_recursively(data_block_dict)
+        return data_block_dict
     
     def validate_main():
         with open("./README.md", "r") as f:
-            is_example = False
-            is_data = False
+            is_data_block = False
+            data_block_header = ""
             data_block = ""
             for line_n, line in enumerate(f, start=1):
-                if line == "example:\n":
-                    is_example = True
+                if line.startswith("##"):
+                    data_block_header = line.replace("#", "").replace("\n", "").strip()
                 elif line == "```\n":
-                    if not is_data:
-                        is_data = True
-                    elif is_data:
-                        is_data = False
-                        if is_example:
-                            is_example = False
-                        else:
-                            data_block_dict = parse_data_block(data_block)
-                            print(data_block_dict)
-                            data_block = ""
-                elif is_data and not is_example:
+                    if is_data_block and data_block_header != "":
+                        data_block_dict = parse_data_block(data_block_header, data_block)
+                        print(data_block_dict)
+                        data_block_header = ""
+                        data_block = ""
+                    is_data_block = not is_data_block
+                elif is_data_block and data_block_header != "":
                     data_block += line
                     
     return validate_main()

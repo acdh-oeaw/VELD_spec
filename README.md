@@ -143,7 +143,6 @@ example:
 ```
 topics: NLP
 ```
-example:
 ```
 topics: 
   - NLP
