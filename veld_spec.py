@@ -41,18 +41,23 @@ def validate(veld_metadata):
     
     def validate_main():
         with open("./README.md", "r") as f:
-            is_data_block = False
             data_block_header = ""
             data_block = ""
+            is_data_block = False
+            is_example = False
             for line_n, line in enumerate(f, start=1):
                 if line.startswith("##"):
                     data_block_header = line.replace("#", "").replace("\n", "").strip()
+                    is_example = False
+                elif line == "example:\n":
+                    is_example = True
                 elif line == "```\n":
-                    if is_data_block and data_block_header != "":
+                    if is_data_block and data_block_header != "" and not is_example:
                         data_block_dict = parse_data_block(data_block_header, data_block)
                         print(data_block_dict)
                         data_block_header = ""
                         data_block = ""
+                        is_example = False
                     is_data_block = not is_data_block
                 elif is_data_block and data_block_header != "":
                     data_block += line
