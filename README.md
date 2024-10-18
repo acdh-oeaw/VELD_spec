@@ -7,10 +7,10 @@ specification of the VELD metadata schema.
 ```
 x-veld:
   data:
-    description: <DESCRIPTION>
-    topics: <TOPICS> 
-    file_types: <FILE_TYPES>
-    [additional: <ADDITIONAL>]
+    description: [<DESCRIPTION>]
+    topics: [<TOPICS>] 
+    file_types: [<FILE_TYPES>]
+    [additional: [<ADDITIONAL>]]
 ```
 
 example:
@@ -29,34 +29,35 @@ x-veld:
 ```
 x-veld:
   code:
-    description: <DESCRIPTION>
-    topics: <TOPICS> 
-    [additional: <ADDITIONAL>]
-    inputs: <INPUTS>
-    outputs: <OUTPUTS>
-    environment_vars: <ENVIRONMENT_VARS>
+    description: [<DESCRIPTION>]
+    topics: [<TOPICS>] 
+    [additional: [<ADDITIONAL>]]
+    inputs: [<INPUTS>]
+    outputs: [<OUTPUTS>]
+    environment_vars: [<ENVIRONMENT_VARS>]
 
 services:
   <VELD_SERVICE_NAME>:
     <DOCKER_COMPOSE_DEFINITION>
-    volumes: <VOLUMES>
-    environment: <ENVIRONMENT>
+    [volumes: <VOLUMES>]
+    [environment: <ENVIRONMENT>]
 ```
 example:
 ```
 x-veld:
   code:
-    description: <TEXTUAL_DESCRIPTION_MEANT_FOR_HUMANS>
-    topics: <TOPICS> 
+    description: ""
+    topics:
+      - ""
     additional:
-      <ARBITRARY_SUB_YAML_DATA>
+      foo:
+        bar:
 
-    inputs: <INPUTS>
-    
+    inputs:
       - description: ""
         volume: /veld/input/
         environment: in_file
-        file_types: ""
+        file_type: ""
         contents:
           - ""
 
@@ -64,7 +65,7 @@ x-veld:
       - description: ""
         volume: /veld/output/
         environment: out_file
-        file_types: ""
+        file_type: ""
         contents:
           - ""
 
@@ -94,6 +95,28 @@ services:
 ```
 
 ## chain veld
+```
+x-veld:
+  chain:
+    description: [<DESCRIPTION>]
+    topics: [<TOPICS>] 
+    file_types: [<FILE_TYPES>]
+    [additional: [<ADDITIONAL>]]
+
+services:
+  veld:
+    extends:
+      file: ./veld_repo/veld_file.yaml
+      service: veld
+    volumes:
+      - ./data/in/:/veld/input/:z
+      - ./data/out/:/veld/output/:z
+    environment:
+      in_file: null
+      out_file: null
+      foo: null
+```
+example:
 ```
 x-veld:
   chain:
@@ -134,7 +157,7 @@ description: training data for word embeddings
 can be a single value or a list of single values (note that the list must be expressed as yaml 
 list, i.e. newline and a hyphen)
 ```
-<TOPICS>: <SINGLE_TOPIC> | { <SINGLE_TOPIC> }+ 
+<TOPICS> ::= <SINGLE_TOPIC> | { <SINGLE_TOPIC> }+ 
 ```
 where `<SINGLE_TOPIC>` can be arbitrary textual tags, associating the veld to some broader 
 context.  
