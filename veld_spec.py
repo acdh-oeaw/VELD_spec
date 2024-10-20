@@ -329,41 +329,37 @@ def read_schema():
         
     def parse_data_block(data_block):
         node_parent_for_level = {0: None}
+        node_previous = None
+        node_current = None
         indentation_level_current = 0
         indentation_level_previous = 0
         current_optional_counter = 0
         state_optional_closed = False
+        state_beginning = True
+        state_symbol = False
+        state_first_symbol = False
+        state_after_symbol_is_mapping_or_var_def = False
+        state_after_symbol_is_mapping_target = False
+        state_key_or_var_def = False
+        state_mapping_key = False
+        state_mapping_target = False
+        state_var_key = False
+        state_var_target = False
+        state_list = False
+        state_optional_open = False
         symboL_mapping_key_or_var_def = ""
         symbol_current = ""
         for line in data_block.splitlines(keepends=True):
-            node_current = None
-            state_beginning = True
-            state_symbol = False
-            state_first_symbol = False
-            state_after_symbol_is_mapping_or_var_def = False
-            state_after_symbol_is_mapping_target = False
-            state_key_or_var_def = False
-            state_mapping_key = False
-            state_mapping_target = False
-            state_var_def = False
-            state_list = False
-            state_optional_open = False
             for char_i, char in enumerate(line):
                 if state_beginning:
                     if char == " ":
                         indentation_level_current += 1
-                    else:
-                        state_beginning = False
-                        state_first_symbol = True
-                        if (indentation_level_current - indentation_level_previous) == 2:
-                            node_parent_for_level[indentation_level_current] = None
-                elif state_first_symbol:
-                    if char == "-":
+                    elif char == "-":
                         state_list = True
                     else:
                         state_symbol = True
-                        state_after_symbol_is_mapping_or_var_def = True
-                    state_first_symbol = False
+                        if (indentation_level_current - indentation_level_previous) == 2:
+                            node_parent_for_level[indentation_level_current] = None
                 elif state_symbol:
                     if char == " ":
                         continue
@@ -382,29 +378,21 @@ def read_schema():
                         pass
                     elif char == "}":
                         pass
+                    elif char == ":":
+                        state_symbol = False
+                        state_key_or_var_def = True
+                        symboL_mapping_key_or_var_def = symbol_current
+                    elif char == "\n" and state_mapping_target and symbol_current != "":
+                        node_current.target = Node(content=symbol_current)
+                        state_mapping_target = False
+                        symbol_current = ""
                     else:
-                        if state_after_symbol_is_mapping_or_var_def:
-                            if char != ":":
-                                symbol_current += char
-                            else:
-                                state_symbol = False
-                                state_key_or_var_def = True
-                                state_after_symbol_is_mapping_or_var_def = False
-                                symboL_mapping_key_or_var_def = symbol_current
-                                symbol_current = ""
-                        elif state_after_symbol_is_mapping_target:
-                            if char != "\n":
-                                symbol_current += char
-                            else:
-                                if symbol_current != "":
-                                    node_current.target = Node(content=symbol_current)
-                                    state_after_symbol_is_mapping_target = False
-                                    
+                        symbol_current += char
                 elif state_key_or_var_def:
                     if char in [":", "="]:
                         symbol_current += char
                     elif symbol_current == "::=":
-                        state_var_def = True
+                        state_var_key = True
                     else:
                         state_mapping_key = True
                         state_key_or_var_def = False
@@ -422,11 +410,17 @@ def read_schema():
                         is_optional=state_optional_open,
                     )
                     node_parent.content.append(node_current)
+                    if state_mapping_target:
+                        node_previous.target = node_parent
                     state_symbol = True
-                    state_after_symbol_is_mapping_target = True
+                    state_mapping_target = True
                     symboL_mapping_key_or_var_def = ""
-                elif state_var_def:
-                    pass
+                elif state_var_key:
+                    node_current = NodeVariableDefinition(content=symboL_mapping_key_or_var_def)
+                    state_var_key = False
+                    state_var_target = True
+                    state_symbol = True
+                    symboL_mapping_key_or_var_def = ""
                 elif state_list:
                     pass
             node_previous = node_current
