@@ -180,7 +180,7 @@ def read_schema():
             else:
                 return get_parent(node.parent, parent_level - 1)
         
-        def state_optional(char):
+        def state_char_optional(char):
             if char == "[":
                 print("optional start")
                 return 1
@@ -190,11 +190,21 @@ def read_schema():
             else:
                 return 0
             
-        def state_variable(char):
+        def state_char_variable(char):
             if char == "<":
                 print("variable start")
                 return 1
             elif char == ">":
+                print("variable end")
+                return -1
+            else:
+                return 0
+            
+        def state_char_list(char):
+            if char == "{":
+                print("variable start")
+                return 1
+            elif char == "}":
                 print("variable end")
                 return -1
             else:
@@ -213,37 +223,46 @@ def read_schema():
         def state_dict():
             pass
         
-        def state_node_mapping():
-            pass
-        
-        def state_leaf():
-            pass
-        
         def state_list():
             pass
         
-        def state_variable_definition():
-            pass
+        def state_variable_definition(node, line_current, line_next_list):
+            for i in range(len(line_current)):
+                char = line_current[i]
+                if char == " ":
+                    continue
+                if char != "\n":
+                    state_node(node, indentation_level, line_current[i+1:], line_next_list)
+                else:
+                    state_line_start(node, indentation_level, line_next_list)
+                    
         
         def state_node(node, indentation_level, line_current, line_next_list):
             symbol = ""
-            symbol_is_optional = False
-            symbol_is_variable = False
+            node_is_optional = False
+            node_is_variable = False
             node_can_be_optional = 0
             node_can_be_variable = 0
+            node_can_be_list = 0
             for i in range(len(line_current)):
                 char = line_current[i]
-                counter_optional_change = state_optional(char)
+                counter_optional_change = state_char_optional(char)
                 if counter_optional_change != 0:
                     if counter_optional_change == -1 and node_can_be_optional == 1:
-                        symbol_is_optional = True
+                        node_is_optional = True
                     node_can_be_optional += counter_optional_change
                     continue
-                counter_variable_change = state_variable(char)
+                counter_variable_change = state_char_variable(char)
                 if counter_variable_change != 0:
                     if counter_variable_change == -1 and node_can_be_variable == 1:
-                        symbol_is_variable = True
+                        node_is_variable = True
                     node_can_be_variable += counter_variable_change
+                    continue
+                counter_list_change = state_char_list(char)
+                if counter_list_change != 0:
+                    if counter_list_change == -1 and node_can_be_list == 1:
+                        node_is_list = True
+                    node_can_be_list += counter_list_change
                     continue
                 if char not in [":", " ", "-", "\n"]:
                     symbol += char
@@ -253,8 +272,8 @@ def read_schema():
                         node_mapping = NodeMapping(
                             content=Node(
                                 content=symbol,
-                                is_optional=symbol_is_optional,
-                                is_variable=symbol_is_variable,
+                                is_optional=node_is_optional,
+                                is_variable=node_is_variable,
                             ),
                         )
                         node_mapping.target = state_mapping_target(None, indentation_level, line_current[i+1:], line_next_list)
@@ -263,20 +282,25 @@ def read_schema():
                         node.content.append(node_mapping)
                     elif line_current[i:i + 4] == " ::= ":
                         print("variable definition")
-                        node_variable_definition = NodeVariableDefinition(
+                        node = NodeVariableDefinition(
                             content=symbol,
-                            is_optional=symbol_is_optional,
-                            is_variable=symbol_is_variable,
+                            is_optional=node_is_optional,
+                            is_variable=node_is_variable,
                         )
                         i += 5
-                        node_variable_definition = state_variable_definition(node_variable_definition, line_current[i:], line_next_list)
+                        node = state_variable_definition(node, line_current[i:], line_next_list)
                     elif char == "-":
                         print("list")
-                        node_list = NodeList()
-                        node = state_list(node_list, line_current[i-1:], line_next_list)
+                        if node is None:
+                            node = NodeList()
+                        node = state_list(None, line_current[i:], line_next_list)
                     elif char == "\n":
                         print("leaf")
-                        node = state_leaf()
+                        node = Node(
+                            content=symbol,
+                            is_optional=node_is_optional,
+                            is_variable=node_is_variable,
+                        )
             return node
             
         def state_line_start(node, indentation_level_above, line_next_list):
