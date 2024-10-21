@@ -128,7 +128,7 @@ services:
 
 ### \<DESCRIPTION>
 
-Any kind of textual description, intented for humans. Can be as long or concise as desired.
+Any kind of textual description, intended for humans. Can be as long or concise as desired.
 
 example:
 ```
