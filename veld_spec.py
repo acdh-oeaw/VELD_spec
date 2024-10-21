@@ -189,19 +189,16 @@ def read_schema():
                 elif line == "example:\n":
                     is_example = True
                 elif line == "```\n":
-                    if is_data_block and data_block_header != "" and not is_example:
-                        try:
-                            node = parse_data_block(data_block)
-                        except Exception as ex:
-                            pass
-                        else:
-                            root_node_disjunction.possibilities.append(node)
+                    is_data_block = not is_data_block
+                elif data_block_header != "" and not is_example:
+                    if is_data_block:
+                        data_block += line
+                    elif data_block != "":
+                        node = parse_data_block(data_block)
+                        root_node_disjunction.possibilities.append(node)
                         data_block_header = ""
                         data_block = ""
                         is_example = False
-                    is_data_block = not is_data_block
-                elif is_data_block and data_block_header != "":
-                    data_block += line
             return root_node_disjunction
     
     return read_schema_main()
