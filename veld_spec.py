@@ -12,6 +12,9 @@ class Node:
     is_optional: bool = False
     is_variable: bool = False
     content: Union[str, None] = None
+    
+    def __repr__(self):
+        return "Node: " + str(self.content)
 
     
 @dataclass
@@ -31,14 +34,19 @@ class NodeList(Node):
 
 
 @dataclass
-class NodeVariableDefinition(Node):
-    content: str = None
+class NodeDisjunction(Node):
     possibilities: List[Node] = None
+    
+    
+@dataclass
+class NodeVariableDefinition(Node):
+    content: Union[Node, None] = None
+    target: Union[Node, None] = None
 
 
 def validate(obj_to_validate, node: Node, path=""):
     
-    def handle_node_disjunction(obj_to_validate, node: NodeVariableDefinition, path):
+    def handle_node_disjunction(obj_to_validate, node: NodeDisjunction, path):
         result_list = []
         is_one_valid = False
         for possible_node in node.possibilities:
@@ -121,8 +129,8 @@ def validate(obj_to_validate, node: Node, path=""):
     def validate_main(obj_to_validate, node: Node, path):
         if type(obj_to_validate) in [dict, list]:
             obj_to_validate = obj_to_validate.copy()
-        if type(node) is NodeVariableDefinition:
-            node: NodeVariableDefinition
+        if type(node) is NodeDisjunction:
+            node: NodeDisjunction
             return handle_node_disjunction(obj_to_validate, node, path)
         elif type(node) is NodeDict:
             node: NodeDict
@@ -328,103 +336,131 @@ def read_schema():
     #     parse_data_block_main()
         
     def parse_data_block(data_block):
-        node_parent_for_level = {0: None}
-        node_previous = None
-        node_current = None
-        indentation_level_current = 0
+        global i
+        global line_counter
+        global node_container_level_dict
+        global indentation_level_previous
+        i = 0
+        line_counter = 0
+        node_container_level_dict = {0: None}
         indentation_level_previous = 0
-        current_optional_counter = 0
-        state_optional_closed = False
-        state_beginning = True
-        state_symbol = False
-        state_first_symbol = False
-        state_after_symbol_is_mapping_or_var_def = False
-        state_after_symbol_is_mapping_target = False
-        state_key_or_var_def = False
-        state_mapping_key = False
-        state_mapping_target = False
-        state_var_key = False
-        state_var_target = False
-        state_list = False
-        state_optional_open = False
-        symboL_mapping_key_or_var_def = ""
-        symbol_current = ""
-        for line in data_block.splitlines(keepends=True):
-            for char_i, char in enumerate(line):
-                if state_beginning:
-                    if char == " ":
-                        indentation_level_current += 1
-                    elif char == "-":
-                        state_list = True
-                    else:
-                        state_symbol = True
-                        if (indentation_level_current - indentation_level_previous) == 2:
-                            node_parent_for_level[indentation_level_current] = None
-                elif state_symbol:
-                    if char == " ":
-                        continue
-                    elif char == "[":
-                        state_optional_open = True
-                        current_optional_counter += 1
-                    elif char == "]":
-                        state_optional_closed = True
-                        state_optional_open = False
-                        current_optional_counter -= 1
-                    elif char == "<":
-                        pass
-                    elif char == ">":
-                        pass
-                    elif char == "{":
-                        pass
-                    elif char == "}":
-                        pass
-                    elif char == ":":
-                        state_symbol = False
-                        state_key_or_var_def = True
-                        symboL_mapping_key_or_var_def = symbol_current
-                    elif char == "\n" and state_mapping_target and symbol_current != "":
-                        node_current.target = Node(content=symbol_current)
-                        state_mapping_target = False
-                        symbol_current = ""
-                    else:
-                        symbol_current += char
-                elif state_key_or_var_def:
-                    if char in [":", "="]:
-                        symbol_current += char
-                    elif symbol_current == "::=":
-                        state_var_key = True
-                    else:
-                        state_mapping_key = True
-                        state_key_or_var_def = False
-                        symbol_current = ""
-                elif state_mapping_key:
-                    node_parent = node_parent_for_level[indentation_level_current]
-                    if node_parent is None:
-                        node_parent = NodeDict(content=[])
-                        node_parent_for_level[indentation_level_current] = node_parent
-                    node_current = NodeMapping(
-                        content=Node(
-                            content=symboL_mapping_key_or_var_def,
-                            is_optional=state_optional_closed,
-                        ),
-                        is_optional=state_optional_open,
-                    )
-                    node_parent.content.append(node_current)
-                    if state_mapping_target:
-                        node_previous.target = node_parent
-                    state_symbol = True
-                    state_mapping_target = True
-                    symboL_mapping_key_or_var_def = ""
-                elif state_var_key:
-                    node_current = NodeVariableDefinition(content=symboL_mapping_key_or_var_def)
-                    state_var_key = False
-                    state_var_target = True
-                    state_symbol = True
-                    symboL_mapping_key_or_var_def = ""
-                elif state_list:
+        
+        def state_symbol():
+            global i
+            symbol = ""
+            optional_local_start = False
+            optional_local_end = False
+            while True:
+                char = data_block[i]
+                if char == "[":
+                    optional_local_start = True
+                elif char == "]":
+                    optional_local_end = True
+                elif char == "<":
                     pass
-            node_previous = node_current
+                elif char == ">":
+                    pass
+                elif char == "{":
+                    pass
+                elif char == "}":
+                    pass
+                elif char in [":", " ", "\n"]:
+                    symbol_is_optional = optional_local_start and optional_local_end
+                    outer_is_optional_start = optional_local_start and not optional_local_end
+                    node = Node(content=symbol, is_optional=symbol_is_optional)
+                    return [node, outer_is_optional_start]
+                else:
+                    symbol += char
+                i += 1
+        
+        def state_target():
+            global i
+            is_optional = None
+            node_list = []
+            node_disjunction = None
+            node_mapping = None
+            while True:
+                char = data_block[i]
+                if char == " ":
+                    i += 1
+                elif char == "|":
+                    if node_disjunction is not None:
+                        node_disjunction = NodeDisjunction()
+                        node_disjunction.is_optional = is_optional
+                elif char == ":":
+                    node_mapping = NodeMapping()
+                    node_disjunction.is_optional = is_optional
+                elif char == "\n":
+                    if node_disjunction is not None:
+                        node_disjunction.possibilities = node_list
+                        return node_disjunction
+                    elif node_mapping is not None:
+                        node_mapping.content = node_list[0]
+                        node_mapping.target = node_list[1]
+                        return node_mapping
+                    elif len(node_list) == 1:
+                        return node_list[0]
+                    else:
+                        return None
+                else:
+                    node, is_optional = state_symbol()
+                    node_list.append(node)
+                    
+        def state_mapping():
+            node_mapping = NodeMapping()
+            content = state_target()
+            if content is not None:
+                node_mapping.target = content
+            else:
+                node_mapping.target = state_line_beginning()
+            return node_mapping
             
+        def state_var_definition():
+            node_variable_definition = NodeVariableDefinition()
+            content = state_target()
+            if content is not None:
+                node_variable_definition.target = content
+            else:
+                node_variable_definition.target = state_line_beginning()
+            return node_variable_definition
+                
+        def state_line_beginning():
+            global i
+            global line_counter
+            global indentation_level_previous
+            line_counter += 1
+            indentation_level = 0
+            while True:
+                if i == len(data_block):
+                    return None
+                char = data_block[i]
+                if char == "\n":
+                    i += 1
+                elif char == " ":
+                    indentation_level += 1
+                    i += 1
+                else:
+                    node_parent = node_container_level_dict.get(indentation_level)
+                    if node_parent is None or (indentation_level > indentation_level_previous):
+                        node_parent = NodeDict(content=[])
+                        node_container_level_dict[indentation_level] = node_parent
+                    indentation_level_previous = indentation_level
+                    key_node, is_optional = state_symbol()
+                    char = data_block[i]
+                    if char == ":":
+                        i += 1
+                        node_mapping = state_mapping()
+                        node_mapping.content = key_node
+                        node_mapping.is_optional = is_optional
+                        node_parent.content.append(node_mapping)
+                        state_line_beginning()
+                        return node_parent
+                    elif data_block[i:i + 3] == "::=":
+                        i += 3
+                        node_var = state_var_definition()
+                        return node_var
+                    
+        return state_line_beginning()
         
     
     with open("./README.md", "r") as f:
@@ -432,6 +468,7 @@ def read_schema():
         data_block = ""
         is_data_block = False
         is_example = False
+        node_list = []
         for line_n, line in enumerate(f, start=1):
             if line.startswith("##"):
                 data_block_header = line.replace("#", "").replace("\n", "").strip()
@@ -440,16 +477,20 @@ def read_schema():
                 is_example = True
             elif line == "```\n":
                 if is_data_block and data_block_header != "" and not is_example:
-                    parse_data_block(data_block)
+                    try:
+                        node_list.append(parse_data_block(data_block))
+                    except Exception as ex:
+                        print(ex)
                     data_block_header = ""
                     data_block = ""
                     is_example = False
                 is_data_block = not is_data_block
             elif is_data_block and data_block_header != "":
                 data_block += line
+        return node_list
 
 
-schema_test = NodeVariableDefinition(
+schema_test = NodeDisjunction(
     possibilities=[
         NodeDict(
             content=[
@@ -478,7 +519,7 @@ schema_test = NodeVariableDefinition(
                                             content=Node(
                                                 content="topics"
                                             ),
-                                            target=NodeVariableDefinition(
+                                            target=NodeDisjunction(
                                                 is_optional=True,
                                                 possibilities=[
                                                     Node(
@@ -538,7 +579,7 @@ schema_test = NodeVariableDefinition(
                                             content=Node(
                                                 content="topics"
                                             ),
-                                            target=NodeVariableDefinition(
+                                            target=NodeDisjunction(
                                                 is_optional=True,
                                                 possibilities=[
                                                     Node(
@@ -691,5 +732,5 @@ test_dict_5 = {
 
 
 if __name__ == "__main__":
-    schema = read_schema()
+    node_list = read_schema()
     pass
