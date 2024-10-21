@@ -9,7 +9,6 @@ x-veld:
   data:
     description: [<DESCRIPTION>]
     topics: [<TOPICS>] 
-    file_types: [<FILE_TYPES>]
     [additional: [<ADDITIONAL>]]
 ```
 
@@ -32,15 +31,10 @@ x-veld:
     description: [<DESCRIPTION>]
     topics: [<TOPICS>] 
     [additional: [<ADDITIONAL>]]
-    inputs: [<INPUTS>]
-    outputs: [<OUTPUTS>]
-    environment_vars: [<ENVIRONMENT_VARS>]
-
 services:
   <VELD_SERVICE_NAME>:
     <DOCKER_COMPOSE_DEFINITION>
     [volumes: <VOLUMES>]
-    [environment: <ENVIRONMENT>]
 ```
 example:
 ```
@@ -52,7 +46,6 @@ x-veld:
     additional:
       foo:
         bar:
-
     inputs:
       - description: ""
         volume: /veld/input/
@@ -60,7 +53,6 @@ x-veld:
         file_type: ""
         contents:
           - ""
-
     outputs:
       - description: ""
         volume: /veld/output/
@@ -68,7 +60,6 @@ x-veld:
         file_type: ""
         contents:
           - ""
-
     environment:
       in_file:
         description: ""
@@ -157,7 +148,7 @@ description: training data for word embeddings
 can be a single value or a list of single values (note that the list must be expressed as yaml 
 list, i.e. newline and a hyphen)
 ```
-<TOPICS> ::= <SINGLE_TOPIC> | { <SINGLE_TOPIC> }+ 
+<TOPICS> ::= <SINGLE_TOPIC> | {<SINGLE_TOPIC>}
 ```
 where `<SINGLE_TOPIC>` can be arbitrary textual tags, associating the veld to some broader 
 context.  
@@ -175,7 +166,7 @@ topics:
 ### \<ADDITIONAL>
 
 Any arbitrary non-veld data, expressed as any kind of yaml data (allowing single values, nested 
-key-values, lists, etc), which might be necessary for internal use or extending functionality not covered by VELD.
+key-values, lists, etc.), which might be necessary for internal use or extending functionality not covered by VELD.
 
 example:
 ```
@@ -183,4 +174,12 @@ additional:
   modified_on:
     - 2024-02-09
     - 2024-09-15
+```
+
+
+### \<VOLUMES>
+
+```
+<VOLUMES> ::= {<SINGLE_VOLUME>}
+<SINGLE_VOLUME> ::= <HOST_PATH>: <CONTAINER_PATH>
 ```
