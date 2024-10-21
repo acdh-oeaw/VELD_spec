@@ -150,191 +150,6 @@ def validate(obj_to_validate, node: Node, path=""):
 
 def read_schema():
     
-    def clean_str(data_block_str):
-        data_block_str_cleaned = ""
-        line = ""
-        for char in data_block_str:
-            if char in ["[", "]", "{", "}"]:
-                char = "\\" + char
-            if char != "\n":
-                line += char
-            else:
-                if line != "" and ":" not in line:
-                    line += ":"
-                line += "\n"
-                data_block_str_cleaned += line
-                line = ""
-        return data_block_str_cleaned
-    
-    def clean_dict_recursively(data_block_dict):
-        data_block_dict_clean = {}
-        for k, v in data_block_dict.items():
-            k = k.replace("\\", "")
-            if type(v) is dict:
-                v = clean_dict_recursively(v)
-            elif type(v) is str:
-                v = v.replace("\\", "")
-            else:
-                v = v
-            data_block_dict_clean[k] = v
-        return data_block_dict_clean
-    
-    # def parse_data_block_STATES(data_block):
-    #
-    #     def get_parent(node, parent_level):
-    #         if parent_level == 0:
-    #             return node
-    #         else:
-    #             return get_parent(node.parent, parent_level - 1)
-    #
-    #     def state_char_optional(char):
-    #         if char == "[":
-    #             print("optional start")
-    #             return 1
-    #         elif char == "]":
-    #             print("optional end")
-    #             return -1
-    #         else:
-    #             return 0
-    #
-    #     def state_char_variable(char):
-    #         if char == "<":
-    #             print("variable start")
-    #             return 1
-    #         elif char == ">":
-    #             print("variable end")
-    #             return -1
-    #         else:
-    #             return 0
-    #
-    #     def state_char_list(char):
-    #         if char == "{":
-    #             print("variable start")
-    #             return 1
-    #         elif char == "}":
-    #             print("variable end")
-    #             return -1
-    #         else:
-    #             return 0
-    #
-    #     def state_mapping_target(node, indentation_level, line_current, line_next_list):
-    #         for i in range(len(line_current)):
-    #             char = line_current[i]
-    #             if char == " ":
-    #                 continue
-    #             if char != "\n":
-    #                 state_node(node, indentation_level, line_current[i+1:], line_next_list)
-    #             else:
-    #                 state_line_start(node, indentation_level, line_next_list)
-    #
-    #     def state_dict():
-    #         pass
-    #
-    #     def state_list():
-    #         pass
-    #
-    #     def state_variable_definition(node, line_current, line_next_list):
-    #         for i in range(len(line_current)):
-    #             char = line_current[i]
-    #             if char == " ":
-    #                 continue
-    #             if char != "\n":
-    #                 state_node(node, indentation_level, line_current[i+1:], line_next_list)
-    #             else:
-    #                 state_line_start(node, indentation_level, line_next_list)
-    #
-    #
-    #     def state_node(node, indentation_level, line_current, line_next_list):
-    #         symbol = ""
-    #         node_is_optional = False
-    #         node_is_variable = False
-    #         node_can_be_optional = 0
-    #         node_can_be_variable = 0
-    #         node_can_be_list = 0
-    #         for i in range(len(line_current)):
-    #             char = line_current[i]
-    #             counter_optional_change = state_char_optional(char)
-    #             if counter_optional_change != 0:
-    #                 if counter_optional_change == -1 and node_can_be_optional == 1:
-    #                     node_is_optional = True
-    #                 node_can_be_optional += counter_optional_change
-    #                 continue
-    #             counter_variable_change = state_char_variable(char)
-    #             if counter_variable_change != 0:
-    #                 if counter_variable_change == -1 and node_can_be_variable == 1:
-    #                     node_is_variable = True
-    #                 node_can_be_variable += counter_variable_change
-    #                 continue
-    #             counter_list_change = state_char_list(char)
-    #             if counter_list_change != 0:
-    #                 if counter_list_change == -1 and node_can_be_list == 1:
-    #                     node_is_list = True
-    #                 node_can_be_list += counter_list_change
-    #                 continue
-    #             if char not in [":", " ", "-", "\n"]:
-    #                 symbol += char
-    #             else:
-    #                 if char == ":":
-    #                     print("key")
-    #                     node_mapping = NodeMapping(
-    #                         content=Node(
-    #                             content=symbol,
-    #                             is_optional=node_is_optional,
-    #                             is_variable=node_is_variable,
-    #                         ),
-    #                     )
-    #                     node_mapping.target = state_mapping_target(None, indentation_level, line_current[i+1:], line_next_list)
-    #                     if node is None:
-    #                         node = NodeDict(content=[])
-    #                     node.content.append(node_mapping)
-    #                 elif line_current[i:i + 4] == " ::= ":
-    #                     print("variable definition")
-    #                     node = NodeVariableDefinition(
-    #                         content=symbol,
-    #                         is_optional=node_is_optional,
-    #                         is_variable=node_is_variable,
-    #                     )
-    #                     i += 5
-    #                     node = state_variable_definition(node, line_current[i:], line_next_list)
-    #                 elif char == "-":
-    #                     print("list")
-    #                     if node is None:
-    #                         node = NodeList()
-    #                     node = state_list(None, line_current[i:], line_next_list)
-    #                 elif char == "\n":
-    #                     print("leaf")
-    #                     node = Node(
-    #                         content=symbol,
-    #                         is_optional=node_is_optional,
-    #                         is_variable=node_is_variable,
-    #                     )
-    #         return node
-    #
-    #     def state_line_start(node, indentation_level_above, line_next_list):
-    #         line_current = line_next_list[0]
-    #         line_next_list = line_next_list[1:]
-    #         indentation_level_current = 0
-    #         for i in range(len(line_current)):
-    #             char = line_current[i]
-    #             if char == " ":
-    #                 indentation_level_current += 1
-    #             else:
-    #                 if indentation_level_current < indentation_level_above:
-    #                     parent_level = (indentation_level_above - indentation_level_current) / 2
-    #                     node_parent = get_parent(node, parent_level)
-    #                     node = state_node(node_parent, indentation_level_current, line_current[i:], line_next_list)
-    #                 elif indentation_level_current == indentation_level_above:
-    #                     node = state_node(node, indentation_level_current, line_current[i:], line_next_list)
-    #                 elif indentation_level_current > indentation_level_above:
-    #                     node = state_node(None, indentation_level_current, line_current[i:], line_next_list)
-    #         return node
-    #
-    #
-    #     def parse_data_block_main():
-    #         return state_line_start(None, 0, data_block.split("\n"))
-    #
-    #     parse_data_block_main()
-        
     def parse_data_block(data_block):
         global i
         global line_counter
@@ -462,32 +277,36 @@ def read_schema():
                     
         return state_line_beginning()
         
-    
-    with open("./README.md", "r") as f:
-        data_block_header = ""
-        data_block = ""
-        is_data_block = False
-        is_example = False
-        node_list = []
-        for line_n, line in enumerate(f, start=1):
-            if line.startswith("##"):
-                data_block_header = line.replace("#", "").replace("\n", "").strip()
-                is_example = False
-            elif line == "example:\n":
-                is_example = True
-            elif line == "```\n":
-                if is_data_block and data_block_header != "" and not is_example:
-                    try:
-                        node_list.append(parse_data_block(data_block))
-                    except Exception as ex:
-                        print(ex)
-                    data_block_header = ""
-                    data_block = ""
+    def read_schema_main():
+        with open("./README.md", "r") as f:
+            data_block_header = ""
+            data_block = ""
+            is_data_block = False
+            is_example = False
+            root_node_disjunction = NodeDisjunction(possibilities=[])
+            for line_n, line in enumerate(f, start=1):
+                if line.startswith("##"):
+                    data_block_header = line.replace("#", "").replace("\n", "").strip()
                     is_example = False
-                is_data_block = not is_data_block
-            elif is_data_block and data_block_header != "":
-                data_block += line
-        return node_list
+                elif line == "example:\n":
+                    is_example = True
+                elif line == "```\n":
+                    if is_data_block and data_block_header != "" and not is_example:
+                        try:
+                            node = parse_data_block(data_block)
+                        except Exception as ex:
+                            pass
+                        else:
+                            root_node_disjunction.possibilities.append(node)
+                        data_block_header = ""
+                        data_block = ""
+                        is_example = False
+                    is_data_block = not is_data_block
+                elif is_data_block and data_block_header != "":
+                    data_block += line
+            return root_node_disjunction
+        
+    return read_schema_main()
 
 
 schema_test = NodeDisjunction(
@@ -724,13 +543,13 @@ test_dict_5 = {
     }
 }
 
-# print(validate(test_dict_1, schema_test))
-# print(validate(test_dict_2, schema_test))
-# print(validate(test_dict_3, schema_test))
-# print(validate(test_dict_4, schema_test))
-# print(validate(test_dict_5, schema_test))
 
 
 if __name__ == "__main__":
-    node_list = read_schema()
+    root_node = read_schema()
+    print(validate(test_dict_1, root_node))
+    print(validate(test_dict_2, root_node))
+    print(validate(test_dict_3, root_node))
+    print(validate(test_dict_4, root_node))
+    print(validate(test_dict_5, root_node))
     pass
