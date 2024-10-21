@@ -91,21 +91,13 @@ x-veld:
   chain:
     description: [<DESCRIPTION>]
     topics: [<TOPICS>] 
-    file_types: [<FILE_TYPES>]
     [additional: [<ADDITIONAL>]]
 
 services:
   veld:
     extends:
-      file: ./veld_repo/veld_file.yaml
-      service: veld
-    volumes:
-      - ./data/in/:/veld/input/:z
-      - ./data/out/:/veld/output/:z
-    environment:
-      in_file: null
-      out_file: null
-      foo: null
+      file: <VELD_CODE_YAML>
+      service: <VELD_CODE_SERVICE>
 ```
 example:
 ```
