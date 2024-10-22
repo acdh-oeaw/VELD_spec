@@ -16,31 +16,32 @@ class Node:
     content: Union[str, None] = None
     
     def __repr__(self):
-        return "Node: " + str(self.content)
+        return str(self.content)
 
     
-@dataclass
+@dataclass(repr=False)
 class NodeMapping(Node):
     content: Union[Node, None] = None
     target: Union[Node, None] = None
-
     
-@dataclass
+    
+@dataclass(repr=False)
 class NodeDict(Node):
     content: List[NodeMapping] = None
-
     
-@dataclass
+    
+@dataclass(repr=False)
 class NodeList(Node):
     content: Node = None
 
 
-@dataclass
+@dataclass(repr=False)
 class NodeDisjunction(Node):
+    # TODO: rename possiblities to content
     possibilities: List[Node] = None
     
     
-@dataclass
+@dataclass(repr=False)
 class NodeVariableDefinition(Node):
     content: Union[Node, None] = None
     target: Union[Node, None] = None
@@ -49,137 +50,130 @@ class NodeVariableDefinition(Node):
 def read_schema():
     
     def parse_data_block(data_block):
-        global i
-        global line_counter
-        global node_container_level_dict
-        global indentation_level_previous
-        i = 0
-        line_counter = 0
-        node_container_level_dict = {0: None}
-        indentation_level_previous = 0
+        
+        class CharState:
+            def __init__(self):
+                self.i = 0
+                self.data_block = data_block
+                # self.char = self.data_block[self.i]
+                self.indentation_level_previous = 0
+                
+            def __repr__(self):
+                i_end = self.i + 10
+                if i_end == len(self.data_block):
+                    i_end = len(self.data_block) - 1
+                return f"{self.i, self.data_block[self.i], self.data_block[self.i:i_end]}"
+            
+            @property
+            def char(self):
+                return self.data_block[self.i]
+            
+            def has_char(self):
+                return self.i < len(self.data_block)
+                
+            def next(self):
+                if self.i < len(self.data_block):
+                    self.i += 1
+            
+        cs = CharState()
         
         def state_symbol():
-            global i
             symbol = ""
-            optional_local_start = False
-            optional_local_end = False
-            while True:
-                char = data_block[i]
-                if char == "[":
-                    optional_local_start = True
-                elif char == "]":
-                    optional_local_end = True
-                elif char == "<":
-                    pass
-                elif char == ">":
-                    pass
-                elif char == "{":
-                    pass
-                elif char == "}":
-                    pass
-                elif char in [":", " ", "\n"]:
-                    symbol_is_optional = optional_local_start and optional_local_end
-                    outer_is_optional_start = optional_local_start and not optional_local_end
-                    node = Node(content=symbol, is_optional=symbol_is_optional)
-                    return [node, outer_is_optional_start]
+            is_variable = False
+            while cs.has_char():
+                if cs.char == "<" or cs.char == ">":
+                    is_variable = True
+                elif cs.char in [":", "]", "}", " ", "\n"]:
+                    node = Node(content=symbol, is_variable=is_variable)
+                    return node
                 else:
-                    symbol += char
-                i += 1
+                    symbol += cs.char
+                cs.next()
         
-        def state_target():
-            global i
-            is_optional = None
-            node_list = []
-            node_disjunction = None
-            node_mapping = None
-            while True:
-                char = data_block[i]
-                if char == " ":
-                    i += 1
-                elif char == "|":
-                    if node_disjunction is not None:
-                        node_disjunction = NodeDisjunction()
-                        node_disjunction.is_optional = is_optional
-                elif char == ":":
-                    node_mapping = NodeMapping()
-                    node_disjunction.is_optional = is_optional
-                elif char == "\n":
-                    if node_disjunction is not None:
-                        node_disjunction.possibilities = node_list
-                        return node_disjunction
-                    elif node_mapping is not None:
-                        node_mapping.content = node_list[0]
-                        node_mapping.target = node_list[1]
-                        return node_mapping
-                    elif len(node_list) == 1:
-                        return node_list[0]
+        def state_next():
+            node = None
+            list_open = False
+            list_close = False
+            optional_open = False
+            optional_close = False
+            while cs.has_char():
+                if cs.char == " ":
+                    pass
+                elif cs.char == "[":
+                    optional_open = True
+                elif cs.char == "]":
+                    optional_close = True
+                elif cs.char == "{":
+                    list_open = True
+                elif cs.char == "}":
+                    if list_open:
+                        node = NodeList(content=node)
+                    list_close = True
+                elif cs.char == ":":
+                    cs.next()
+                    if cs.char == ":":
+                        cs.next()
+                        if cs.char == "=":
+                            cs.next()
+                            node = NodeVariableDefinition(content=node)
+                            node.target = state_next()
                     else:
-                        return None
+                        node = NodeMapping(content=node)
+                        node.target = state_next()
+                    continue
+                elif cs.char == "|":
+                    cs.next()
+                    node = NodeDisjunction(possibilities=[node])
+                    node_next = state_next()
+                    if type(node_next) is NodeDisjunction:
+                        for node_next_possible in node_next.possibilities:
+                            node.possibilities.append(node_next_possible)
+                    else:
+                        node.possibilities.append(node_next)
+                    continue
+                elif cs.char == "\n":
+                    return node
                 else:
-                    node, is_optional = state_symbol()
-                    node_list.append(node)
-        
-        def state_mapping():
-            node_mapping = NodeMapping()
-            content = state_target()
-            if content is not None:
-                node_mapping.target = content
-            else:
-                node_mapping.target = state_line_beginning()
-            return node_mapping
-        
-        def state_var_definition():
-            node_variable_definition = NodeVariableDefinition()
-            content = state_target()
-            if content is not None:
-                node_variable_definition.target = content
-            else:
-                node_variable_definition.target = state_line_beginning()
-            return node_variable_definition
-        
-        def state_line_beginning():
-            global i
-            global line_counter
-            global indentation_level_previous
-            line_counter += 1
+                    node = state_symbol()
+                    continue
+                cs.next()
+            
+        def state_line_beginning(indentation_level_previous):
+            node = None
             indentation_level = 0
-            while True:
-                if i == len(data_block):
-                    return None
-                char = data_block[i]
-                if char == "\n":
-                    i += 1
-                elif char == " ":
+            while cs.has_char():
+                if cs.char == "\n":
+                    indentation_level = 0
+                elif cs.char == " ":
                     indentation_level += 1
-                    i += 1
                 else:
-                    node_parent = node_container_level_dict.get(indentation_level)
-                    if node_parent is None or (indentation_level > indentation_level_previous):
-                        node_parent = NodeDict(content=[])
-                        node_container_level_dict[indentation_level] = node_parent
-                    indentation_level_previous = indentation_level
-                    key_node, is_optional = state_symbol()
-                    char = data_block[i]
-                    if char == ":":
-                        i += 1
-                        node_mapping = state_mapping()
-                        node_mapping.content = key_node
-                        node_mapping.is_optional = is_optional
-                        node_parent.content.append(node_mapping)
-                        state_line_beginning()
-                        return node_parent
-                    elif data_block[i:i + 3] == "::=":
-                        i += 3
-                        node_var = state_var_definition()
-                        return node_var
+                    if indentation_level == indentation_level_previous:
+                        node_line = state_next()
+                        if type(node_line) is NodeMapping:
+                            if node is None:
+                                node = NodeDict(content=[])
+                            node.content.append(node_line)
+                        elif type(node_line) is NodeVariableDefinition:
+                            node = node_line
+                        continue
+                    elif indentation_level > indentation_level_previous:
+                        cs.i -= indentation_level + 1
+                        node_next = state_line_beginning(indentation_level)
+                        node_line.target = node_next
+                        continue
+                    elif indentation_level < indentation_level_previous:
+                        cs.i -= indentation_level + 1
+                        break
+                cs.next()
+            return node
         
-        return state_line_beginning()
+        return state_line_beginning(0)
     
     def read_schema_main():
         with open("./README.md", "r") as f:
             data_block_header = ""
             data_block = ""
-            is_data_block = False
+            is_in_data_block = False
             is_example = False
             root_node_disjunction = NodeDisjunction(possibilities=[])
             for line_n, line in enumerate(f, start=1):
@@ -189,16 +183,15 @@ def read_schema():
                 elif line == "example:\n":
                     is_example = True
                 elif line == "```\n":
-                    is_data_block = not is_data_block
-                elif data_block_header != "" and not is_example:
-                    if is_data_block:
-                        data_block += line
-                    elif data_block != "":
+                    is_in_data_block = not is_in_data_block
+                    if not is_in_data_block and not is_example:
                         node = parse_data_block(data_block)
                         root_node_disjunction.possibilities.append(node)
                         data_block_header = ""
                         data_block = ""
                         is_example = False
+                elif data_block_header != "" and not is_example and is_in_data_block:
+                    data_block += line
             return root_node_disjunction
     
     return read_schema_main()
@@ -320,3 +313,4 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
             raise Exception("no param passed")
             
     return validate_main()
+    
