@@ -27,18 +27,17 @@ class NodeMapping(Node):
     
 @dataclass(repr=False)
 class NodeDict(Node):
-    content: List[NodeMapping] = None
+    content: Union[List[NodeMapping], None] = None
     
     
 @dataclass(repr=False)
 class NodeList(Node):
-    content: Node = None
+    content: Union[Node, None] = None
 
 
 @dataclass(repr=False)
 class NodeDisjunction(Node):
-    # TODO: rename possiblities to content
-    possibilities: List[Node] = None
+    content: Union[List[Node], None] = None
     
     
 @dataclass(repr=False)
@@ -133,13 +132,13 @@ def read_schema():
                     continue
                 elif cs.char == "|":
                     cs.next()
-                    node = NodeDisjunction(possibilities=[node])
+                    node = NodeDisjunction(content=[node])
                     node_next = state_next()
                     if type(node_next) is NodeDisjunction:
-                        for node_next_possible in node_next.possibilities:
-                            node.possibilities.append(node_next_possible)
+                        for node_next_possible in node_next.content:
+                            node.content.append(node_next_possible)
                     else:
-                        node.possibilities.append(node_next)
+                        node.content.append(node_next)
                     continue
                 elif cs.char == "\n":
                     return node
@@ -185,7 +184,7 @@ def read_schema():
             data_block = ""
             is_in_data_block = False
             is_example = False
-            root_node_disjunction = NodeDisjunction(possibilities=[])
+            root_node_disjunction = NodeDisjunction(content=[])
             for line_n, line in enumerate(f, start=1):
                 if line.startswith("##"):
                     data_block_header = line.replace("#", "").replace("\n", "").strip()
@@ -196,7 +195,7 @@ def read_schema():
                     is_in_data_block = not is_in_data_block
                     if not is_in_data_block and not is_example:
                         node = parse_data_block(data_block)
-                        root_node_disjunction.possibilities.append(node)
+                        root_node_disjunction.content.append(node)
                         data_block_header = ""
                         data_block = ""
                         is_example = False
@@ -214,7 +213,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
         def handle_node_disjunction(obj_to_validate, node: NodeDisjunction, path):
             result_list = []
             is_one_valid = False
-            for possible_node in node.possibilities:
+            for possible_node in node.content:
                 result_list.append(validate_dict(obj_to_validate, possible_node, path))
             for result in result_list:
                 if result[0]:
