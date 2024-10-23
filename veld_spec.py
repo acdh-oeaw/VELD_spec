@@ -103,12 +103,14 @@ def read_schema():
                     optional_open = True
                 elif cs.char == "]":
                     optional_close = True
+                    if optional_open:
+                        node.is_optional = True
                 elif cs.char == "{":
                     list_open = True
                 elif cs.char == "}":
+                    list_close = True
                     if list_open:
                         node = NodeList(content=node)
-                    list_close = True
                 elif cs.char == ":":
                     cs.next()
                     if cs.char == ":":
@@ -116,6 +118,7 @@ def read_schema():
                         if cs.char == "=":
                             cs.next()
                             node = NodeVariableDefinition(content=node)
+                            node.content.is_variable = False
                             node_next = state_next()
                             if type(node_next) is NodeMapping:
                                 node_next = NodeDict(content=[node_next])
@@ -123,6 +126,10 @@ def read_schema():
                     else:
                         node = NodeMapping(content=node)
                         node.target = state_next()
+                        if optional_open and not optional_close:
+                            node.is_optional = True
+                        if list_open and not list_close:
+                            node = NodeList(content=node)
                     continue
                 elif cs.char == "|":
                     cs.next()
