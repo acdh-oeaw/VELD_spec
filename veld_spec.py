@@ -15,6 +15,20 @@ class Node:
     is_variable: bool = False
     content: Union[str, None] = None
     
+    def copy(self):
+        node_copy = self.__class__.__new__(self.__class__)
+        for k, v in self.__dict__.items():
+            if isinstance(v, Node):
+                v = v.copy()
+            elif type(v) is list:
+                v_sub_copy = []
+                for v_sub in v:
+                    if isinstance(v_sub, Node):
+                        v_sub_copy.append(v_sub.copy())
+                v = v_sub_copy
+            node_copy.__dict__[k] = v
+        return node_copy
+    
     def __repr__(self):
         return str(self.content)
 
@@ -23,6 +37,9 @@ class Node:
 class NodeMapping(Node):
     content: Union[Node, None] = None
     target: Union[Node, None] = None
+    
+    def __repr__(self):
+        return str(f"{self.content}: {self.target}")
     
     
 @dataclass(repr=False)
@@ -33,17 +50,26 @@ class NodeDict(Node):
 @dataclass(repr=False)
 class NodeList(Node):
     content: Union[Node, None] = None
+    
+    def __repr__(self):
+        return str(f"[{self.content}]")
 
 
 @dataclass(repr=False)
 class NodeDisjunction(Node):
     content: Union[List[Node], None] = None
     
+    def __repr__(self):
+        return str(" | ".join([repr(c) for c in self.content]))
+    
     
 @dataclass(repr=False)
 class NodeVariableDefinition(Node):
     content: Union[Node, None] = None
     target: Union[Node, None] = None
+    
+    def __repr__(self):
+        return str(f"{self.content}::= {self.target}")
 
 
 def read_schema():
@@ -178,16 +204,56 @@ def read_schema():
         
         return state_line_beginning(0)
     
+    def resolve_variables(schema_with_variables):
+        
+        def resolve_variables_recursively(node: Node):
+            if type(node) is NodeDict:
+                for node_mapping in node.content:
+                    node_mapping.content = resolve_variables_recursively(node_mapping.content)
+                    node_mapping.target = resolve_variables_recursively(node_mapping.target)
+            elif type(node) is NodeDisjunction:
+                for node_sub in node.content:
+                    node_sub = resolve_variables_recursively(node_sub)
+            elif type(node) is NodeList:
+                node.content = resolve_variables_recursively(node.content)
+            elif type(node) is Node:
+                if node.is_variable:
+                    node.is_variable = False
+                    if node.content in schema_with_variables["variables"]:
+                        node_var_instance = schema_with_variables["variables"][node.content]
+                        node_var_instance = node_var_instance.copy()
+                        is_optional = node.is_optional
+                        node = resolve_variables_recursively(node_var_instance)
+                        node.is_optional = is_optional
+                    else:
+                        node.content = None
+            return node
+        
+        def resolve_variables_main():
+            schema = {}
+            for k, v in schema_with_variables["velds"].items():
+                schema[k] = resolve_variables_recursively(v)
+            return schema
+        
+        return resolve_variables_main()
+    
     def read_schema_main():
         with open("./README.md", "r") as f:
             data_block_header = ""
             data_block = ""
             is_in_data_block = False
             is_example = False
-            root_node_disjunction = NodeDisjunction(content=[])
+            schema_with_variables = {
+                "velds": {
+                    "data": None,
+                    "code": None,
+                    "chain": None,
+                },
+                "variables": {},
+            }
             for line_n, line in enumerate(f, start=1):
                 if line.startswith("##"):
-                    data_block_header = line.replace("#", "").replace("\n", "").strip()
+                    data_block_header = line.replace("#", "").replace("\n", "").strip().split(" ")[0]
                     is_example = False
                 elif line == "example:\n":
                     is_example = True
@@ -195,13 +261,17 @@ def read_schema():
                     is_in_data_block = not is_in_data_block
                     if not is_in_data_block and not is_example:
                         node = parse_data_block(data_block)
-                        root_node_disjunction.content.append(node)
+                        if type(node) is NodeVariableDefinition:
+                            schema_with_variables["variables"][node.content.content] = node.target
+                        else:
+                            schema_with_variables["velds"][data_block_header] = node
                         data_block_header = ""
                         data_block = ""
                         is_example = False
                 elif data_block_header != "" and not is_example and is_in_data_block:
                     data_block += line
-            return root_node_disjunction
+            schema = resolve_variables(schema_with_variables)
+            return schema
     
     return read_schema_main()
 
@@ -290,7 +360,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
             #     return (False, f"node is variable, but has fixed content: {node.content},at {path}/")
             return (True, None)
         
-        def validate_main(obj_to_validate, node: Node, path):
+        def validate_dict_main(obj_to_validate, node: Node, path):
             if type(obj_to_validate) in [dict, list]:
                 obj_to_validate = obj_to_validate.copy()
             if type(node) is NodeDisjunction:
@@ -309,22 +379,31 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                 node: Node
                 return handle_node(obj_to_validate, node, path)
         
-        return validate_main(obj_to_validate, node, path)
+        return validate_dict_main(obj_to_validate, node, path)
 
-    def validate_main():
-        schema = read_schema()
-        if dict_to_validate is not None:
-            return validate_dict(dict_to_validate, schema)
+    def validate_main(dict_to_validate: dict, yaml_to_validate: str):
+        if dict_to_validate is None == yaml_to_validate is None:
+            raise Exception(f"two parameters passed: {dict_to_validate} and {yaml_to_validate}")
         elif yaml_to_validate is not None:
             with open(yaml_to_validate, "r") as f:
-                return validate_dict(yaml.safe_load(f), schema)
+                dict_to_validate = yaml.safe_load(f)
+        schema = read_schema()
+        x_veld = dict_to_validate.get("x-veld")
+        if x_veld is None:
+            return (False, "root node x-veld missing")
+        x_veld = list(x_veld.keys())
+        if len(x_veld) != 1:
+            return (False, f"multiple entries found under x-veld: {x_veld}")
+        veld_type = x_veld[0]
+        if veld_type not in list(schema.keys()):
+            return (False, f"neither data, code, or chain: {veld_type}")
         else:
-            raise Exception("no param passed")
+            return validate_dict(dict_to_validate, schema[veld_type])
             
-    return validate_main()
+    return validate_main(dict_to_validate, yaml_to_validate)
 
 if __name__ == "__main__":
-    result = validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_valid.yaml")
-    result = validate(yaml_to_validate="./tests/veld_yaml_files/data_barebone_valid.yaml")
+    print(validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_valid.yaml"))
+    print(validate(yaml_to_validate="./tests/veld_yaml_files/data_barebone_valid.yaml"))
     pass
     
