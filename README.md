@@ -173,5 +173,9 @@ additional:
 
 ```
 <VOLUMES> ::= {<SINGLE_VOLUME>}
+```
+
+### \<SINGLE_VOLUME>
+```
 <SINGLE_VOLUME> ::= <HOST_PATH>: <CONTAINER_PATH>
 ```
