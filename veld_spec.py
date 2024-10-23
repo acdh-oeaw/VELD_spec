@@ -116,7 +116,10 @@ def read_schema():
                         if cs.char == "=":
                             cs.next()
                             node = NodeVariableDefinition(content=node)
-                            node.target = state_next()
+                            node_next = state_next()
+                            if type(node_next) is NodeMapping:
+                                node_next = NodeDict(content=[node_next])
+                            node.target = node_next
                     else:
                         node = NodeMapping(content=node)
                         node.target = state_next()
@@ -313,4 +316,9 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
             raise Exception("no param passed")
             
     return validate_main()
+
+if __name__ == "__main__":
+    result = validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_valid.yaml")
+    result = validate(yaml_to_validate="./tests/veld_yaml_files/data_barebone_valid.yaml")
+    pass
     
