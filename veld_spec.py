@@ -325,7 +325,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                     if not result[0]:
                         return result
                 elif not target.is_optional and not target.content is None:
-                    return (False, f"non-optional value {target} missing at: {path_sub}/")
+                    return (False, f"non-optional value: '{target}' missing at: {path_sub}/")
                 return (True, None)
             
             if type(obj_to_validate) is not dict:
@@ -388,8 +388,6 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                 return (False, f"is not primitive type, but {obj_type}, at: {path}/")
             elif obj_type is None and not node.is_optional:
                 return (False, f"non-optional value is empty at: {path}/")
-            # elif node.is_variable and not (node.content.startswith("<") and node.content.endswith(">")):
-            #     return (False, f"node is variable, but has fixed content: {node.content},at {path}/")
             return (True, None)
         
         def validate_dict_main(obj_to_validate, node: Node, path):
@@ -438,9 +436,3 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
         return validate_dict(dict_to_validate, schema[veld_type])
             
     return validate_main(dict_to_validate, yaml_to_validate)
-
-if __name__ == "__main__":
-    # print(validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_valid.yaml"))
-    print(validate(yaml_to_validate="./tests/veld_yaml_files/data_barebone_valid.yaml"))
-    pass
-    
