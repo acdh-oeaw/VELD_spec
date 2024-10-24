@@ -31,6 +31,9 @@ class Node:
     
     def __repr__(self):
         return str(self.content)
+    
+    def __str__(self):
+        return self.__repr__()
 
     
 @dataclass(repr=False)
@@ -302,7 +305,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                     if not result[0]:
                         return result
                 elif not target.is_optional:
-                    return (False, f"non-optional value missing at: {path_sub}/")
+                    return (False, f"non-optional value {target} missing at: {path_sub}/")
                 return (True, None)
             
             if type(obj_to_validate) is not dict:
@@ -388,22 +391,27 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
             with open(yaml_to_validate, "r") as f:
                 dict_to_validate = yaml.safe_load(f)
         schema = read_schema()
-        x_veld = dict_to_validate.get("x-veld")
-        if x_veld is None:
+        if dict_to_validate is None:
+            return (False, "empty dict")
+        if "x-veld" not in dict_to_validate:
             return (False, "root node x-veld missing")
-        x_veld = list(x_veld.keys())
+        x_veld = dict_to_validate["x-veld"]
+        if x_veld is None:
+            return (False, "entry under x-veld is empty")
         if len(x_veld) != 1:
             return (False, f"multiple entries found under x-veld: {x_veld}")
-        veld_type = x_veld[0]
-        if veld_type not in list(schema.keys()):
+        veld_type = None
+        for k in x_veld.keys():
+            if k in ["data", "code", "chain"]:
+                veld_type = k
+        if veld_type is None:
             return (False, f"neither data, code, or chain: {veld_type}")
-        else:
-            return validate_dict(dict_to_validate, schema[veld_type])
+        return validate_dict(dict_to_validate, schema[veld_type])
             
     return validate_main(dict_to_validate, yaml_to_validate)
 
 if __name__ == "__main__":
-    print(validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_valid.yaml"))
+    # print(validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_valid.yaml"))
     print(validate(yaml_to_validate="./tests/veld_yaml_files/data_barebone_valid.yaml"))
     pass
     
