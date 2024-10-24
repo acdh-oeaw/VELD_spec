@@ -1,3 +1,4 @@
+import pkg_resources
 from dataclasses import dataclass
 from typing import List, Union
 
@@ -258,7 +259,8 @@ def read_schema():
         return resolve_variables_main()
     
     def read_schema_main():
-        with open("./README.md", "r") as f:
+        print(__name__)
+        with open(pkg_resources.resource_filename(__name__, "README.md"), "r") as f:
             data_block_header = ""
             data_block_counter = 0
             data_block = ""
@@ -412,8 +414,13 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
         return validate_dict_main(obj_to_validate, node, path)
 
     def validate_main(dict_to_validate: dict, yaml_to_validate: str):
+        if dict_to_validate is None and yaml_to_validate is None:
+            raise Exception(f"no parameters passed. Neither dict_to_validate, nor yaml_to_validate")
         if dict_to_validate is None == yaml_to_validate is None:
-            raise Exception(f"two parameters passed: {dict_to_validate} and {yaml_to_validate}")
+            raise Exception(
+                f"two parameters passed: {dict_to_validate} and {yaml_to_validate}. Must be only "
+                f"one of either."
+            )
         elif yaml_to_validate is not None:
             with open(yaml_to_validate, "r") as f:
                 dict_to_validate = yaml.safe_load(f)
