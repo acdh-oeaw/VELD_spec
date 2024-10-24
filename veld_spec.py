@@ -273,7 +273,7 @@ def read_schema():
                     if line == "example:\n":
                         is_example = True
                     elif not is_example:
-                        if line == "```\n":
+                        if line.startswith("```"):
                             data_block_counter += 1
                         elif data_block_counter == 1:
                             data_block += line
