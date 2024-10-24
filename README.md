@@ -9,6 +9,7 @@ x-veld:
   data:
     description: [<DESCRIPTION>]
     topics: [<TOPICS>] 
+    file_type: <FILE_TYPE>
     [additional: [<ADDITIONAL>]]
 ```
 
@@ -31,6 +32,9 @@ x-veld:
     description: [<DESCRIPTION>]
     topics: [<TOPICS>] 
     [additional: [<ADDITIONAL>]]
+    inputs: [{<INPUT_OR_OUTPUT>}]
+    outputs: [{<INPUT_OR_OUTPUT>}]
+    environment: [{<ENVIRONMENT>}]
 services:
   <VELD_SERVICE_NAME>:
     <DOCKER_COMPOSE_DEFINITION>
@@ -166,6 +170,17 @@ additional:
   modified_on:
     - 2024-02-09
     - 2024-09-15
+```
+
+
+### \<INPUT_OR_OUTPUT>
+
+```
+<INPUT_OR_OUTPUT> ::=
+  description: [<DESCRIPTION>]
+  volume: <CONTAINER_PATH>
+  environment: <ENVIRONMENT_VAR>
+  file_type: <FILE_TYPE>
 ```
 
 
