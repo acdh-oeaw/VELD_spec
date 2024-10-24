@@ -167,7 +167,7 @@ def read_schema():
                             if optional_open and not optional_close:
                                 node.is_optional = True
                             if list_open and not list_close:
-                                node = NodeList(content=node)
+                                node = NodeDict(content=[node])
                     continue
                 elif cs.char == "|":
                     cs.next()
