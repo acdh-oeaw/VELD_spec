@@ -319,7 +319,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                     result = validate_dict(obj_value, target, path_sub)
                     if not result[0]:
                         return result
-                elif not target.is_optional:
+                elif not target.is_optional and not target.content is None:
                     return (False, f"non-optional value {target} missing at: {path_sub}/")
                 return (True, None)
             
@@ -349,7 +349,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                     result = go_to_target(obj_value, node_target, path_sub)
                     if not result[0]:
                         return result
-                if len(obj_to_validate) != 0:
+                if len(obj_to_validate) != 0 and not any(n.content.content is None for n in node.content):
                     unmatched_keys = ",".join(k for k in obj_to_validate.keys())
                     return (False, f"elements not matching anything at: {path + '/' + unmatched_keys}")
             return (True, None)
