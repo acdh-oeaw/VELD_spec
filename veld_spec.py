@@ -246,8 +246,8 @@ def read_schema():
     def read_schema_main():
         with open("./README.md", "r") as f:
             data_block_header = ""
+            data_block_counter = 0
             data_block = ""
-            is_in_data_block = False
             is_example = False
             schema_with_variables = {
                 "velds": {
@@ -261,21 +261,24 @@ def read_schema():
                 if line.startswith("##"):
                     data_block_header = line.replace("#", "").replace("\n", "").strip().split(" ")[0]
                     is_example = False
-                elif line == "example:\n":
-                    is_example = True
-                elif line == "```\n":
-                    is_in_data_block = not is_in_data_block
-                    if not is_in_data_block and not is_example:
-                        node = parse_data_block(data_block)
-                        if type(node) is NodeVariableDefinition:
-                            schema_with_variables["variables"][node.content.content] = node.target
-                        else:
-                            schema_with_variables["velds"][data_block_header] = node
-                        data_block_header = ""
-                        data_block = ""
-                        is_example = False
-                elif data_block_header != "" and not is_example and is_in_data_block:
-                    data_block += line
+                elif data_block_header != "":
+                    if line == "example:\n":
+                        is_example = True
+                    elif not is_example:
+                        if line == "```\n":
+                            data_block_counter += 1
+                        elif data_block_counter == 1:
+                            data_block += line
+                        if data_block_counter == 2:
+                            node = parse_data_block(data_block)
+                            if type(node) is NodeVariableDefinition:
+                                schema_with_variables["variables"][node.content.content] = node.target
+                            else:
+                                schema_with_variables["velds"][data_block_header] = node
+                            data_block_header = ""
+                            data_block_counter = 0
+                            data_block = ""
+                            is_example = False
             schema = resolve_variables(schema_with_variables)
             return schema
     
