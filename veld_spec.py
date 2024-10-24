@@ -329,14 +329,14 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                     if node_mapping.content.content is None:
                         node_keys_variables.append(node_mapping)
                         continue
-                    if node_key not in obj_to_validate and not node_mapping.is_optional:
-                        return (False, f"non-optional key missing: '{node_key}', at: {path}/")
-                    else:
-                        obj_value = obj_to_validate.pop(node_key, None)
+                    if node_key in obj_to_validate:
+                        obj_value = obj_to_validate.pop(node_key)
                         path_sub = path + "/" + node_key
                         result = go_to_target(obj_value, node_target, path_sub)
                         if not result[0]:
                             return result
+                    elif not node_mapping.is_optional:
+                        return (False, f"non-optional key missing: '{node_key}', at: {path}/")
                 for node_mapping in node_keys_variables:
                     node_target = node_mapping.target
                     obj_key = next(iter(obj_to_validate.keys()))
