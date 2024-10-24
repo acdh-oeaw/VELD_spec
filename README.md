@@ -2,6 +2,9 @@
 
 specification of the VELD metadata schema.
 
+- pip
+- notes on notation
+
 ## velds
 
 ### data veld
@@ -12,7 +15,7 @@ x-veld:
     file_type: <FILE_TYPE>
     path: [<PATH>]
     [description: <DESCRIPTION>]
-    [contents: <CONTENT>]
+    [contents: <CONTENT> | {<CONTENT>}]
     [topics: <TOPIC> | {<TOPIC>}] 
     [additional: <ADDITIONAL>]
 ```
@@ -147,6 +150,14 @@ additional:
     - 2024-09-15
 ```
 
+### \<CONTENT>
+```
+<CONTENT> ::= <PRIMITIVE>
+```
+
+### \<BOOL>
+either `true` or `false`
+
 ### \<DESCRIPTION>
 ```
 <DESCRIPTION> ::= <PRIMITIVE>
@@ -166,7 +177,25 @@ example:
 ```
 
 ### \<ENVIRONMENT>
+```
+<ENVIRONMENT> ::= <ENVIRONMENT_VAR_NAME>: <PRIMITIVE>
+```
+example:
+```
+```
+### \<ENVIRONMENT_VAR_NAME>
+```
+<ENVIRONMENT_VAR_NAME> ::= <PRIMITIVE>
+```
+example:
+```
+```
 
+### \<ENV_TYPE>
+must be one of the following literals:
+```
+<ENV_TYPE> ::= str | bool | int | float
+```
 example:
 ```
 ```
@@ -175,10 +204,16 @@ example:
 ```
 <FILE_TYPE> ::= <PRIMITIVE>
 ```
+example:
+```
+```
 
 example:
 ```
 file_type: txt
+```
+example:
+```
 ```
 
 ### \<INPUT_OR_OUTPUT>
@@ -186,12 +221,51 @@ file_type: txt
 ```
 <INPUT_OR_OUTPUT> ::=
   volume: <CONTAINER_PATH>
-  environment: <ENVIRONMENT_VAR_NAME> | {<ENVIRONMENT_VAR_NAME>}
-  description: [<DESCRIPTION>] 
-  file_type: <FILE_TYPE> | {<FILE_TYPE>}
-  contents: <CONTENT>
+  [environment: <ENVIRONMENT_VAR_NAME>]
+  [description: <DESCRIPTION>] 
+  [file_type: <FILE_TYPE> | {<FILE_TYPE>}]
+  [contents: <CONTENT> | {<CONTENT>}]
+```
+example:
+```
 ```
 
+### \<PATH>
+```
+<PATH> ::= <PRIMITIVE>
+```
+example:
+```
+```
+
+
+### \<PRIMITIVE>
+Any primitive data type, i.e. not a list or a dictionary.
+example:
+```
+this is a string
+```
+```
+42
+```
+
+### \<SETTING>
+```
+<SETTING> ::= 
+  environment: <ENVIRONMENT_VAR_NAME>
+  description: <DESCRIPTION>
+  env_type: <ENV_TYPE>
+  default: <PRIMITIVE>
+  optional: <BOOL>
+```
+example:
+```
+  environment: vector_size
+  description: "word2vec hyperparameter: number of dimensions of the word vectors"
+  env_type: int
+  default: 200
+  optional: true
+```
 
 ### \<TOPIC>
 
@@ -200,7 +274,6 @@ list, i.e. newline and a hyphen)
 ```
 <TOPIC> ::= <PRIMITIVE>
 ```
-
 example:
 ```
 topics: NLP
@@ -211,7 +284,6 @@ topics:
   - word embeddings
 ```
 
-
 ### \<VELD_SERVICE_NAME>
 ```
 <VELD_SERVICE_NAME> ::= <PRIMITIVE>
@@ -219,19 +291,10 @@ topics:
 example:
 ```
 ```
-
 ### \<VOLUME>
 ```
 <VOLUME> ::= <HOST_PATH>: <CONTAINER_PATH>
 ```
-
-### \<PRIMITIVE>
-Any primitve data type, i.e. not a list or a dictionariy.
 example:
 ```
-this is a string
 ```
-```
-42
-```
-
