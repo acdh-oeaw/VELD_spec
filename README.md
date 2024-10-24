@@ -32,7 +32,7 @@ x-veld:
     description: [<DESCRIPTION>]
     topics: [<TOPICS>] 
     [additional: [<ADDITIONAL>]]
-    inputs: [{<INPUT_OR_OUTPUT>}] [test](https://github.com/acdh-oeaw/VELD_spec?tab=readme-ov-file#input_or_output)
+    inputs: [{<INPUT_OR_OUTPUT>}]
     outputs: [{<INPUT_OR_OUTPUT>}]
     environment: [{<ENVIRONMENT>}]
 services:
@@ -40,11 +40,6 @@ services:
     <DOCKER_COMPOSE_DEFINITION>
     [volumes: <VOLUMES>]
 ```
-
-
-
-
-
 example:
 ```
 x-veld:
