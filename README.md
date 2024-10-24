@@ -2,6 +2,8 @@
 
 specification of the VELD metadata schema.
 
+TODO:
+- veld technical concept
 - pip
 - notes on notation
 
@@ -13,7 +15,7 @@ specification of the VELD metadata schema.
 x-veld:
   data:
     file_type: <FILE_TYPE>
-    path: [<PATH>]
+    [path: <PATH>]
     [description: <DESCRIPTION>]
     [contents: <CONTENT> | {<CONTENT>}]
     [topics: <TOPIC> | {<TOPIC>}] 
@@ -28,11 +30,13 @@ x-veld:
     topics:
       - NLP
       - word embeddings
-    file_types: txt
+    file_type: txt
     additional:
       generated_on: 2024-09-15
 ```
+
 ### code veld
+
 ```
 x-veld:
   code:
@@ -98,6 +102,7 @@ services:
 ```
 
 ### chain veld
+
 ```
 x-veld:
   chain:
@@ -151,14 +156,17 @@ additional:
 ```
 
 ### \<CONTENT>
+
 ```
 <CONTENT> ::= <PRIMITIVE>
 ```
 
 ### \<BOOL>
+
 either `true` or `false`
 
 ### \<DESCRIPTION>
+
 ```
 <DESCRIPTION> ::= <PRIMITIVE>
 ```
@@ -178,13 +186,16 @@ example:
 ```
 
 ### \<ENVIRONMENT>
+
 ```
 <ENVIRONMENT> ::= {<ENVIRONMENT_VAR_NAME>: <PRIMITIVE>}
 ```
 example:
 ```
 ```
+
 ### \<ENVIRONMENT_VAR_NAME>
+
 ```
 <ENVIRONMENT_VAR_NAME> ::= <PRIMITIVE>
 ```
@@ -193,6 +204,7 @@ example:
 ```
 
 ### \<ENV_TYPE>
+
 must be one of the following literals:
 ```
 <ENV_TYPE> ::= str | bool | int | float
@@ -202,6 +214,7 @@ example:
 ```
 
 ### \<FILE_TYPE>
+
 ```
 <FILE_TYPE> ::= <PRIMITIVE>
 ```
@@ -232,6 +245,7 @@ example:
 ```
 
 ### \<PATH>
+
 ```
 <PATH> ::= <PRIMITIVE>
 ```
@@ -241,6 +255,7 @@ example:
 
 
 ### \<PRIMITIVE>
+
 Any primitive data type, i.e. not a list or a dictionary.
 example:
 ```
@@ -251,6 +266,7 @@ this is a string
 ```
 
 ### \<SETTING>
+
 ```
 <SETTING> ::= 
   environment: <ENVIRONMENT_VAR_NAME>
@@ -286,13 +302,16 @@ topics:
 ```
 
 ### \<VELD_SERVICE_NAME>
+
 ```
 <VELD_SERVICE_NAME> ::= <PRIMITIVE>
 ```
 example:
 ```
 ```
+
 ### \<VOLUME>
+
 ```
 <VOLUME> ::= <HOST_PATH>:<CONTAINER_PATH>
 ```
