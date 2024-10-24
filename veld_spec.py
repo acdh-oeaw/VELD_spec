@@ -49,13 +49,16 @@ class NodeMapping(Node):
 class NodeDict(Node):
     content: Union[List[NodeMapping], None] = None
     
+    def __repr__(self):
+        return str(", ".join([repr(nm) for nm in self.content]))
+    
     
 @dataclass(repr=False)
 class NodeList(Node):
     content: Union[Node, None] = None
     
     def __repr__(self):
-        return str(f"[{self.content}]")
+        return str(f"{{{self.content}}}")
 
 
 @dataclass(repr=False)
