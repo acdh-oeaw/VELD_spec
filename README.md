@@ -40,6 +40,11 @@ services:
     <DOCKER_COMPOSE_DEFINITION>
     [volumes: <VOLUMES>]
 ```
+
+[test](https://github.com/acdh-oeaw/VELD_spec?tab=readme-ov-file#input_or_output)
+
+
+
 example:
 ```
 x-veld:
