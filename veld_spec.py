@@ -152,7 +152,10 @@ def read_schema():
                             node.content.is_variable = False
                             node_next = state_next()
                             if type(node_next) is NodeMapping:
-                                node_next = NodeDict(content=[node_next])
+                                node_next = NodeDict(
+                                    content=[node_next],
+                                    is_optional=node_next.is_optional
+                                )
                             node.target = node_next
                     else:
                         node = NodeMapping(content=node)
@@ -203,6 +206,8 @@ def read_schema():
                         node_line.target = node_next
                         continue
                     elif indentation_level < indentation_level_previous:
+                        if type(node) is NodeDict:
+                            node.is_optional = all([n.is_optional for n in node.content])
                         cs.i -= indentation_level + 1
                         break
                 cs.next()
