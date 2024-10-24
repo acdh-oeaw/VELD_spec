@@ -263,7 +263,7 @@ def read_schema():
                 "variables": {},
             }
             for line_n, line in enumerate(f, start=1):
-                if line.startswith("##"):
+                if line.startswith("###"):
                     data_block_header = line.replace("#", "").replace("\n", "").strip().split(" ")[0]
                     is_example = False
                 elif data_block_header != "":

@@ -2,15 +2,19 @@
 
 specification of the VELD metadata schema.
 
-## data veld
+## velds
+
+### data veld
 
 ```
 x-veld:
   data:
-    description: [<DESCRIPTION>]
-    topics: [<TOPICS>] 
     file_type: <FILE_TYPE>
-    [additional: [<ADDITIONAL>]]
+    path: [<PATH>]
+    [description: <DESCRIPTION>]
+    [contents: <CONTENT>]
+    [topics: <TOPIC> | {<TOPIC>}] 
+    [additional: <ADDITIONAL>]
 ```
 
 example:
@@ -25,20 +29,21 @@ x-veld:
     additional:
       generated_on: 2024-09-15
 ```
-## code veld
+### code veld
 ```
 x-veld:
   code:
-    description: [<DESCRIPTION>]
-    topics: [<TOPICS>] 
-    [additional: [<ADDITIONAL>]]
-    inputs: [{<INPUT_OR_OUTPUT>}]
-    outputs: [{<INPUT_OR_OUTPUT>}]
-    environment: [{<ENVIRONMENT>}]
+    [description: <DESCRIPTION>]
+    [topics: <TOPIC> | {<TOPIC>}] 
+    [additional: <ADDITIONAL>]
+    [inputs: {<INPUT_OR_OUTPUT>}]
+    [outputs: {<INPUT_OR_OUTPUT>}]
+    [settings: {<SETTING>}]
 services:
   <VELD_SERVICE_NAME>:
     <DOCKER_COMPOSE_DEFINITION>
-    [volumes: <VOLUMES>]
+    [volumes: {<VOLUME>}]
+    [environment: {<ENVIRONMENT>}]
 ```
 example:
 ```
@@ -89,19 +94,18 @@ services:
       foo: null
 ```
 
-## chain veld
+### chain veld
 ```
 x-veld:
   chain:
-    description: [<DESCRIPTION>]
-    topics: [<TOPICS>] 
-    [additional: [<ADDITIONAL>]]
-
+    [description: <DESCRIPTION>]
+    [topics: <TOPIC> | {<TOPIC>}] 
+    [additional: <ADDITIONAL>]
 services:
-  veld:
+  <VELD_SERVICE_NAME>:
     extends:
       file: <VELD_CODE_YAML>
-      service: <VELD_CODE_SERVICE>
+      service: <VELD_SERVICE_NAME>
 ```
 example:
 ```
@@ -130,35 +134,6 @@ services:
 
 ## variables
 
-### \<DESCRIPTION>
-
-Any kind of textual description, intended for humans. Can be as long or concise as desired.
-
-example:
-```
-description: training data for word embeddings
-```
-
-### \<TOPICS>
-
-can be a single value or a list of single values (note that the list must be expressed as yaml 
-list, i.e. newline and a hyphen)
-```
-<TOPICS> ::= <SINGLE_TOPIC> | {<SINGLE_TOPIC>}
-```
-where `<SINGLE_TOPIC>` can be arbitrary textual tags, associating the veld to some broader 
-context.  
-
-example:
-```
-topics: NLP
-```
-```
-topics: 
-  - NLP
-  - word embeddings
-```
-
 ### \<ADDITIONAL>
 
 Any arbitrary non-veld data, expressed as any kind of yaml data (allowing single values, nested 
@@ -172,25 +147,68 @@ additional:
     - 2024-09-15
 ```
 
+### \<DESCRIPTION>
+
+Any kind of textual description, intended for humans. Can be as long or concise as desired.
+
+example:
+```
+description: training data for word embeddings
+```
+
+### \<DOCKER_COMPOSE_DEFINITION>
+
+example:
+```
+```
+
+### \<ENVIRONMENT>
+
+example:
+```
+```
+
+### \<FILE_TYPE>
+
+example:
+```
+file_type: txt
+```
 
 ### \<INPUT_OR_OUTPUT>
 
 ```
 <INPUT_OR_OUTPUT> ::=
-  description: [<DESCRIPTION>]
   volume: <CONTAINER_PATH>
-  environment: <ENVIRONMENT_VAR>
-  file_type: <FILE_TYPE>
+  environment: <ENVIRONMENT_VAR_NAME> | {<ENVIRONMENT_VAR_NAME>}
+  description: [<DESCRIPTION>] 
+  file_type: <FILE_TYPE> | {<FILE_TYPE>}
+  contents: <CONTENT>
 ```
 
 
-### \<VOLUMES>
+### \<TOPIC>
 
+can be a single value or a list of single values (note that the list must be expressed as yaml 
+list, i.e. newline and a hyphen)
+
+example:
 ```
-<VOLUMES> ::= {<SINGLE_VOLUME>}
+topics: NLP
+```
+```
+topics: 
+  - NLP
+  - word embeddings
 ```
 
-### \<SINGLE_VOLUME>
+
+### \<VELD_SERVICE_NAME>
+example:
 ```
-<SINGLE_VOLUME> ::= <HOST_PATH>: <CONTAINER_PATH>
+```
+
+### \<VOLUME>
+```
+<VOLUME> ::= <HOST_PATH>: <CONTAINER_PATH>
 ```
