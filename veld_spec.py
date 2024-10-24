@@ -30,7 +30,10 @@ class Node:
         return node_copy
     
     def __repr__(self):
-        return str(self.content)
+        if self.content is None:
+            return "<PRIMITIVE>"
+        else:
+            return str(self.content)
     
     def __str__(self):
         return self.__repr__()

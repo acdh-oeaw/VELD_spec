@@ -148,6 +148,9 @@ additional:
 ```
 
 ### \<DESCRIPTION>
+```
+<DESCRIPTION> ::= <PRIMITIVE>
+```
 
 Any kind of textual description, intended for humans. Can be as long or concise as desired.
 
@@ -169,6 +172,9 @@ example:
 ```
 
 ### \<FILE_TYPE>
+```
+<FILE_TYPE> ::= <PRIMITIVE>
+```
 
 example:
 ```
@@ -191,6 +197,9 @@ file_type: txt
 
 can be a single value or a list of single values (note that the list must be expressed as yaml 
 list, i.e. newline and a hyphen)
+```
+<TOPIC> ::= <PRIMITIVE>
+```
 
 example:
 ```
@@ -204,6 +213,9 @@ topics:
 
 
 ### \<VELD_SERVICE_NAME>
+```
+<VELD_SERVICE_NAME> ::= <PRIMITIVE>
+```
 example:
 ```
 ```
@@ -212,3 +224,14 @@ example:
 ```
 <VOLUME> ::= <HOST_PATH>: <CONTAINER_PATH>
 ```
+
+### \<PRIMITIVE>
+Any primitve data type, i.e. not a list or a dictionariy.
+example:
+```
+this is a string
+```
+```
+42
+```
+
