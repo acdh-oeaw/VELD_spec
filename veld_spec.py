@@ -161,12 +161,13 @@ def read_schema():
                                 )
                             node.target = node_next
                     else:
-                        node = NodeMapping(content=node)
-                        node.target = state_next()
-                        if optional_open and not optional_close:
-                            node.is_optional = True
-                        if list_open and not list_close:
-                            node = NodeList(content=node)
+                        if cs.char == " " or cs.char == "\n":
+                            node = NodeMapping(content=node)
+                            node.target = state_next()
+                            if optional_open and not optional_close:
+                                node.is_optional = True
+                            if list_open and not list_close:
+                                node = NodeList(content=node)
                     continue
                 elif cs.char == "|":
                     cs.next()
