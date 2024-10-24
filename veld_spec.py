@@ -197,7 +197,10 @@ def read_schema():
                 else:
                     if indentation_level == indentation_level_previous:
                         node_line = state_next()
-                        if type(node_line) is NodeMapping:
+                        if (
+                            type(node_line) is NodeMapping
+                            or (type(node_line) is Node and node_line.is_variable)
+                        ):
                             if node is None:
                                 node = NodeDict(content=[])
                             node.content.append(node_line)
@@ -222,10 +225,12 @@ def read_schema():
     def resolve_variables(schema_with_variables):
         
         def resolve_variables_recursively(node: Node):
-            if type(node) is NodeDict:
-                for node_mapping in node.content:
-                    node_mapping.content = resolve_variables_recursively(node_mapping.content)
-                    node_mapping.target = resolve_variables_recursively(node_mapping.target)
+            if type(node) is NodeMapping:
+                node.content = resolve_variables_recursively(node.content)
+                node.target = resolve_variables_recursively(node.target)
+            elif type(node) is NodeDict:
+                for node_sub in node.content:
+                    node_sub = resolve_variables_recursively(node_sub)
             elif type(node) is NodeDisjunction:
                 for node_sub in node.content:
                     node_sub = resolve_variables_recursively(node_sub)
@@ -328,19 +333,20 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
             else:
                 node_keys_variables = []
                 for node_mapping in node.content:
-                    node_key = node_mapping.content.content
-                    node_target = node_mapping.target
-                    if node_mapping.content.content is None:
-                        node_keys_variables.append(node_mapping)
-                        continue
-                    if node_key in obj_to_validate:
-                        obj_value = obj_to_validate.pop(node_key)
-                        path_sub = path + "/" + node_key
-                        result = go_to_target(obj_value, node_target, path_sub)
-                        if not result[0]:
-                            return result
-                    elif not node_mapping.is_optional:
-                        return (False, f"non-optional key missing: '{node_key}', at: {path}/")
+                    if type(node_mapping) is NodeMapping:
+                        node_key = node_mapping.content.content
+                        node_target = node_mapping.target
+                        if node_mapping.content.content is None:
+                            node_keys_variables.append(node_mapping)
+                            continue
+                        if node_key in obj_to_validate:
+                            obj_value = obj_to_validate.pop(node_key)
+                            path_sub = path + "/" + node_key
+                            result = go_to_target(obj_value, node_target, path_sub)
+                            if not result[0]:
+                                return result
+                        elif not node_mapping.is_optional:
+                            return (False, f"non-optional key missing: '{node_key}', at: {path}/")
                 for node_mapping in node_keys_variables:
                     node_target = node_mapping.target
                     obj_key = next(iter(obj_to_validate.keys()))
@@ -349,7 +355,15 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                     result = go_to_target(obj_value, node_target, path_sub)
                     if not result[0]:
                         return result
-                if len(obj_to_validate) != 0 and not any(n.content.content is None for n in node.content):
+                
+                other_elements_allowed = False
+                for node_sub in node.content:
+                    if type(node_sub) is NodeMapping:
+                        if node_sub.content.content is None:
+                            other_elements_allowed = True
+                    elif type(node_sub) is Node and node_sub.content is None:
+                        other_elements_allowed = True
+                if len(obj_to_validate) != 0 and not other_elements_allowed:
                     unmatched_keys = ",".join(k for k in obj_to_validate.keys())
                     return (False, f"elements not matching anything at: {path + '/' + unmatched_keys}")
             return (True, None)
