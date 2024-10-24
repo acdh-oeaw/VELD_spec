@@ -301,6 +301,15 @@ topics:
   - word embeddings
 ```
 
+
+### \<VELD_CODE_YAML>
+
+```
+<VELD_CODE_YAML> ::= <PRIMITIVE>
+```
+example:
+```
+
 ### \<VELD_SERVICE_NAME>
 
 ```
