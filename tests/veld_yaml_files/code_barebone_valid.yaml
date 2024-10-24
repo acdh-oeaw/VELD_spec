@@ -1,10 +1,6 @@
 x-veld:
   code:
-    description: null
-    topics: null
-    additional: bla
 
 services:
-  VELD_SERVICE_NAME:
-    volumes:
-      path_mapping
+  veld_train:
+    build:

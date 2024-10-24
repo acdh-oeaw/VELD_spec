@@ -2,3 +2,7 @@ x-veld:
   chain:
 
 services:
+  veld_chain:
+    extends:
+      file: some_code_veld.yaml
+      service: some_code_veld

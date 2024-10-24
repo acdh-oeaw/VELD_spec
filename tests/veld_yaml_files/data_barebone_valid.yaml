@@ -1,4 +1,3 @@
 x-veld:
   data:
-    description: null
-    topics: null
+    file_type: foo
