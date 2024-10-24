@@ -45,7 +45,7 @@ x-veld:
 services:
   <VELD_SERVICE_NAME>:
     <DOCKER_COMPOSE_DEFINITION>
-    volumes: {<VOLUME>}
+    [volumes: {<VOLUME>}]
     [environment: <ENVIRONMENT>]
 ```
 example:
