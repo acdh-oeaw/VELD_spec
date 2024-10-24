@@ -45,8 +45,8 @@ x-veld:
 services:
   <VELD_SERVICE_NAME>:
     <DOCKER_COMPOSE_DEFINITION>
-    [volumes: {<VOLUME>}]
-    [environment: {<ENVIRONMENT>}]
+    volumes: {<VOLUME>}
+    [environment: <ENVIRONMENT>]
 ```
 example:
 ```
@@ -174,11 +174,12 @@ description: training data for word embeddings
 
 example:
 ```
+<DOCKER_COMPOSE_DEFINITION> ::= <PRIMITIVE>
 ```
 
 ### \<ENVIRONMENT>
 ```
-<ENVIRONMENT> ::= <ENVIRONMENT_VAR_NAME>: <PRIMITIVE>
+<ENVIRONMENT> ::= {<ENVIRONMENT_VAR_NAME>: <PRIMITIVE>}
 ```
 example:
 ```
@@ -253,10 +254,10 @@ this is a string
 ```
 <SETTING> ::= 
   environment: <ENVIRONMENT_VAR_NAME>
-  description: <DESCRIPTION>
-  env_type: <ENV_TYPE>
-  default: <PRIMITIVE>
-  optional: <BOOL>
+  [description: <DESCRIPTION>]
+  [env_type: <ENV_TYPE>]
+  [default: <PRIMITIVE>]
+  [optional: <BOOL>]
 ```
 example:
 ```
@@ -293,7 +294,7 @@ example:
 ```
 ### \<VOLUME>
 ```
-<VOLUME> ::= <HOST_PATH>: <CONTAINER_PATH>
+<VOLUME> ::= <HOST_PATH>:<CONTAINER_PATH>
 ```
 example:
 ```
