@@ -32,7 +32,7 @@ x-veld:
     description: [<DESCRIPTION>]
     topics: [<TOPICS>] 
     [additional: [<ADDITIONAL>]]
-    inputs: [{<INPUT_OR_OUTPUT>}]
+    inputs: [{<INPUT_OR_OUTPUT>}] [test](https://github.com/acdh-oeaw/VELD_spec?tab=readme-ov-file#input_or_output)
     outputs: [{<INPUT_OR_OUTPUT>}]
     environment: [{<ENVIRONMENT>}]
 services:
@@ -41,7 +41,7 @@ services:
     [volumes: <VOLUMES>]
 ```
 
-[test](https://github.com/acdh-oeaw/VELD_spec?tab=readme-ov-file#input_or_output)
+
 
 
 
