@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="veld_spec",
-    version="0.1.13",
+    version="0.1.14",
     author="Stefan Resch",
     author_email="stefan.resch@oeaw.ac.at",
     description="VELD specification",
@@ -18,7 +18,6 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         "PyYAML>=6.0.2",
-        "jsonschema>=4.23.0",
     ],
 )
 
