@@ -315,7 +315,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                 for node_mapping in node.content:
                     node_key = node_mapping.content.content
                     node_target = node_mapping.target
-                    if node_mapping.content.is_variable:
+                    if node_mapping.content.content is None:
                         node_keys_variables.append(node_mapping)
                         continue
                     if node_key not in obj_to_validate and not node_mapping.is_optional:
