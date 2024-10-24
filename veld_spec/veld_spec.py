@@ -421,6 +421,8 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                 f"two parameters passed: {dict_to_validate} and {yaml_to_validate}. Must be only "
                 f"one of either."
             )
+        if type(dict_to_validate) is not dict and dict_to_validate is not None:
+            raise Exception(f"dict_to_validate is not a dictionary, but {type(dict_to_validate)}")
         elif yaml_to_validate is not None:
             with open(yaml_to_validate, "r") as f:
                 dict_to_validate = yaml.safe_load(f)

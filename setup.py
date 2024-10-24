@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="veld_spec",
-    version="0.1.31",
+    version="0.1.35",
     author="Stefan Resch",
     author_email="stefan.resch@oeaw.ac.at",
     description="VELD specification",
