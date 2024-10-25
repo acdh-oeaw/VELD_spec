@@ -259,7 +259,6 @@ def read_schema():
         return resolve_variables_main()
     
     def read_schema_main():
-        print(__name__)
         with open(pkg_resources.resource_filename(__name__, "README.md"), "r") as f:
             data_block_header = ""
             data_block_counter = 0
