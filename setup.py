@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="veld_spec",
-    version="0.1.49",
+    version="0.1.50",
     author="Stefan Resch",
     author_email="stefan.resch@oeaw.ac.at",
     description="VELD specification",
