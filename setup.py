@@ -1,8 +1,8 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="veld_spec",
-    version="0.1.35",
+    version="0.1.49",
     author="Stefan Resch",
     author_email="stefan.resch@oeaw.ac.at",
     description="VELD specification",
@@ -17,5 +17,7 @@ setup(
     python_requires=">=3.6",
     install_requires=["PyYAML>=6.0.2"],
     packages=["veld_spec"],
-    package_data={"veld_spec": ["README.md"]},
+    package_dir={"veld_spec": "."},
+    include_package_data=True,
+    package_data={"": ["README.md"]},
 )
