@@ -114,6 +114,8 @@ services:
     extends:
       file: <VELD_CODE_YAML>
       service: <VELD_SERVICE_NAME>
+    [volumes: {<VOLUME>}]
+    [environment: <ENVIRONMENT>]
 ```
 example:
 ```
