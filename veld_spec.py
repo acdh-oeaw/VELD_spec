@@ -32,9 +32,12 @@ class Node:
     
     def __repr__(self):
         if self.content is None:
-            return "<PRIMITIVE>"
+            repr_str = "<PRIMITIVE>"
         else:
-            return str(self.content)
+            repr_str = str(self.content)
+        if self.is_optional:
+            repr_str = "[" + repr_str + "]"
+        return repr_str
     
     def __str__(self):
         return self.__repr__()
@@ -46,7 +49,10 @@ class NodeMapping(Node):
     target: Union[Node, None] = None
     
     def __repr__(self):
-        return str(f"{self.content}: {self.target}")
+        repr_str = str(f"{self.content}: {self.target}")
+        if self.is_optional:
+            repr_str = "[" + repr_str + "]"
+        return repr_str
     
     
 @dataclass(repr=False)
@@ -54,7 +60,10 @@ class NodeDict(Node):
     content: Union[List[NodeMapping], None] = None
     
     def __repr__(self):
-        return str(", ".join([repr(nm) for nm in self.content]))
+        repr_str = str(", ".join([repr(nm) for nm in self.content]))
+        if self.is_optional:
+            repr_str = "[" + repr_str + "]"
+        return repr_str
     
     
 @dataclass(repr=False)
@@ -62,7 +71,10 @@ class NodeList(Node):
     content: Union[Node, None] = None
     
     def __repr__(self):
-        return str(f"{{{self.content}}}")
+        repr_str = str(f"{{{self.content}}}")
+        if self.is_optional:
+            repr_str = "[" + repr_str + "]"
+        return repr_str
 
 
 @dataclass(repr=False)
@@ -70,7 +82,10 @@ class NodeDisjunction(Node):
     content: Union[List[Node], None] = None
     
     def __repr__(self):
-        return str(" | ".join([repr(c) for c in self.content]))
+        repr_str = str(" | ".join([repr(c) for c in self.content]))
+        if self.is_optional:
+            repr_str = "[" + repr_str + "]"
+        return repr_str
     
     
 @dataclass(repr=False)
@@ -79,7 +94,10 @@ class NodeVariableDefinition(Node):
     target: Union[Node, None] = None
     
     def __repr__(self):
-        return str(f"{self.content}::= {self.target}")
+        repr_str = str(f"{self.content}::= {self.target}")
+        if self.is_optional:
+            repr_str = "[" + repr_str + "]"
+        return repr_str
 
 
 def read_schema():
@@ -356,7 +374,6 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                     result = go_to_target(obj_value, node_target, path_sub)
                     if not result[0]:
                         return result
-                
                 other_elements_allowed = False
                 for node_sub in node.content:
                     if type(node_sub) is NodeMapping:
@@ -370,6 +387,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
             return (True, None)
         
         def handle_node_mapping(obj_to_validate, node: NodeMapping, path):
+            # TODO: implement or remove
             raise Exception
         
         def handle_node_list(obj_to_validate, node: NodeList, path):
