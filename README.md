@@ -94,7 +94,7 @@ root:
 
 valid:
 
-This yaml content is identical to the simple schema above.
+is identical to the simple schema above.
 
 ```
 root:
@@ -103,7 +103,7 @@ root:
 
 invalid:
 
-This yaml content is missing the mapping `sub`
+is missing the mapping `sub`
 
 ```
 root:
@@ -111,7 +111,7 @@ root:
 
 invalid:
 
-This yaml content contains a non-defined additional element `root_2`
+contains a non-defined additional element `root_2`
 
 ```
 root:
@@ -184,7 +184,7 @@ root:
 
 valid:
 
-The optional value does not exist
+optional value does not exist
 
 ```
 root:
@@ -193,7 +193,7 @@ root:
 
 valid:
 
-The optional value does exist
+optional value does exist
 
 ```
 root:
@@ -202,7 +202,7 @@ root:
 
 invalid:
 
-The non-optional key of the mapping does not exist
+non-optional key of the mapping does not exist
 
 ```
 root:
@@ -219,7 +219,7 @@ root:
 
 valid:
 
-The optional mapping does not exist
+optional mapping does not exist
 
 ```
 root:
@@ -227,7 +227,7 @@ root:
 
 valid:
 
-The optional mapping does exist
+optional mapping does exist
 
 ```
 root:
@@ -236,7 +236,7 @@ root:
 
 invalid:
 
-Only the key of the optional mapping exists, but no value.
+Only the key of the optional mapping exists, but not its value.
 
 ```
 root:
@@ -305,7 +305,7 @@ root:
 
 valid:
 
-It's a single scalar
+is a single scalar
 
 ```
 root:
@@ -314,7 +314,7 @@ root:
 
 valid:
 
-It's a list of scalars
+is a list of scalars
 
 ```
 root:
