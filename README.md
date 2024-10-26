@@ -18,15 +18,46 @@ here: https://zenodo.org/records/13322913
 
 ## pip installable validator
 
+This repo also contains code for the validator which can be installed via pip with:
+
 ```
 pip install veld-spec
+```
+
+import with:
+
+```
+from veld_spec import validate
+```
+
+Use it to validate veld yaml files, either by passing the content as python dictionary or by
+passing the name of a yaml file:
+
+```
+validate(dict_to_validate={"x-veld": {...}})
+```
+
+```
+validate(yaml_to_validate="veld_file.yaml")
+```
+It will return a tuple which:
+
+- if the veld yaml content is valid, the first element is `True` and the second `None`  
+```
+(True, None)
+```
+
+- if the veld yaml content is invalid, the first element is `False` and the second contains the 
+  error message.
+```
+(False, 'root node x-veld missing')
 ```
 
 ## Primer on yaml+BNF metasyntax of the specification
 
 This section is a primer on how to read the metasyntax of the VELD specification, which is expressed
 in yaml syntax with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form).
-This Any yaml file adhering to this schema becomes a valid representation of a VELD object.
+Any yaml file adhering to this schema becomes a valid representation of a VELD object.
 
 ### non-variables
 
@@ -361,6 +392,9 @@ bar:
 
 ## VELD specification
 
+The following sections contain the specifications for the three VELD objects: data velds, code 
+velds, and chain velds. Any variables referenced here are defined at [variables](#veld-variables)
+
 ### data veld
 
 ```
@@ -499,9 +533,11 @@ services:
       foo: null
 ```
 
-## variables
+### VELD variables
 
-### \<ADDITIONAL>
+All the variables referenced above.
+
+#### \<ADDITIONAL>
 
 Any arbitrary non-veld data, expressed as any kind of yaml data (allowing single values, nested
 key-values, lists, etc.), which might be necessary for internal use or extending functionality not
@@ -516,13 +552,13 @@ additional:
     - 2024-09-15
 ```
 
-### \<CONTENT>
+#### \<CONTENT>
 
 ```
 <CONTENT> ::= <SCALAR>
 ```
 
-### \<BOOL>
+#### \<BOOL>
 
 ```
 <BOOL> ::= true | false
@@ -530,7 +566,7 @@ additional:
 
 either `true` or `false`
 
-### \<DESCRIPTION>
+#### \<DESCRIPTION>
 
 ```
 <DESCRIPTION> ::= <SCALAR>
@@ -544,7 +580,7 @@ example:
 description: training data for word embeddings
 ```
 
-### \<DOCKER_COMPOSE_DEFINITION>
+#### \<DOCKER_COMPOSE_DEFINITION>
 
 example:
 
@@ -552,7 +588,7 @@ example:
 <DOCKER_COMPOSE_DEFINITION> ::= <SCALAR>
 ```
 
-### \<ENVIRONMENT>
+#### \<ENVIRONMENT>
 
 ```
 <ENVIRONMENT> ::= {<ENVIRONMENT_VAR_NAME>: <SCALAR>}
@@ -563,7 +599,7 @@ example:
 ```
 ```
 
-### \<ENVIRONMENT_VAR_NAME>
+#### \<ENVIRONMENT_VAR_NAME>
 
 ```
 <ENVIRONMENT_VAR_NAME> ::= <SCALAR>
@@ -574,7 +610,7 @@ example:
 ```
 ```
 
-### \<ENV_TYPE>
+#### \<ENV_TYPE>
 
 must be one of the following literals:
 
@@ -587,7 +623,7 @@ example:
 ```
 ```
 
-### \<FILE_TYPE>
+#### \<FILE_TYPE>
 
 ```
 <FILE_TYPE> ::= <SCALAR>
@@ -609,7 +645,7 @@ example:
 ```
 ```
 
-### \<INPUT_OR_OUTPUT>
+#### \<INPUT_OR_OUTPUT>
 
 ```
 <INPUT_OR_OUTPUT> ::=
@@ -625,7 +661,7 @@ example:
 ```
 ```
 
-### \<PATH>
+#### \<PATH>
 
 ```
 <PATH> ::= <SCALAR>
@@ -636,7 +672,7 @@ example:
 ```
 ```
 
-### \<SCALAR>
+#### \<SCALAR>
 
 Any primitive data type, i.e. not a list or a dictionary. example:
 
@@ -648,7 +684,7 @@ this is a string
 42
 ```
 
-### \<SETTING>
+#### \<SETTING>
 
 ```
 <SETTING> ::= 
@@ -669,7 +705,7 @@ example:
   optional: true
 ```
 
-### \<TOPIC>
+#### \<TOPIC>
 
 can be a single value or a list of single values (note that the list must be expressed as yaml list,
 i.e. newline and a hyphen)
@@ -690,7 +726,7 @@ topics:
   - word embeddings
 ```
 
-### \<VELD_CODE_YAML>
+#### \<VELD_CODE_YAML>
 
 ```
 <VELD_CODE_YAML> ::= <SCALAR>
@@ -700,7 +736,7 @@ example:
 
 ```
 
-### \<VELD_SERVICE_NAME>
+#### \<VELD_SERVICE_NAME>
 
 ```
 
@@ -712,7 +748,7 @@ example:
 
 ```
 
-### \<VOLUME>
+#### \<VOLUME>
 
 ```
 
