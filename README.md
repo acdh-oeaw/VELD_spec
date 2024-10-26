@@ -15,6 +15,7 @@ here: https://zenodo.org/records/13322913
     - [data veld](#data-veld)
     - [code veld](#code-veld)
     - [chain veld](#chain-veld)
+    - [VELD variables](#veld-variables)
 
 ## pip installable validator
 
