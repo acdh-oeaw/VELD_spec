@@ -32,7 +32,7 @@ class Node:
     
     def __repr__(self):
         if self.content is None:
-            repr_str = "<PRIMITIVE>"
+            repr_str = "<SCALAR>"
         else:
             repr_str = str(self.content)
         if self.is_optional:

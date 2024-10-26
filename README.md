@@ -1,6 +1,33 @@
 # VELD spec
 
-specification of the VELD metadata schema.
+This is the formal specification of the VELD metadata schema. 
+
+The technical concept of the VELD architecture design can be found here: https://zenodo.org/records/13322913
+
+This repository also contains a pip installable validator.
+
+## formal specification in yaml+BNF metasyntax
+
+The metadata schema of VELD yaml files are expressed in yaml syntax with additional BNF-like 
+[metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form).
+
+### variables
+
+Variables are marked with `<` and `>`. They are defined with `::=` and referenced anywhere with 
+their name, where their values are interpolated. Variables may contain other variables but 
+ultimately must resolve to some primitive yaml type (primitive ) 
+
+Example usage:
+```
+some_root_key:
+  some_sub_key: <SOME_VALUE>
+```
+Example definition:
+```
+<SOME_VALUE> ::= true | false
+```
+
+
 
 TODO:
 - veld technical concept
@@ -160,7 +187,7 @@ additional:
 ### \<CONTENT>
 
 ```
-<CONTENT> ::= <PRIMITIVE>
+<CONTENT> ::= <SCALAR>
 ```
 
 ### \<BOOL>
@@ -170,7 +197,7 @@ either `true` or `false`
 ### \<DESCRIPTION>
 
 ```
-<DESCRIPTION> ::= <PRIMITIVE>
+<DESCRIPTION> ::= <SCALAR>
 ```
 
 Any kind of textual description, intended for humans. Can be as long or concise as desired.
@@ -184,13 +211,13 @@ description: training data for word embeddings
 
 example:
 ```
-<DOCKER_COMPOSE_DEFINITION> ::= <PRIMITIVE>
+<DOCKER_COMPOSE_DEFINITION> ::= <SCALAR>
 ```
 
 ### \<ENVIRONMENT>
 
 ```
-<ENVIRONMENT> ::= {<ENVIRONMENT_VAR_NAME>: <PRIMITIVE>}
+<ENVIRONMENT> ::= {<ENVIRONMENT_VAR_NAME>: <SCALAR>}
 ```
 example:
 ```
@@ -199,7 +226,7 @@ example:
 ### \<ENVIRONMENT_VAR_NAME>
 
 ```
-<ENVIRONMENT_VAR_NAME> ::= <PRIMITIVE>
+<ENVIRONMENT_VAR_NAME> ::= <SCALAR>
 ```
 example:
 ```
@@ -218,7 +245,7 @@ example:
 ### \<FILE_TYPE>
 
 ```
-<FILE_TYPE> ::= <PRIMITIVE>
+<FILE_TYPE> ::= <SCALAR>
 ```
 example:
 ```
@@ -249,14 +276,14 @@ example:
 ### \<PATH>
 
 ```
-<PATH> ::= <PRIMITIVE>
+<PATH> ::= <SCALAR>
 ```
 example:
 ```
 ```
 
 
-### \<PRIMITIVE>
+### \<SCALAR>
 
 Any primitive data type, i.e. not a list or a dictionary.
 example:
@@ -274,7 +301,7 @@ this is a string
   environment: <ENVIRONMENT_VAR_NAME>
   [description: <DESCRIPTION>]
   [env_type: <ENV_TYPE>]
-  [default: <PRIMITIVE>]
+  [default: <SCALAR>]
   [optional: <BOOL>]
 ```
 example:
@@ -291,7 +318,7 @@ example:
 can be a single value or a list of single values (note that the list must be expressed as yaml 
 list, i.e. newline and a hyphen)
 ```
-<TOPIC> ::= <PRIMITIVE>
+<TOPIC> ::= <SCALAR>
 ```
 example:
 ```
@@ -307,7 +334,7 @@ topics:
 ### \<VELD_CODE_YAML>
 
 ```
-<VELD_CODE_YAML> ::= <PRIMITIVE>
+<VELD_CODE_YAML> ::= <SCALAR>
 ```
 example:
 ```
@@ -315,7 +342,7 @@ example:
 ### \<VELD_SERVICE_NAME>
 
 ```
-<VELD_SERVICE_NAME> ::= <PRIMITIVE>
+<VELD_SERVICE_NAME> ::= <SCALAR>
 ```
 example:
 ```
