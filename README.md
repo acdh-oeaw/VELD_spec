@@ -63,7 +63,7 @@ This is the exhaustive list of compoments that make up the VELD specification:
 - [non-variable](#non-variable)
 - [variable](#variable)
 - [optional](#optional)
-- [lists](#lists)
+- [list](#list)
 - [disjunction](#disjunction)
 - [composition](#composition)
 
@@ -232,7 +232,7 @@ root:
   sub: 
 ```
 
-### lists
+### list
 
 Lists are defined with `{` and `}`. Within can be any content, complex or not, variables or not, and
 any nestings of such. A valid list is where all its elements adhere to the definition, and it can be
