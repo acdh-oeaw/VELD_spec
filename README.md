@@ -9,17 +9,20 @@ here: https://zenodo.org/records/13322913
 
 **table of contents:**
 
-- This repository also contains a pip installable validator.
-- [Formal specification in yaml+BNF metasyntax](#Formal-specification-in-yamlbnf-metasyntax)
-- 
-- schema
-    - data
-    - code
-    - chain
+- [pip installable validator](#pip-installable-validator)
+- [VELD specification in yaml+BNF metasyntax](#VELD-specification-in-yamlbnf-metasyntax)
+- [VELD specification](#VELD-specification)
+    - [data veld](#data-veld)
+    - [code veld](#code-veld)
+    - [chain veld](#chain-veld)
 
-## pip
+## pip installable validator
 
-## Formal specification in yaml+BNF metasyntax
+```
+pip install veld-spec
+```
+
+## VELD specification in yaml+BNF metasyntax
 
 The metadata schema of VELD is expressed in yaml syntax
 with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form). Any yaml file
@@ -356,7 +359,7 @@ root:
 bar:
 ```
 
-## velds
+## VELD specification
 
 ### data veld
 
