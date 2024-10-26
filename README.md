@@ -82,7 +82,7 @@ This is the exhaustive list of compoments that make up the VELD specification:
 
 Anything that is not a variable or marked with special syntax as described below must exist as-is.
 
-**Example:**
+Example:
 
 A yaml file adhering to the schema must have a [mapping](https://yaml.org/spec/1.2.2/#nodes) at the
 root named `root` containing a child mapping `sub` which must be empty
@@ -92,7 +92,7 @@ root:
   sub:
 ```
 
-**valid:**
+valid:
 
 This yaml content is identical to the simple schema above.
 
@@ -101,7 +101,7 @@ root:
   sub:
 ```
 
-**invalid:**
+invalid:
 
 This yaml content is missing the mapping `sub`
 
@@ -109,7 +109,7 @@ This yaml content is missing the mapping `sub`
 root:
 ```
 
-**invalid:**
+invalid:
 
 This yaml content contains a non-defined additional element `root_2`
 
@@ -124,7 +124,7 @@ root_2:
 Variables are marked with `<` and `>` and defined with `::=`. They may nest other variables but must
 ultimately resolve to a basic [yaml scalar](https://yaml.org/spec/1.2.2/#scalars).
 
-**Example:**
+Example:
 
 In this yaml content, a variable `<SOME_VALUE>` is used as a placeholder, indicating that it can be
 replaced with any content that fits its definition somewhere else: `<SOME_VALUE> ::= `, while the
@@ -148,7 +148,7 @@ But no complex type like lists or mappings are allowed.
 <SOME_VALUE> ::= <SCALAR>
 ```
 
-**valid:**
+valid:
 
 `foo` is a simple yaml scalar
 
@@ -157,7 +157,7 @@ root:
   sub: foo 
 ```
 
-**invalid:**
+invalid:
 
 `foo` is not a scalar, but a more complex mapping
 
@@ -173,7 +173,7 @@ Content that is optional is marked with `[` and `]`. Inside can be any other com
 compositions. If a collection of yaml objects is marked as optional, it must be either absent or
 present fully; partial objects are invalid.
 
-**Example:**
+Example:
 
 A single value may be present or not, but the key of its mapping must be present
 
@@ -182,7 +182,7 @@ root:
   sub: [<SCALAR>]
 ```
 
-**valid:**
+valid:
 
 The optional value does not exist
 
@@ -191,7 +191,7 @@ root:
   sub: 
 ```
 
-**valid:**
+valid:
 
 The optional value does exist
 
@@ -200,7 +200,7 @@ root:
   sub: foo 
 ```
 
-**invalid:**
+invalid:
 
 The non-optional key of the mapping does not exist
 
@@ -208,7 +208,7 @@ The non-optional key of the mapping does not exist
 root:
 ```
 
-**Example:**
+Example:
 
 An entire mapping is marked as optional
 
@@ -217,7 +217,7 @@ root:
   [sub: <SCALAR>]
 ```
 
-**valid:**
+valid:
 
 The optional mapping does not exist
 
@@ -225,7 +225,7 @@ The optional mapping does not exist
 root:
 ```
 
-**valid:**
+valid:
 
 The optional mapping does exist
 
@@ -234,7 +234,7 @@ root:
   sub: foo 
 ```
 
-**invalid:**
+invalid:
 
 Only the key of the optional mapping exists, but no value.
 
@@ -249,7 +249,7 @@ Lists are defined with `{` and `}`. Within can be any content, complex or not, v
 any nestings of such. A valid list is where all its elements adhere to the definition, and it can be
 of any cardinality, including zero.
 
-**Example:**
+Example:
 
 The content of the mapping with key `sub` must be a list of simple scalars.
 
@@ -258,7 +258,7 @@ root:
   sub: {<SCALAR>}
 ```
 
-**valid:**
+valid:
 
 A list with only scalars
 
@@ -269,7 +269,7 @@ root:
     - bar
 ```
 
-**valid:**
+valid:
 
 No value at all, which can also be interpreted as an empty list
 
@@ -278,7 +278,7 @@ root:
   sub:
 ```
 
-**invalid:**
+invalid:
 
 A list with a scalar and a mapping
 
@@ -303,7 +303,7 @@ root:
   sub: <SCALAR> | {<SCALAR>} 
 ```
 
-**valid:**
+valid:
 
 It's a single scalar
 
@@ -312,7 +312,7 @@ root:
   sub: foo 
 ```
 
-**valid:**
+valid:
 
 It's a list of scalars
 
@@ -323,7 +323,7 @@ root:
     - bar 
 ```
 
-**invalid:**
+invalid:
 
 It's neither a scalar nor a list of scalars, but a mapping
 
@@ -365,14 +365,14 @@ root:
 <BOOL> ::= true | false
 ```
 
-**valid:**
+valid:
 
 ```
 root:
   sub_1: foo
 ```
 
-**valid:**
+valid:
 
 ```
 root:
@@ -383,7 +383,7 @@ root:
     - foo_3
 ```
 
-**valid:**
+valid:
 
 ```
 root:
@@ -392,7 +392,7 @@ root:
     sub_sub_1:
 ```
 
-**valid:**
+valid:
 
 ```
 root:
