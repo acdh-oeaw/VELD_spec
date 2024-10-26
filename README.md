@@ -67,7 +67,7 @@ This is the exhaustive list of compoments that make up the VELD specification:
 - [disjunction](#disjunction)
 - [composition](#composition)
 
-### non-variables
+### non-variable
 
 Anything that is not a variable or marked with special syntax as described below must exist 
 as-is.
@@ -108,7 +108,7 @@ root:
 root_2
 ```
 
-### variables
+### variable
 
 Variables are marked with `<` and `>` and defined with `::=`. They may nest other variables but must
 ultimately resolve to a basic [yaml scalar](https://yaml.org/spec/1.2.2/#scalars).
