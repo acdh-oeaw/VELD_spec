@@ -392,8 +392,11 @@ root:
 
 ## VELD specification
 
-The following sections contain the specifications for the three VELD objects: data velds, code 
-velds, and chain velds. Any variables referenced here are defined at [variables](#veld-variables)
+The following sections contain the specifications for the three VELD objects and their variables:
+- [data veld](#data-veld)
+- [code veld](#code-veld)
+- [chain veld](#chain-veld)
+- [VELD variables](#veld-variables)
 
 ### data veld
 
