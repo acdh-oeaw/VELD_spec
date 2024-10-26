@@ -10,7 +10,7 @@ here: https://zenodo.org/records/13322913
 **table of contents:**
 
 - [pip installable validator](#pip-installable-validator)
-- [VELD specification in yaml+BNF metasyntax](#VELD-specification-in-yamlbnf-metasyntax)
+- [Primer on yaml+BNF metasyntax of the specification](#primer-on-yamlbnf-metasyntax-of-the-specification)
 - [VELD specification](#VELD-specification)
     - [data veld](#data-veld)
     - [code veld](#code-veld)
@@ -22,11 +22,11 @@ here: https://zenodo.org/records/13322913
 pip install veld-spec
 ```
 
-## VELD specification in yaml+BNF metasyntax
+## Primer on yaml+BNF metasyntax of the specification
 
-The metadata schema of VELD is expressed in yaml syntax
-with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form). Any yaml file
-adhering to this schema becomes a valid representation of a VELD object.
+This section is a primer on how to read the metasyntax of the VELD specification, which is expressed
+in yaml syntax with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form).
+This Any yaml file adhering to this schema becomes a valid representation of a VELD object.
 
 ### non-variables
 
@@ -35,7 +35,7 @@ Anything that is not a variable or marked with special syntax as described below
 **Example:**
 
 A yaml file adhering to the schema must have a [mapping](https://yaml.org/spec/1.2.2/#nodes) at the
-root
+root named `root` containing a child mapping `sub` which must be empty
 
 ```
 root:
@@ -340,10 +340,9 @@ root:
         - foo_2
 ```
 
-
 ### arbitrary additional content
 
-Any content that is not explicitely defined  is not allowed.
+Any content that is not explicitely defined is not allowed.
 
 **example:**
 
@@ -353,6 +352,7 @@ root:
 ```
 
 **invalid:**
+
 ```
 root:
   sub: foo
