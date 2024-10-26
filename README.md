@@ -11,11 +11,17 @@ here: https://zenodo.org/records/13322913
 
 - [pip installable validator](#pip-installable-validator)
 - [Primer on yaml+BNF metasyntax of the specification](#primer-on-yamlbnf-metasyntax-of-the-specification)
+  - [non-variable](#non-variable)
+  - [variable](#variable)
+  - [optional](#optional)
+  - [list](#list)
+  - [disjunction](#disjunction)
+  - [composition](#composition)
 - [VELD specification](#VELD-specification)
-    - [data veld](#data-veld)
-    - [code veld](#code-veld)
-    - [chain veld](#chain-veld)
-    - [VELD variables](#veld-variables)
+  - [data veld](#data-veld)
+  - [code veld](#code-veld)
+  - [chain veld](#chain-veld)
+  - [VELD variables](#veld-variables)
 
 ## pip installable validator
 
