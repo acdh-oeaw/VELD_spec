@@ -1,38 +1,359 @@
 # VELD spec
 
-This is the formal specification of the VELD metadata schema. 
+**version 1.0**
 
-The technical concept of the VELD architecture design can be found here: https://zenodo.org/records/13322913
+This is the formal specification of the VELD metadata schema.
 
-This repository also contains a pip installable validator.
+The technical concept of the VELD architecture design can be found
+here: https://zenodo.org/records/13322913
+
+**table of contents:**
+
+- This repository also contains a pip installable validator.
+- formal specification in yaml+BNF metasyntax
+- schema
+    - data
+    - code
+    - chain
+
+## pip
 
 ## formal specification in yaml+BNF metasyntax
 
-The metadata schema of VELD yaml files are expressed in yaml syntax with additional BNF-like 
-[metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form).
+The metadata schema of VELD is expressed in yaml syntax
+with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form). Any yaml file
+adhering to this schema becomes a valid representation of a VELD object.
+
+### non-variables
+
+Anything that is not a variable or marked with special syntax as described below must exist as-is.
+
+**Example:**
+
+A yaml file adhering to the schema must have a [mapping](https://yaml.org/spec/1.2.2/#nodes) at the
+root
+
+```
+root:
+  sub:
+```
+
+**valid:**
+
+This yaml content is identical to the simple schema above.
+
+```
+root:
+  sub:
+```
+
+**invalid:**
+
+This yaml content is missing the mapping `sub`
+
+```
+root:
+```
 
 ### variables
 
-Variables are marked with `<` and `>`. They are defined with `::=` and referenced anywhere with 
-their name, where their values are interpolated. Variables may contain other variables but 
-ultimately must resolve to some primitive yaml type (primitive ) 
+Variables are marked with `<` and `>` and defined with `::=`. They may nest other variables but must
+ultimately resolve to a basic [yaml scalar](https://yaml.org/spec/1.2.2/#scalars).
 
-Example usage:
+**Example:**
+
+In this yaml content, a variable `<SOME_VALUE>` is used as a placeholder, indicating that it can be
+replaced with any content that fits its definition somewhere else: `<SOME_VALUE> ::= `, while the
+other non-variable yaml keys `root` and `sub` need to be present exactly in such structure with
+identical naming. (Note that `<SCALAR>` is the only variable not defined within this document as it
+refers to the yaml scalar type, defined in [yaml 1.2.2](https://yaml.org/spec/1.2.2/) itself)
+
+**variable usage**
+
 ```
-some_root_key:
-  some_sub_key: <SOME_VALUE>
+root:
+  sub: <SOME_VALUE>
 ```
-Example definition:
+
+**variable definition:**
+
+The value `<SOME_VALUE>` can be replaced with can be any yaml scalar, e.g. string, integer, boolean
+etc. But no complex type like lists or mappings.
+
 ```
-<SOME_VALUE> ::= true | false
+<SOME_VALUE> ::= <SCALAR>
+```
+
+**valid:**
+
+`foo` is a simple yaml scalar
+
+```
+root:
+  sub: foo 
+```
+
+**invalid:**
+
+`foo` is not a scalar, but a more complex mapping
+
+```
+root:
+  sub: 
+    foo: bar 
+```
+
+### optional
+
+Content that is optional is marked with `[` and `]`. Inside can be groups of or single non-variables
+or variables. If a collection of yaml objects is marked as optional, it must be either absent or
+present fully; partial objects are invalid.
+
+**Example:**
+
+A single value may be present or not, but the key of its mapping must be present
+
+```
+root:
+  sub: [<SCALAR>]
+```
+
+**valid:**
+
+The optional value does not exist
+
+```
+root:
+  sub: 
+```
+
+**valid:**
+
+The optional value does exist
+
+```
+root:
+  sub: foo 
+```
+
+**invalid:**
+
+The non-optional key of the mapping does not exist
+
+```
+root:
+```
+
+**Example:**
+
+An entire mapping is marked as optional instead of only the single value
+
+```
+root:
+  [sub: <SCALAR>]
+```
+
+**valid:**
+
+The optional mapping does not exist
+
+```
+root:
+```
+
+**valid:**
+
+The optional mapping does exist
+
+```
+root:
+  sub: foo 
+```
+
+**invalid:**
+
+Only the key of the optional mapping exists, but no value.
+
+```
+root:
+  sub: 
+```
+
+### lists
+
+Lists are defined with `{` and `}`. Within can be any content, complex or not, variables or not, and
+any nestings of such. A valid list is where all its elements adhere to the definition, and it can be
+any cardinality, including zero.
+
+**Example:**
+
+The content of the mapping with key `sub` must be a list of simple scalars.
+
+```
+root:
+  sub: {<SCALAR>}
+```
+
+**valid:**
+
+A list with only scalars
+
+```
+root:
+  sub:
+    - foo
+    - bar
+```
+
+**valid:**
+
+No value at all, which can also be interpreted as an empty list
+
+```
+root:
+  sub:
+```
+
+**invalid:**
+
+A list with a scalar and a mapping
+
+```
+root:
+  sub:
+    - foo
+    - bar: baz
+```
+
+### disjunction
+
+Indicating a range of possibilities with `|` in between the options, of which precisely one must be
+fulfilled.
+
+**example:**
+
+content of `sub` must be either a single scalar or a list of scalars.
+
+```
+root:
+  sub: <SCALAR> | {<SCALAR>} 
+```
+
+**valid:**
+
+It's a single scalar
+
+```
+root:
+  sub: foo 
+```
+
+**valid:**
+
+It's a list of scalars
+
+```
+root:
+  sub:
+    - foo
+    - bar 
+```
+
+**invalid:**
+
+It's neither a scalar nor a list of scalars, but a mapping
+
+```
+root:
+  sub:
+    foo: bar 
+```
+
+### compositions
+
+Any components described above can be arbitrarily combined and nested.
+
+**example:**
+
+A root element `root` must exist, containing two mappings. The first mapping with key `sub_1`
+must contain a scalar. The second mapping `sub_2` is entirely optional and may contain either a list
+of the variable `<SUB_CONTENT>` or a single scalar. The variable `<SUB_CONTENT>` contains two more
+mappings, where the key `sub_sub_1` must exist, but its value is optional. The other mapping
+`sub_sub_2` is optional entirely, and it contains a single mapping `sub_sub_sub` to a list of
+scalars.
+
+```
+root:
+  sub_1: <SCALAR> 
+  [sub_2: <SCALAR> | {<SUB_CONTENT>}]
+```
+
+```
+<SUB_CONTENT> ::= 
+  sub_sub_1: [<SCALAR>]
+  [sub_sub_2: 
+    sub_sub_sub: {<SCALAR>}
+  ] 
+```
+
+**valid:**
+
+```
+root:
+  sub_1: foo_1 
+```
+
+**valid:**
+
+```
+root:
+  sub_1: foo
+  sub_2: 
+    - foo_1
+    - foo_2
+    - foo_3
+```
+
+**valid:**
+
+```
+root:
+  sub_1: foo
+  sub_2:
+    sub_sub_1: foo
+```
+
+**valid:**
+
+```
+root:
+  sub_1: foo
+  sub_2:
+    sub_sub_1: foo
+    sub_sub_2:
+      sub_sub_sub:
+        - foo_1
+        - foo_2
 ```
 
 
+### arbitrary additional content
 
-TODO:
-- veld technical concept
-- pip
-- notes on notation
+Any content that is not explicitely defined  is not allowed.
+
+**example:**
+
+```
+root:
+  sub: <SCALAR>
+```
+
+**invalid:**
+```
+root:
+  sub: foo
+bar:
+```
 
 ## velds
 
@@ -50,6 +371,7 @@ x-veld:
 ```
 
 example:
+
 ```
 x-veld:
   data:
@@ -79,7 +401,9 @@ services:
     [volumes: {<VOLUME>}]
     [environment: <ENVIRONMENT>]
 ```
+
 example:
+
 ```
 x-veld:
   code:
@@ -144,7 +468,9 @@ services:
     [volumes: {<VOLUME>}]
     [environment: <ENVIRONMENT>]
 ```
+
 example:
+
 ```
 x-veld:
   chain:
@@ -173,10 +499,12 @@ services:
 
 ### \<ADDITIONAL>
 
-Any arbitrary non-veld data, expressed as any kind of yaml data (allowing single values, nested 
-key-values, lists, etc.), which might be necessary for internal use or extending functionality not covered by VELD.
+Any arbitrary non-veld data, expressed as any kind of yaml data (allowing single values, nested
+key-values, lists, etc.), which might be necessary for internal use or extending functionality not
+covered by VELD.
 
 example:
+
 ```
 additional:
   modified_on:
@@ -192,6 +520,10 @@ additional:
 
 ### \<BOOL>
 
+```
+<BOOL> ::= true | false
+```
+
 either `true` or `false`
 
 ### \<DESCRIPTION>
@@ -203,6 +535,7 @@ either `true` or `false`
 Any kind of textual description, intended for humans. Can be as long or concise as desired.
 
 example:
+
 ```
 description: training data for word embeddings
 ```
@@ -210,6 +543,7 @@ description: training data for word embeddings
 ### \<DOCKER_COMPOSE_DEFINITION>
 
 example:
+
 ```
 <DOCKER_COMPOSE_DEFINITION> ::= <SCALAR>
 ```
@@ -219,7 +553,9 @@ example:
 ```
 <ENVIRONMENT> ::= {<ENVIRONMENT_VAR_NAME>: <SCALAR>}
 ```
+
 example:
+
 ```
 ```
 
@@ -228,17 +564,22 @@ example:
 ```
 <ENVIRONMENT_VAR_NAME> ::= <SCALAR>
 ```
+
 example:
+
 ```
 ```
 
 ### \<ENV_TYPE>
 
 must be one of the following literals:
+
 ```
 <ENV_TYPE> ::= str | bool | int | float
 ```
+
 example:
+
 ```
 ```
 
@@ -247,15 +588,20 @@ example:
 ```
 <FILE_TYPE> ::= <SCALAR>
 ```
+
 example:
+
 ```
 ```
 
 example:
+
 ```
 file_type: txt
 ```
+
 example:
+
 ```
 ```
 
@@ -269,7 +615,9 @@ example:
   [file_type: <FILE_TYPE> | {<FILE_TYPE>}]
   [contents: <CONTENT> | {<CONTENT>}]
 ```
+
 example:
+
 ```
 ```
 
@@ -278,18 +626,20 @@ example:
 ```
 <PATH> ::= <SCALAR>
 ```
-example:
-```
-```
 
+example:
+
+```
+```
 
 ### \<SCALAR>
 
-Any primitive data type, i.e. not a list or a dictionary.
-example:
+Any primitive data type, i.e. not a list or a dictionary. example:
+
 ```
 this is a string
 ```
+
 ```
 42
 ```
@@ -304,7 +654,9 @@ this is a string
   [default: <SCALAR>]
   [optional: <BOOL>]
 ```
+
 example:
+
 ```
   environment: vector_size
   description: "word2vec hyperparameter: number of dimensions of the word vectors"
@@ -315,42 +667,51 @@ example:
 
 ### \<TOPIC>
 
-can be a single value or a list of single values (note that the list must be expressed as yaml 
-list, i.e. newline and a hyphen)
+can be a single value or a list of single values (note that the list must be expressed as yaml list,
+i.e. newline and a hyphen)
+
 ```
 <TOPIC> ::= <SCALAR>
 ```
+
 example:
+
 ```
 topics: NLP
 ```
+
 ```
 topics: 
   - NLP
   - word embeddings
 ```
 
-
 ### \<VELD_CODE_YAML>
 
 ```
 <VELD_CODE_YAML> ::= <SCALAR>
 ```
+
 example:
+
 ```
 
 ### \<VELD_SERVICE_NAME>
 
 ```
+
 <VELD_SERVICE_NAME> ::= <SCALAR>
+
 ```
 example:
 ```
+
 ```
 
 ### \<VOLUME>
 
 ```
+
 <VOLUME> ::= <HOST_PATH>:<CONTAINER_PATH>
 ```
 example:
