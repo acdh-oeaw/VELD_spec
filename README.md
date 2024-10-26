@@ -60,12 +60,12 @@ in yaml syntax with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E
 Any yaml file adhering to this schema becomes a valid representation of a VELD object.
 
 This is the exhaustive list of compoments that make up the VELD specification:
-- [non-variables](#non-variables)
-- [variables](#variables)
+- [non-variable](#non-variable)
+- [variable](#variable)
 - [optional](#optional)
 - [lists](#lists)
 - [disjunction](#disjunction)
-- [compositions](#compositions)
+- [composition](#composition)
 
 ### non-variables
 
