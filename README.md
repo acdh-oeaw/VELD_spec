@@ -132,14 +132,14 @@ other non-variable yaml keys `root` and `sub` need to be present exactly in such
 identical naming. (Note that `<SCALAR>` is the only variable not defined within this document as it
 refers to the yaml scalar type, defined in [yaml 1.2.2](https://yaml.org/spec/1.2.2/) itself)
 
-**variable usage**
+variable usage
 
 ```
 root:
   sub: <SOME_VALUE>
 ```
 
-**variable definition:**
+variable definition:
 
 The value `<SOME_VALUE>` can be replaced with any yaml scalar, e.g. string, integer, boolean etc.
 But no complex type like lists or mappings are allowed.
@@ -294,7 +294,7 @@ root:
 Indicating a range of possibilities with `|` in between the options, of which precisely one must be
 fulfilled.
 
-**example:**
+example:
 
 content of `sub` must be either a single scalar or a list of scalars.
 
@@ -337,7 +337,7 @@ root:
 
 Any components described above can be arbitrarily combined and nested.
 
-**example:**
+example:
 
 A root element `root` must exist, containing two mappings. The first mapping with key `sub_1`
 must contain a scalar. The second mapping `sub_2` is entirely optional and may contain either a
