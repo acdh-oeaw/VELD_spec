@@ -169,8 +169,8 @@ root:
 
 ### optional
 
-Content that is optional is marked with `[` and `]`. Inside can be groups of single non-variables or
-variables. If a collection of yaml objects is marked as optional, it must be either absent or
+Content that is optional is marked with `[` and `]`. Inside can be any other components or 
+compositions. If a collection of yaml objects is marked as optional, it must be either absent or
 present fully; partial objects are invalid.
 
 **Example:**
