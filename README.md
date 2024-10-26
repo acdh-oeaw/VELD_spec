@@ -59,9 +59,18 @@ This section is a primer on how to read the metasyntax of the VELD specification
 in yaml syntax with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form).
 Any yaml file adhering to this schema becomes a valid representation of a VELD object.
 
+This is the exhaustive list of compoments that make up the VELD specification:
+- [non-variables](#non-variables)
+- [variables](#variables)
+- [optional](#optional)
+- [lists](#lists)
+- [disjunction](#disjunction)
+- [compositions](#compositions)
+
 ### non-variables
 
-Anything that is not a variable or marked with special syntax as described below must exist as-is.
+Anything that is not a variable or marked with special syntax as described below must exist 
+as-is.
 
 **Example:**
 
@@ -88,6 +97,15 @@ This yaml content is missing the mapping `sub`
 
 ```
 root:
+```
+**invalid:**
+
+This yaml content contains a non-defined additional element `root_2`
+
+```
+root:
+  sub:
+root_2
 ```
 
 ### variables
@@ -306,7 +324,8 @@ root:
 
 ### compositions
 
-Any components described above can be arbitrarily combined and nested.
+Any components described above can be arbitrarily combined and nested. Anything that is not 
+explicitly defined is not allowed.
 
 **example:**
 
@@ -369,25 +388,6 @@ root:
       sub_sub_sub:
         - foo_1
         - foo_2
-```
-
-### arbitrary additional content
-
-Any content that is not explicitely defined is not allowed.
-
-**example:**
-
-```
-root:
-  sub: <SCALAR>
-```
-
-**invalid:**
-
-```
-root:
-  sub: foo
-bar:
 ```
 
 ## VELD specification
