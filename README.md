@@ -10,7 +10,8 @@ here: https://zenodo.org/records/13322913
 **table of contents:**
 
 - This repository also contains a pip installable validator.
-- formal specification in yaml+BNF metasyntax
+- [Formal specification in yaml+BNF metasyntax](#Formal-specification-in-yaml+BNF-metasyntax)
+- 
 - schema
     - data
     - code
@@ -18,7 +19,7 @@ here: https://zenodo.org/records/13322913
 
 ## pip
 
-## formal specification in yaml+BNF metasyntax
+## Formal specification in yaml+BNF metasyntax
 
 The metadata schema of VELD is expressed in yaml syntax
 with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form). Any yaml file
