@@ -10,7 +10,7 @@ here: https://zenodo.org/records/13322913
 **table of contents:**
 
 - This repository also contains a pip installable validator.
-- [Formal specification in yaml+BNF metasyntax](#Formal-specification-in-yaml+BNF-metasyntax)
+- [Formal specification in yaml+BNF metasyntax](#Formal-specification-in-yamlbnf-metasyntax)
 - 
 - schema
     - data
