@@ -294,7 +294,7 @@ root:
 Indicating a range of possibilities with `|` in between the options, of which precisely one must be
 fulfilled.
 
-example:
+Example:
 
 content of `sub` must be either a single scalar or a list of scalars.
 
@@ -337,7 +337,7 @@ root:
 
 Any components described above can be arbitrarily combined and nested.
 
-example:
+Example:
 
 A root element `root` must exist, containing two mappings. The first mapping with key `sub_1`
 must contain a scalar. The second mapping `sub_2` is entirely optional and may contain either a
@@ -427,7 +427,7 @@ x-veld:
     [additional: <ADDITIONAL>]
 ```
 
-example:
+Example:
 
 ```
 x-veld:
@@ -459,7 +459,7 @@ services:
     [environment: <ENVIRONMENT>]
 ```
 
-example:
+Example:
 
 ```
 x-veld:
@@ -526,7 +526,7 @@ services:
     [environment: <ENVIRONMENT>]
 ```
 
-example:
+Example:
 
 ```
 x-veld:
@@ -562,7 +562,7 @@ Any arbitrary non-veld data, expressed as any kind of yaml data (allowing single
 key-values, lists, etc.), which might be necessary for internal use or extending functionality not
 covered by VELD.
 
-example:
+Example:
 
 ```
 additional:
@@ -593,7 +593,7 @@ either `true` or `false`
 
 Any kind of textual description, intended for humans. Can be as long or concise as desired.
 
-example:
+Example:
 
 ```
 description: training data for word embeddings
@@ -601,7 +601,7 @@ description: training data for word embeddings
 
 #### \<DOCKER_COMPOSE_DEFINITION>
 
-example:
+Example:
 
 ```
 <DOCKER_COMPOSE_DEFINITION> ::= <SCALAR>
@@ -613,7 +613,7 @@ example:
 <ENVIRONMENT> ::= {<ENVIRONMENT_VAR_NAME>: <SCALAR>}
 ```
 
-example:
+Example:
 
 ```
 ```
@@ -624,7 +624,7 @@ example:
 <ENVIRONMENT_VAR_NAME> ::= <SCALAR>
 ```
 
-example:
+Example:
 
 ```
 ```
@@ -637,7 +637,7 @@ must be one of the following literals:
 <ENV_TYPE> ::= str | bool | int | float
 ```
 
-example:
+Example:
 
 ```
 ```
@@ -648,18 +648,18 @@ example:
 <FILE_TYPE> ::= <SCALAR>
 ```
 
-example:
+Example:
 
 ```
 ```
 
-example:
+Example:
 
 ```
 file_type: txt
 ```
 
-example:
+Example:
 
 ```
 ```
@@ -675,7 +675,7 @@ example:
   [contents: <CONTENT> | {<CONTENT>}]
 ```
 
-example:
+Example:
 
 ```
 ```
@@ -686,14 +686,16 @@ example:
 <PATH> ::= <SCALAR>
 ```
 
-example:
+Example:
 
 ```
 ```
 
 #### \<SCALAR>
 
-Any primitive data type, i.e. not a list or a dictionary. example:
+Any primitive data type, i.e. not a list or a dictionary. 
+
+Example:
 
 ```
 this is a string
@@ -714,7 +716,7 @@ this is a string
   [optional: <BOOL>]
 ```
 
-example:
+Example:
 
 ```
   environment: vector_size
@@ -733,7 +735,7 @@ i.e. newline and a hyphen)
 <TOPIC> ::= <SCALAR>
 ```
 
-example:
+Example:
 
 ```
 topics: NLP
@@ -751,7 +753,7 @@ topics:
 <VELD_CODE_YAML> ::= <SCALAR>
 ```
 
-example:
+Example:
 
 ```
 ```
@@ -762,7 +764,7 @@ example:
 <VELD_SERVICE_NAME> ::= <SCALAR>
 ```
 
-example:
+Example:
 
 ```
 ```
@@ -773,7 +775,7 @@ example:
 <VOLUME> ::= <HOST_PATH>:<CONTAINER_PATH>
 ```
 
-example:
+Example:
 
 ```
 ```
