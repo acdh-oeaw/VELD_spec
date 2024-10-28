@@ -290,28 +290,32 @@ def read_schema():
                 },
                 "variables": {},
             }
+            has_reached_spec = False
             for line_n, line in enumerate(f, start=1):
-                if line.startswith("###"):
-                    data_block_header = line.replace("#", "").replace("\n", "").strip().split(" ")[0]
-                    is_example = False
-                elif data_block_header != "":
-                    if line == "example:\n":
-                        is_example = True
-                    elif not is_example:
-                        if line.startswith("```"):
-                            data_block_counter += 1
-                        elif data_block_counter == 1:
-                            data_block += line
-                        if data_block_counter == 2:
-                            node = parse_data_block(data_block)
-                            if type(node) is NodeVariableDefinition:
-                                schema_with_variables["variables"][node.content.content] = node.target
-                            else:
-                                schema_with_variables["velds"][data_block_header] = node
-                            data_block_header = ""
-                            data_block_counter = 0
-                            data_block = ""
-                            is_example = False
+                if line == "## VELD specification\n":
+                    has_reached_spec = True
+                if has_reached_spec:
+                    if line.startswith("###"):
+                        data_block_header = line.replace("#", "").replace("\n", "").strip().split(" ")[0]
+                        is_example = False
+                    elif data_block_header != "":
+                        if line == "Example:\n":
+                            is_example = True
+                        elif not is_example:
+                            if line.startswith("```"):
+                                data_block_counter += 1
+                            elif data_block_counter == 1:
+                                data_block += line
+                            if data_block_counter == 2:
+                                node = parse_data_block(data_block)
+                                if type(node) is NodeVariableDefinition:
+                                    schema_with_variables["variables"][node.content.content] = node.target
+                                else:
+                                    schema_with_variables["velds"][data_block_header] = node
+                                data_block_header = ""
+                                data_block_counter = 0
+                                data_block = ""
+                                is_example = False
             schema = resolve_variables(schema_with_variables)
             return schema
     
