@@ -846,6 +846,12 @@ additional:
 The target folder inside a container of a code veld. Used within `<VOLUME>`. 
 
 ```
+<CONTAINER_PATH> ::= <SCALAR>
+```
+
+Example:
+
+```
 x-veld:
   code:
     ...
