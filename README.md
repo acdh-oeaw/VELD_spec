@@ -69,7 +69,7 @@ This section is a primer on how to read the metasyntax of the VELD specification
 in yaml syntax with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form).
 Any yaml file adhering to this schema becomes a valid representation of a VELD object.
 
-This is the exhaustive list of compoments that make up the VELD specification:
+This is the exhaustive list of components that make up the VELD specification:
 
 - [non-variable](#non-variable)
 - [variable](#variable)
@@ -84,8 +84,8 @@ Anything that is not a variable or marked with special syntax as described below
 
 Example:
 
-A yaml file adhering to the schema must have a [mapping](https://yaml.org/spec/1.2.2/#nodes) at the
-root named `root` containing a child mapping `sub` which must be empty
+A yaml file adhering to the example schema below must have a [mapping](https://yaml.org/spec/1.2.
+2/#nodes) at the root named `root` containing a child mapping `sub` which must be empty
 
 ```
 root:
@@ -132,7 +132,7 @@ other non-variable yaml keys `root` and `sub` need to be present exactly in such
 identical naming. (Note that `<SCALAR>` is the only variable not defined within this document as it
 refers to the yaml scalar type, defined in [yaml 1.2.2](https://yaml.org/spec/1.2.2/) itself)
 
-variable usage
+variable usage:
 
 ```
 root:
@@ -159,7 +159,7 @@ root:
 
 invalid:
 
-`foo` is not a scalar, but a more complex mapping
+`foo` is not a scalar, but a mapping
 
 ```
 root:
@@ -325,7 +325,7 @@ root:
 
 invalid:
 
-It's neither a scalar nor a list of scalars, but a mapping
+is neither a scalar nor a list of scalars, but a mapping
 
 ```
 root:
@@ -414,7 +414,7 @@ The following sections contain the specifications for the three VELD objects and
 - [chain veld](#chain-veld)
 - [VELD variables](#veld-variables)
 
-Details and reasonings on this design are discussed in greater depth in the Technical Concept found
+Details and reasoning on this design are discussed in greater depth in the Technical Concept found
 here: https://zenodo.org/records/13322913
 
 As a very brief introduction, the three VELD objects represents units which are functionally
@@ -1369,10 +1369,10 @@ services:
 A docker compose volume. It is integral to the VELD design as this defines the interface between
 code / chain velds and data velds. It is the bridge between host `<HOST_PATH>` and container
 `<CONTAINER_PATH>` and understanding of this core docker functionality is essential to the
-understanding of the VELD design principles. The `<CONTAINER_PATH>` path is defined in the 
-metadata section of a code veld, communicating where it expects what kind of data. If a code 
-veld is used to be as a stand-alone it should also already provide template docker compose 
-mappings so that data can be mounted ad-hoc.
+understanding of the VELD design principles. The `<CONTAINER_PATH>` path is defined in the metadata
+section of a code veld, communicating where it expects what kind of data. If a code veld is used to
+be as a stand-alone it should also already provide template docker compose mappings so that data can
+be mounted ad-hoc.
 
 ```
 <VOLUME> ::= <HOST_PATH>:<CONTAINER_PATH>
@@ -1380,9 +1380,8 @@ mappings so that data can be mounted ad-hoc.
 
 Example:
 
-This code veld communicates that it stores output under the container path `/veld/output/`, and 
-it also provides some docker compose mapping out of the box, should the code veld be used 
-stand-alone. 
+This code veld communicates that it stores output under the container path `/veld/output/`, and it
+also provides some docker compose mapping out of the box, should the code veld be used stand-alone.
 
 ```
 x-veld:
