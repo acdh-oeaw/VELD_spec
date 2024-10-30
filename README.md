@@ -841,9 +841,21 @@ additional:
   by: SteffRhes
 ```
 
-### \<CONTAINER_PATH>
+#### \<CONTAINER_PATH>
+
+The target folder inside a container of a code veld. Used within `<VOLUME>`. 
 
 ```
+x-veld:
+  code:
+    ...
+    outputs:
+      - volume: /veld/output/ # <CONTAINER_PATH>
+services:
+  veld_download_and_extract:
+    volumes:
+      - ./src/:/veld/code/ # <CONTAINER_PATH>
+      - ./data/wikipedia_json/:/veld/output/ # <CONTAINER_PATH>
 ```
 
 #### \<CONTENT>
