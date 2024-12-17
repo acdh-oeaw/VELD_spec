@@ -292,7 +292,7 @@ def read_schema():
             data_block_counter = 0
             data_block = ""
             is_example = False
-            schema_with_variables = {
+            schema = {
                 "velds": {
                     "data": None,
                     "code": None,
@@ -319,14 +319,14 @@ def read_schema():
                             if data_block_counter == 2:
                                 node = parse_data_block(data_block)
                                 if type(node) is NodeVariableDefinition:
-                                    schema_with_variables["variables"][node.content.content] = node.target
+                                    schema["variables"][node.content.content] = node.target
                                 else:
-                                    schema_with_variables["velds"][data_block_header] = node
+                                    schema["velds"][data_block_header] = node
                                 data_block_header = ""
                                 data_block_counter = 0
                                 data_block = ""
                                 is_example = False
-            schema = resolve_variables(schema_with_variables)
+            schema = resolve_variables(schema)
             return schema
     
     return read_schema_main()
