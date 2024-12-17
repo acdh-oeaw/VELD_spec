@@ -204,12 +204,22 @@ def read_schema():
                     node = state_symbol()
                     continue
                 cs.next()
+                
+        def state_comment():
+            while cs.has_char():
+                if cs.char != "\n":
+                    cs.next()
+                else:
+                    break
             
         def state_line_beginning(indentation_level_previous):
             node = None
             indentation_level = 0
             while cs.has_char():
-                if cs.char == "\n":
+                if cs.char == "#":
+                    state_comment()
+                    continue
+                elif cs.char == "\n":
                     indentation_level = 0
                 elif cs.char == " ":
                     indentation_level += 1
