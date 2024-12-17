@@ -7,31 +7,31 @@ from veld_spec import validate
 class TestVeldMetadata(unittest.TestCase):
     
     def test_chain_barebone_valid(self):
-        result = validate(yaml_to_validate="./veld_yaml_files/chain_barebone_valid.yaml")
+        result = validate(yaml_to_validate="./tests/veld_yaml_files/chain_barebone_valid.yaml")
         self.assertTrue(result[0])
     
     def test_chain_barebone_invalid(self):
-        result = validate(yaml_to_validate="./veld_yaml_files/chain_barebone_invalid.yaml")
+        result = validate(yaml_to_validate="./tests/veld_yaml_files/chain_barebone_invalid.yaml")
         self.assertFalse(result[0])
     
     def test_code_barebone_valid(self):
-        result = validate(yaml_to_validate="./veld_yaml_files/code_barebone_valid.yaml")
+        result = validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_valid.yaml")
         self.assertTrue(result[0])
     
     def test_code_barebone_invalid(self):
-        result = validate(yaml_to_validate="./veld_yaml_files/code_barebone_invalid.yaml")
+        result = validate(yaml_to_validate="./tests/veld_yaml_files/code_barebone_invalid.yaml")
         self.assertFalse(result[0])
     
     def test_data_barebone_valid(self):
-        result = validate(yaml_to_validate="./veld_yaml_files/data_barebone_valid.yaml")
+        result = validate(yaml_to_validate="./tests/veld_yaml_files/data_barebone_valid.yaml")
         self.assertTrue(result[0])
     
     def test_data_barebone_invalid(self):
-        result = validate(yaml_to_validate="./veld_yaml_files/data_barebone_invalid.yaml")
+        result = validate(yaml_to_validate="./tests/veld_yaml_files/data_barebone_invalid.yaml")
         self.assertFalse(result[0])
         
     def test_production_velds(self):
-        production_velds_folder = "./veld_yaml_files/production_velds/"
+        production_velds_folder = "./tests/veld_yaml_files/production_velds/"
         num_correct = 0
         num_incorrect = 0
         for veld_file in os.listdir(production_velds_folder):
@@ -45,3 +45,7 @@ class TestVeldMetadata(unittest.TestCase):
                 num_correct += 1
         print("num_correct:", num_correct)
         print("num_incorrect:", num_incorrect)
+
+
+if __name__ == "__main__":
+    unittest.main()

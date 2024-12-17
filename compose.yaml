@@ -1,8 +1,9 @@
 
 services:
-  veld_spec:
+
+  veld_spec_test:
     build: .
-    command: python /app/main.py
+    command: python ./tests/test.py
     working_dir: /app/
     volumes:
       - ./:/app/
