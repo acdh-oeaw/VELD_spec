@@ -1,0 +1,137 @@
+x-veld:
+  chain:
+    description: "udpipe inference setup, reading in preprocessed ELTeC data"
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "tokenization"
+      - "lemmatization"
+      - "part of speech"
+      - "dependency parsing"
+      - "universal dependencies"
+      - "grammatical annotation"
+
+# define some variables here once, so that following services can reuse it
+x-vars: 
+  - &var_extends_infer
+    file: ./code/veld_code__udpipe/veld_infer.yaml
+    service: veld_infer
+  - &var_extends_downloader
+    file: ./code/veld_code__downloader/veld.yaml
+    service: veld_downloader
+  - &var_volumes
+    - ./data/data_tmp_txt_transformed/:/veld/input/txt/
+    - ./data/data_tmp_conllu_inferenced/:/veld/output/
+
+services:
+
+
+  # cze inference
+
+  veld_download_cze:
+    extends: *var_extends_downloader
+    volumes:
+      - ./data/data_tmp_udpipe_models/cze/:/veld/output/
+    environment:
+      url: "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131/czech-pdt-ud-2.5-191206.udpipe"
+
+  veld_infer_cze:
+    extends: *var_extends_infer
+    volumes:
+      - ./data/data_tmp_txt_transformed/ELTeC-cze/level1/:/veld/input/txt/
+      - ./data/data_tmp_udpipe_models/cze/:/veld/input/model/
+      - ./data/data_tmp_conllu_inferenced/ELTeC-cze/level1/:/veld/output/
+    environment:
+      in_model_file: "czech-pdt-ud-2.5-191206.udpipe"
+    depends_on:
+      veld_download_cze:
+        condition: service_completed_successfully
+
+
+  # deu inference
+
+  veld_download_deu:
+    extends: *var_extends_downloader
+    volumes:
+      - ./data/data_tmp_udpipe_models/deu/:/veld/output/
+    environment:
+      url: "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131/german-hdt-ud-2.5-191206.udpipe"
+  
+  veld_infer_deu:
+    extends: *var_extends_infer
+    volumes:
+      - ./data/data_tmp_txt_transformed/ELTeC-deu/level1/:/veld/input/txt/
+      - ./data/data_tmp_udpipe_models/deu/:/veld/input/model/
+      - ./data/data_tmp_conllu_inferenced/ELTeC-deu/level1/:/veld/output/
+    environment:
+      in_model_file: "german-hdt-ud-2.5-191206.udpipe"
+    depends_on:
+      veld_download_deu:
+        condition: service_completed_successfully
+
+
+  # eng inference
+
+  veld_download_eng:
+    extends: *var_extends_downloader
+    volumes:
+      - ./data/data_tmp_udpipe_models/eng/:/veld/output/
+    environment:
+      url: "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131/english-ewt-ud-2.5-191206.udpipe"
+  
+  veld_infer_eng:
+    extends: *var_extends_infer
+    volumes:
+      - ./data/data_tmp_txt_transformed/ELTeC-eng/level1/:/veld/input/txt/
+      - ./data/data_tmp_udpipe_models/eng/:/veld/input/model/
+      - ./data/data_tmp_conllu_inferenced/ELTeC-eng/level1/:/veld/output/
+    environment:
+      in_model_file: "english-ewt-ud-2.5-191206.udpipe"
+    depends_on:
+      veld_download_eng:
+        condition: service_completed_successfully
+
+
+  # fra inference
+
+  veld_download_fra:
+    extends: *var_extends_downloader
+    volumes:
+      - ./data/data_tmp_udpipe_models/fra/:/veld/output/
+    environment:
+      url: "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131/french-gsd-ud-2.5-191206.udpipe"
+  
+  veld_infer_fra:
+    extends: *var_extends_infer
+    volumes:
+      - ./data/data_tmp_txt_transformed/ELTeC-fra/level1/:/veld/input/txt/
+      - ./data/data_tmp_udpipe_models/fra/:/veld/input/model/
+      - ./data/data_tmp_conllu_inferenced/ELTeC-fra/level1/:/veld/output/
+    environment:
+      in_model_file: "french-gsd-ud-2.5-191206.udpipe"
+    depends_on:
+      veld_download_fra:
+        condition: service_completed_successfully
+
+
+  # spa inference
+
+  veld_download_spa:
+    extends: *var_extends_downloader
+    volumes:
+      - ./data/data_tmp_udpipe_models/spa/:/veld/output/
+    environment:
+      url: "https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11234/1-3131/spanish-gsd-ud-2.5-191206.udpipe"
+  
+  veld_infer_spa:
+    extends: *var_extends_infer
+    volumes:
+      - ./data/data_tmp_txt_transformed/ELTeC-spa/level1/:/veld/input/txt/
+      - ./data/data_tmp_udpipe_models/spa/:/veld/input/model/
+      - ./data/data_tmp_conllu_inferenced/ELTeC-spa/level1/:/veld/output/
+    environment:
+      in_model_file: "spanish-gsd-ud-2.5-191206.udpipe"
+    depends_on:
+      veld_download_spa:
+        condition: service_completed_successfully
+

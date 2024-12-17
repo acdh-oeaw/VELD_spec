@@ -1,0 +1,29 @@
+x-veld:
+  chain:
+
+services:
+  veld_train_glove:
+    extends:
+      file: ./code/veld_code__glove/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./data/veld_data__amc_we_training_data/data/203_vert_rftt_inhalt_nodup__uniq__stripped__sampled__lowercased__punctuation_removed__cleaned/:/veld/input/:z
+      - ./data/veld_data__glove_models/data/m4/:/veld/output/:z
+    environment:
+      in_corpus_file: "data.txt"
+      out_vocab_file: "m4_vocab.txt"
+      out_cooccurrence_file: "m4_cooccurrence.bin"
+      out_cooccurrence_shuf_file: "m4_cooccurrence_shuf.bin"
+      out_vector_file: "m4_vector"
+      model_id: "m4"
+      model_description: "10% AMC model"
+      verbose: 2
+      memory: 4.0
+      vocab_min_count: 5
+      vector_size: 200
+      max_iter: 10
+      window_size: 15
+      binary: 2
+      num_threads: 14
+      x_max: 10
+

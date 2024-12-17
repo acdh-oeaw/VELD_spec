@@ -1,0 +1,19 @@
+x-veld:
+  chain:
+    description: "downloading wikipedia archive and extracting each article to a json file."
+    topics:
+      - "NLP"
+      - "Machine Learning"
+      - "ETL"
+
+services:
+
+  veld_preprocess_download_and_extract:
+    extends:
+      file: ./code/veld_code__wikipedia_nlp_preprocessing/veld_download_and_extract.yaml
+      service: veld_download_and_extract
+    volumes:
+      - ./data/training_data/extracted/:/veld/output/:z
+    environment:
+      wikipedia_dump_url: https://dumps.wikimedia.org/dewiki/latest/dewiki-latest-pages-articles.xml.bz2
+

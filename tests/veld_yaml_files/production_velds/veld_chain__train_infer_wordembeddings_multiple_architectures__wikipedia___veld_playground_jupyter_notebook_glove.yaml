@@ -1,0 +1,14 @@
+x-veld:
+  chain:
+    description: "jupyter notebook for playing with glove models"
+    topics: "NLP"
+
+services:
+  veld_jupyter_notebook_glove:
+    extends:
+      file: ./code/veld_code__glove/veld_jupyter_notebook.yaml
+      service: veld_jupyter_notebook
+    volumes:
+      - ./data/training_data/:/veld/storage/training_data/:z
+      - ./data/models/glove/:/veld/storage/models/:z
+

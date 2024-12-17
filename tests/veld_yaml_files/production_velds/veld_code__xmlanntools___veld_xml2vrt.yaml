@@ -1,0 +1,87 @@
+x-veld:
+  code:
+    description: "A demo code veld, integrating the xml2vrt script. For more documentation, 
+      see: https://github.com/czcorpus/xmlanntools?tab=readme-ov-file#xml2vrt"
+    topics:
+      - NLP
+      - ETL
+
+    inputs:
+      - volume: /veld/input/data/
+        environment: in_ann_xml_file
+        file_type: xml
+      - volume: /veld/input/config/
+        environment: in_ann2standoff_ini_file
+        file_type: ini
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_conlluish_xml_file
+        file_type: xml
+
+    settings:
+      - environment: attributes
+        env_type: str
+        optional: true
+      - environment: token_element
+        env_type: str
+        optional: true
+      - environment: include_elements
+        env_type: str
+        optional: true
+      - environment: exclude_elements
+        env_type: str
+        optional: true
+      - environment: keep_token_tags
+        env_type: bool
+        default: false
+        optional: true
+      - environment: keep_empty
+        env_type: bool
+        default: false
+        optional: true
+      - environment: discard_freetext
+        env_type: bool
+        default: false
+        optional: true
+      - environment: no_glue
+        env_type: bool
+        default: false
+        optional: true
+      - environment: glue
+        env_type: str
+        optional: true
+      - environment: fragment
+        env_type: bool
+        default: false
+        optional: true
+      - environment: no_flattening
+        env_type: bool
+        default: false
+        optional: true
+
+services:
+  veld_xml2vrt:
+    build: .
+    volumes:
+      - ./:/veld/code/
+      - ./data/xml2vrt/in/data/:/veld/input/data/
+      - ./data/xml2vrt/in/config/:/veld/input/config/
+      - ./data/xml2vrt/out/:/veld/output/
+    command: ./veld_xml2vrt.sh
+    environment:
+      in_ann_xml_file: null
+      in_ann2standoff_ini_file: null
+      out_conlluish_xml_file: null
+      attributes: null
+      token_element: null
+      include_elements: null
+      exclude_elements: null
+      keep_token_tags: false
+      keep_empty: false
+      discard_freetext: false
+      no_glue: false
+      glue: null
+      fragment: false
+      no_flattening: false
+

@@ -1,0 +1,54 @@
+x-veld:
+  code:
+    description: "A demo code veld, integrating the standoff2xml script. For more documentation, 
+      see: https://github.com/czcorpus/xmlanntools?tab=readme-ov-file#standoff2xml"
+    topics:
+      - NLP
+      - ETL
+
+    inputs:
+      - volume: /veld/input/
+        environment: in_txt_file
+        file_type: txt
+      - volume: /veld/input/
+        environment: in_json_file
+        file_type: json
+      - volume: /veld/input/
+        environment: in_ann_json_file
+        file_type: json
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_ann_xml_file
+        file_type: xml
+
+    settings:
+      - environment: token_annotation
+        env_type: bool
+        default: false
+        optional: true
+      - environment: warn_breaking
+        env_type: str
+        optional: true
+      - environment: keep_between_sentences
+        env_type: bool
+        default: false
+        optional: true
+
+services:
+  veld_standoff2xml:
+    build: .
+    volumes:
+      - ./:/veld/code/
+      - ./data/standoff2xml/in/:/veld/input/
+      - ./data/standoff2xml/out/:/veld/output/
+    command: ./veld_standoff2xml.sh
+    environment:
+      in_txt_file: null
+      in_json_file: null
+      in_ann_json_file: null
+      out_ann_xml_file: null
+      token_annotation: false
+      warn_breaking: null
+      keep_between_sentences: false
+

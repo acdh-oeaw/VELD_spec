@@ -1,0 +1,18 @@
+x-veld:
+  data:
+    description: 100% AMC model
+    file_type: bin
+    contents:
+    - word embeddings model
+    - fasttext model
+    additional:
+      model_id: m7
+      train_data_description: null
+      training_architecture: fasttext
+      train_data_size: 54G
+      train_data_md5_hash: 7e9b50396f77babeef827beff7e506ef
+      training_epochs: 10
+      training_vector_size: 200
+      training_window_size: 5
+      training_duration (minutes): 3380
+      model_data_size: 12G

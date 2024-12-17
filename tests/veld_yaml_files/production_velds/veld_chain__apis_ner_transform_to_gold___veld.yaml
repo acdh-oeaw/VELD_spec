@@ -1,0 +1,24 @@
+x-veld:
+  chain:
+    description: "Conversion of apis ner model data to harmonized custom json format."
+    topics:
+      - "ETL"
+      - "data cleaning"
+
+services:
+  veld:
+    extends:
+      file: ./code/veld_code__apis_ner_transform_to_gold/veld.yaml
+      service: veld
+    volumes:
+      - ./data/veld_data__apis_spacy_ner_legacy/:/veld/input/
+      - ./data/veld_data__apis_oebl__ner_gold/data_uncleaned:/veld/output/uncleaned/
+      - ./data/veld_data__apis_oebl__ner_gold/data_cleaned:/veld/output/cleaned/
+      - ./data/veld_data__apis_oebl__ner_gold/data_cleaned_simplified:/veld/output/cleaned_simplified/
+      - ./:/veld/output/log/
+    environment:
+      out_json_uncleaned_file: "uncleaned.json"
+      out_json_cleaned_file: "cleaned.json"
+      out_json_cleaned_simplified_file: "cleaned_simplified.json"
+      out_log_file: "extract_and_clean.log"
+

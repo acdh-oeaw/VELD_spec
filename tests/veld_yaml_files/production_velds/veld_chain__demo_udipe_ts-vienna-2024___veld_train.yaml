@@ -1,0 +1,22 @@
+x-veld:
+  chain:
+    description: "A demonstration of a VELD chain training a udpipe model from scratch"
+    topics:
+    - NLP
+    - universal dependencies
+
+services:
+  veld_train:
+    extends:
+      file: ./code/veld_code__udpipe/veld_train.yaml
+      service: veld_train
+    volumes:
+      - ./data/veld_data__demo_train_data_ts-vienna-2024/:/veld/input/
+      - ./data/veld_data__demo_updipe_models_ts-vienna-2024/:/veld/output/
+    environment:
+      train_data_path: "en_ewt-ud.conllu"
+      model_path: "en_ewt-ud.udpipe"
+      tokenizer_epochs: 2
+      tagger_iterations: 2
+      parser_iterations: 2
+

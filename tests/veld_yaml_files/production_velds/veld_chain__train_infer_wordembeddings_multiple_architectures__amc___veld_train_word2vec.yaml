@@ -1,0 +1,19 @@
+x-veld:
+  chain:
+
+services:
+  veld_train_word2vec:
+    extends:
+      file: ./code/veld_code__word2vec/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./data/veld_data__amc_we_training_data/data/203_vert_rftt_inhalt_nodup__uniq__stripped__lowercased__punctuation_removed__cleaned/:/veld/input/:z
+      - ./data/veld_data__word2vec_models/m8/:/veld/output/:z
+    environment:
+      in_train_data_file: "data.txt"
+      out_model_file: "m8.bin"
+      model_description: "100% AMC model"
+      epochs: 10
+      vector_size: 300
+      window: 10
+

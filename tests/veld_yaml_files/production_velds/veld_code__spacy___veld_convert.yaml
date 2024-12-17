@@ -1,0 +1,71 @@
+x-veld:
+  code:
+    description: "prepare data for spacy NER training, since spacy expects the entity annotation
+      indices to be precisely at the beginning and end of the words, and also no overlapping
+      entity annotations. Then it converts the data to spaCy docbin, and prepares it for training
+      by splitting it into train, dev, eval subsets, and shuffling them randomly."
+    topics:
+      - "ETL"
+      - "NLP"
+      - "Machine learning"
+
+    inputs:
+      - volume: /veld/input/
+        file_type: "json"
+        description: "name of the csv file, containing NER gold data"
+        environment: in_json_file
+        contents: "NER gold data"
+
+    outputs:
+      - volume: /veld/output/docbin/
+        description: "path to folder where spacy docbin files will be stored with file names
+          `train.spacy, dev.spacy, eval.spacy`"
+        file_type: "spacy docbin"
+        contents: "NER gold data"
+      - volume: /veld/output/log/
+        environment: out_log_file
+        description: "log file of conversion"
+        file_type: "spacy docbin"
+        contents: "NER gold data"
+
+    settings:
+      - environment: model_base
+        description: "spacy model to be used for conversion."
+        env_type: str
+      - environment: percentage_train
+        description: "percentage of data allocated to training set"
+        env_type: "int"
+        default: 80
+      - environment: percentage_dev
+        description: "percentage of data allocated to dev set"
+        env_type: "int"
+        default: 10
+      - environment: percentage_eval
+        description: "percentage of data allocated to eval set"
+        env_type: "int"
+        default: 10
+      - environment: seed
+        description: "seed for initial random shuffling of training data"
+        env_type: "int"
+        default: 42
+
+services:
+  veld_convert:
+    build: .
+    command: python /veld/code/convert.py
+    #command: bash -c 'ls /root/ && touch /root/bla && ls /root/'
+    volumes:
+      - ./src/:/veld/code/
+      - ./data/models_base_cache/:/tmp/models_base_cache/
+      - ./data/training_data_json/:/veld/input/
+      - ./data/docbin/:/veld/output/docbin/
+      - ./:/veld/output/log/
+    environment:
+      in_json_file: null
+      out_log_file: null
+      model_base: null
+      percentage_train: 80
+      percentage_dev: 10
+      percentage_eval: 10
+      seed: 42
+

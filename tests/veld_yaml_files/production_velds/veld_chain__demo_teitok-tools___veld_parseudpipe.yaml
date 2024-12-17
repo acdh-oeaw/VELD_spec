@@ -1,0 +1,35 @@
+x-veld:
+  chain:
+    description: "This chain veld exemplifies usage of the respective code veld. For more 
+      information on the underlying tool and its usage, see: 
+      https://github.com/ufal/teitok-tools?tab=readme-ov-file#parseudpipe"
+    topics:
+      - NLP
+      - ETL
+      - tokenization
+      - universal dependencies
+
+services:
+  veld_parseudpipe:
+    extends:
+      file: ./code/veld_code__teitok-tools/veld_parseudpipe.yaml
+      service: veld_parseudpipe
+    volumes:
+      - ./data/parseudpipe/in/:/veld/input/
+      - ./data/parseudpipe/out/:/veld/output/
+    environment:
+      in_xml_file: DEU001_tokenized.xml
+      out_xml_file: DEU001.xml
+      model: german-hdt-ud-2.6-200830
+      sent: p
+      # TODO: set better example on usage
+      #token: null
+      # TODO: set better example on usage
+      #tokxp: null
+      # TODO: set better example on usage
+      #sent: null
+      # TODO: set better example on usage
+      #sentxp: null
+      # TODO: set better example on usage
+      #atts: null
+

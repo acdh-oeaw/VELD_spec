@@ -1,0 +1,24 @@
+x-veld:
+  data:
+    description: 100% AMC model
+    file_type: bin
+    topics:
+    - NLP
+    - word embeddings
+    contents:
+    - word embeddings model
+    - word2vec model
+    additional:
+      model_id: m9
+      training_architecture: word2vec
+      train_data_description: 'Entire AMC: unique sentences, stripped from non-alphanumeric
+        lines, lowercased, punctuation removed, removed sentences with too many non-alphanumeric
+        characters.'
+      train_data_size: 54G
+      train_data_md5_hash: 7e9b50396f77babeef827beff7e506ef
+      training_vector_size: 200
+      training_epochs: 10
+      window: 10
+      min_count: 5
+      training_duration (minutes): 1847
+      model_data_size: 261M

@@ -1,0 +1,20 @@
+x-veld:
+  chain:
+
+services:
+  veld_eval_word2vec:
+    extends:
+      file: ./code/veld_code__wordembeddings_evaluation/veld_eval_word2vec.yaml
+      service: veld_eval_word2vec
+    volumes:
+      - ./data/veld_data__word2vec_models/m9/:/veld/input/1/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_gold_data/lowercase/:/veld/input/2/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/:/veld/output/1/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/logs/word2vec/:/veld/output/2:z
+    environment:
+      in_1_model_file: "m9.bin"
+      in_1_model_metadata_file: "veld.yaml"
+      in_2_eval_gold_data_file: "eval_data_lowercase.yaml"
+      out_1_eval_summary_file: "summary.yaml"
+      out_2_eval_log_file: "m9.txt"
+

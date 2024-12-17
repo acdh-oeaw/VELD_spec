@@ -1,0 +1,16 @@
+x-veld:
+  chain:
+    description: "publish SpaCy text classification models trained during the MARA project to
+      huggingface"
+    topics:
+      - "NLP"
+
+services:
+  # this is for now just testing if the old models can be loaded correctly
+  veld_publish_to_hf:
+    build: ./code/mara-nlp-suite__spacy-build/
+    command: python /veld/code/test.py
+    volumes:
+      - ./code/mara-nlp-suite__spacy-build/test.py:/veld/code/test.py
+      - ./data/mara-nlp-suite-internal/data_internal/models/mo3/:/veld/input/
+

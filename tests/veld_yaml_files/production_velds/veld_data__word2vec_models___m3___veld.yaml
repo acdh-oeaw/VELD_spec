@@ -1,0 +1,24 @@
+x-veld:
+  data:
+    description: 10% AMC model
+    file_type: bin
+    topics:
+    - NLP
+    - word embeddings
+    contents:
+    - word embeddings model
+    - word2vec model
+    additional:
+      model_id: m3
+      training_architecture: word2vec
+      train_data_description: 'AMC data: stripped from non-alphanumeric lines, 10%
+        sampled, lowercased, punctuation removed, cleaned from lines not having enough
+        text'
+      train_data_size: 5.4G
+      train_data_md5_hash: 33167f260dbf99fa3ceebc3563302954
+      training_vector_size: 200
+      training_epochs: 10
+      window: 5
+      min_count: 5
+      training_duration (minutes): 165.3
+      model_data_size: 2.4G

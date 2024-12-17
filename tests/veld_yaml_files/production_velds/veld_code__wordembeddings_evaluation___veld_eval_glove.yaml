@@ -1,0 +1,56 @@
+x-veld:
+  code:
+    description: "custom evaluation logic on GloVe word embeddings."
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "evaluation"
+
+    inputs:
+      - volume: /veld/input/model/
+        environment: in_vector_file
+        file_type: "GloVe vector model"
+        contents:
+          - "NLP model"
+          - "word embeddings model"
+      - volume: /veld/input/model/
+        environment: in_model_metadata_file
+        file_type: "yaml"
+        contents: "metadata"
+      - volume: /veld/input/eval_data/
+        environment: in_eval_gold_data_file
+        file_type: "yaml"
+        contents: "NLP gold data"
+
+    outputs:
+      - volume: /veld/output/summary/
+        environment: out_eval_summary_file
+        file_type: "yaml"
+        description: ""
+        contents: ""
+      - volume: /veld/output/log/
+        environment: out_eval_log_file
+        file_type: "txt"
+        contents: "logs"
+
+    settings:
+      - environment: model_id
+        description: "id of the model"
+        env_type: "str"
+
+services:
+  veld_eval_glove:
+    build: 
+      context: .
+      dockerfile: ./build_glove.dockerfile
+    command: python3 eval_glove.py
+    volumes:
+      - ./src/:/veld/code/:z
+    environment:
+      in_1_vector_file: null
+      model_id: null
+      in_1_model_metadata_file: null
+      in_2_eval_gold_data_file: null
+      out_1_eval_summary_file: null
+      out_2_eval_log_file: null
+

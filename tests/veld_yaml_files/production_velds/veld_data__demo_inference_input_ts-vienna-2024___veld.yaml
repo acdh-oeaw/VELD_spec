@@ -1,0 +1,11 @@
+x-veld:
+  data:
+    file_type: txt
+    description: "A single txt file, used as inference input to a self-trained updipe model as a
+      demonstration"
+    topics:
+      - NLP
+      - universal dependencies
+    contents:
+      - raw text
+

@@ -1,0 +1,34 @@
+x-veld:
+  chain:
+    description: "preprocessing by making the entire text lowercase."
+    topics: "NLP"
+
+services:
+
+  veld_preprocess_lowercase_articles:
+    extends:
+      file: ./code/veld_code__wordembeddings_preprocessing/veld_preprocess_lowercase.yaml
+      service: veld_preprocess_lowercase
+    volumes:
+      - ./data/training_data/extracted__txt_article_per_line/:/veld/input/:z
+      - ./data/training_data/extracted__txt_article_per_line__lowercased/:/veld/output/:z
+    environment:
+      in_txt_file: "data.txt"
+      out_txt_file: "data.txt"
+      out_data_description: "all data lowercased"
+
+  veld_preprocess_lowercase_sentences:
+    extends:
+      file: ./code/veld_code__wordembeddings_preprocessing/veld_preprocess_lowercase.yaml
+      service: veld_preprocess_lowercase
+    volumes:
+      - ./data/training_data/extracted__txt_sentence_per_line/:/veld/input/:z
+      - ./data/training_data/extracted__txt_sentence_per_line__lowercased/:/veld/output/:z
+    environment:
+      in_txt_file: "data.txt"
+      out_txt_file: "data.txt"
+      out_data_description: "all data lowercased"
+    depends_on:
+      veld_preprocess_lowercase_articles:
+        condition: service_completed_successfully
+

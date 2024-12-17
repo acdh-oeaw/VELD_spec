@@ -1,0 +1,10 @@
+x-veld:
+  code:
+
+services:
+  infer_and_create_index:
+    build: .
+    command: python /veld/code/infer_and_create_index.py
+    volumes:
+      - ./src/:/veld/code/
+

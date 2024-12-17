@@ -1,0 +1,56 @@
+x-veld:
+  code:
+    description: "custom evaluation logic on word2vec word embeddings."
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "evaluation"
+
+    inputs:
+      - volume: /veld/input/model/
+        environment: in_model_file
+        description: "word2vec model file to be evaluated"
+        file_type: "word2vec model"
+        contents:
+          - "NLP model"
+          - "word embeddings model"
+      - volume: /veld/input/model/
+        environment: in_model_metadata_file
+        description: "word2vec model metadata"
+        file_type: "yaml"
+        contents: "metadata"
+      - volume: /veld/input/eval_data/
+        environment: in_eval_gold_data_file
+        file_type: "yaml"
+        contents: "NLP gold data"
+
+    outputs:
+      - volume: /veld/output/summary/
+        environment: out_eval_summary_file
+        file_type: "yaml"
+        description: ""
+        contents: ""
+      - volume: /veld/output/log/
+        environment: out_eval_log_file
+        file_type: "txt"
+        contents: "logs"
+
+services:
+  veld_eval_word2vec:
+    build: 
+      context: .
+      dockerfile: ./build_word2vec.dockerfile
+    command: python eval_word2vec.py
+    volumes:
+      - ./src/:/veld/code/:z
+      - ./data/models/:/veld/input/1/:z
+      - ./data/evaluation_gold_data/:/veld/input/2/:z
+      - ./data/evaluation_results/summary/:/veld/output/1/:z
+      - ./data/evaluation_results/logs/:/veld/output/2/:z
+    environment:
+      in_1_model_file: null
+      in_1_model_metadata_file: null
+      in_2_eval_gold_data_file: null
+      out_1_eval_summary_file: null
+      out_2_eval_log_file: null
+

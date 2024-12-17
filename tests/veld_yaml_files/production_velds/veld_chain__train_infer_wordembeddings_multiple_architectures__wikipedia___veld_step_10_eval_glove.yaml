@@ -1,0 +1,23 @@
+x-veld:
+  chain:
+    description: "evaluate glove model against evaluation gold data"
+    topics: "NLP"
+
+services:
+  veld_eval_glove:
+    extends:
+      file: ./code/veld_code__wordembeddings_evaluation/veld_eval_glove.yaml
+      service: veld_eval_glove
+    volumes:
+      - ./data/models/glove/m1/:/veld/input/model/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_gold_data/lowercase/:/veld/input/eval_data/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/:/veld/output/summary/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/logs/glove/:/veld/output/log/:z
+    environment:
+      in_vector_file: "m1_vector.txt"
+      model_id: "m1"
+      in_model_metadata_file: "veld.yaml"
+      in_eval_gold_data_file: "eval_data_lowercase.yaml"
+      out_eval_summary_file: "summary.yaml"
+      out_eval_log_file: "m1.txt"
+

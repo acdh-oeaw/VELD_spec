@@ -1,0 +1,50 @@
+x-veld:
+  code:
+    description: "custom evaluation logic on fasttext word embeddings."
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "evaluation"
+
+    inputs:
+      - volume: /veld/input/model/
+        environment: in_model_file
+        file_type: "fasttext model"
+        contents:
+          - "NLP model"
+          - "word embeddings model"
+      - volume: /veld/input/model/
+        environment: in_model_metadata_file
+        file_type: "yaml"
+        contents: "metadata"
+      - volume: /veld/input/eval_data/
+        environment: in_eval_gold_data_file
+        file_type: "yaml"
+        contents: "NLP gold data"
+
+    outputs:
+      - volume: /veld/output/summary/
+        environment: out_eval_summary_file
+        file_type: "yaml"
+        description: ""
+        contents: ""
+      - volume: /veld/output/log/
+        environment: out_eval_log_file
+        file_type: "txt"
+        contents: "logs"
+
+services:
+  veld_eval_fasttext:
+    build: 
+      context: .
+      dockerfile: ./build_fasttext.dockerfile
+    command: python eval_fasttext.py
+    volumes:
+      - ./src/:/veld/code/:z
+    environment:
+      in_model_file: null
+      in_model_metadata_file: null
+      in_2_eval_gold_data_file: null
+      out_1_eval_summary_file: null
+      out_2_eval_log_file: null
+

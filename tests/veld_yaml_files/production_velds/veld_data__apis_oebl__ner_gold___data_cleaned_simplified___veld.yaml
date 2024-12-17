@@ -1,0 +1,18 @@
+x-veld:
+  data:
+    file_type: json
+    description: Same as the cleaned data, but with simplified entities (e.g. `PER`
+      instead of `PER-1337`). Probably it's best to use this data set for NER training.
+    contents:
+    - gold data
+    - NER gold data
+    - NLP gold data
+    topics:
+    - NLP
+    - Named entity recognition
+    additional:
+      total count of entities: 14313
+      individual count of entities:
+        ORG: 5356
+        PER: 3698
+        LOC: 5259

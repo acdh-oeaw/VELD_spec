@@ -1,0 +1,15 @@
+x-veld:
+  data:
+    description: 'Entire AMC: unique sentences, stripped from non-alphanumeric lines, lowercased,
+      punctuation removed, removed sentences with too many non-alphanumeric characters.'
+    file_type: txt
+    contents:
+      - raw text
+      - newspaper texts
+    topics: NLP
+    path: data.txt
+    additional:
+      data size: 54G
+      number of lines: 485820330
+      min_percentage_char: 80
+

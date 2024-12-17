@@ -1,0 +1,31 @@
+x-veld:
+  chain:
+    description: "training a glove model on wikipediaa"
+    topics: "NLP"
+
+services:
+  veld_train_glove:
+    extends:
+      file: ./code/veld_code__glove/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./data/training_data/extracted__txt_article_per_line__lowercased__removed_punctuation/:/veld/input/:z
+      - ./data/models/glove/m1/:/veld/output/:z
+    environment:
+      in_corpus_file: "data.txt"
+      out_vocab_file: "m1_vocab.txt"
+      out_cooccurrence_file: "m1_cooccurrence.bin"
+      out_cooccurrence_shuf_file: "m1_cooccurrence_shuf.bin"
+      out_vector_file: "m1_vector"
+      model_id: "m1"
+      model_description: "10% wikipedia test model"
+      verbose: 2
+      memory: 1.0
+      vocab_min_count: 5
+      vector_size: 200
+      max_iter: 5
+      window_size: 5
+      binary: 2
+      num_threads: 11
+      x_max: 10
+

@@ -1,0 +1,14 @@
+x-veld:
+  data:
+    description: "Entire AMC: no metadata, only text, one sentence per line, each sentence made
+      unique by ordering AMC sentences alphabetically and removing dupcliates; Created by Hannes
+      Pirker." 
+    file_type: txt
+    contents:
+      - raw text
+      - newspaper texts
+    topics: NLP
+    additional:
+      data size: 58G
+      number of lines: 521785159
+

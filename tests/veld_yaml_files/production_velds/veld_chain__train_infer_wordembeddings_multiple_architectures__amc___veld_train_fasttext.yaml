@@ -1,0 +1,19 @@
+x-veld:
+  chain:
+
+services:
+  veld_train_fasttext:
+    extends:
+      file: ./code/veld_code__fasttext/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./veld_data_amc_we_training_data/203_vert_rftt_inhalt_nodup__uniq__stripped__lowercased__punctuation_removed__cleaned/:/veld/input/:z
+      - ./veld_data_fasttext_models/m9/:/veld/output/:z
+    environment:
+      in_train_data_file: "data.txt"
+      out_model_file: "m9.bin"
+      model_description: "100% AMC model"
+      vector_size: 300
+      epochs: 10
+      window_size: 10
+

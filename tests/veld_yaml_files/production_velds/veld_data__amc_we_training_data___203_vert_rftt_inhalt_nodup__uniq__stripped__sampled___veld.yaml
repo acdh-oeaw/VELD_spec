@@ -1,0 +1,13 @@
+x-veld:
+  data:
+    description: '10% AMC: stripped from non-alphanumeric lines, 10% sampled.'
+    file_type: txt
+    contents:
+      - raw text
+      - newspaper texts
+    topics: NLP
+    additional:
+      data size: 5.8G
+      number of lines: 52172602
+      percentage_sample: 10.0
+      sample_random_seed: '42'

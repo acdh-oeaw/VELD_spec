@@ -1,0 +1,20 @@
+x-veld:
+  data:
+    description: 100% AMC model
+    file_type: bin
+    contents:
+    - word embeddings model
+    - fasttext model
+    additional:
+      model_id: m9
+      train_data_description: 'Entire AMC: unique sentences, stripped from non-alphanumeric
+        lines, lowercased, punctuation removed, removed sentences with too many non-alphanumeric
+        characters.'
+      training_architecture: fasttext
+      train_data_size: 54G
+      train_data_md5_hash: 7e9b50396f77babeef827beff7e506ef
+      training_epochs: 10
+      training_vector_size: 300
+      training_window_size: 10
+      training_duration (minutes): 6513
+      model_data_size: 18G

@@ -1,0 +1,63 @@
+x-veld:
+  chain:
+    description: "xml / xslt transformation of ELTeC data"
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "tokenization"
+      - "lemmatization"
+      - "part of speech"
+      - "dependency parsing"
+      - "universal dependencies"
+      - "grammatical annotation"
+
+# define a yaml variable here once, so that following services can reuse it
+x-vars: 
+  - &var_extends
+    file: ./code/veld_code__xml_xslt_transformer/veld.yaml
+    service: veld
+  - &var_environment
+    in_xsl_file: "transformation.xsl"
+
+services:
+
+  veld_preprocess_cze:
+    extends: *var_extends
+    volumes: 
+      - ./data/veld_data__eltec_original_selection/data/ELTeC-cze/level1/:/veld/input/xml/
+      - ./data/xsl/:/veld/input/xsl/
+      - ./data/data_tmp_txt_transformed/ELTeC-cze/level1/:/veld/output/
+    environment: *var_environment
+
+  veld_preprocess_deu:
+    extends: *var_extends
+    volumes: 
+      - ./data/veld_data__eltec_original_selection/data/ELTeC-deu/level1/:/veld/input/xml/
+      - ./data/xsl/:/veld/input/xsl/
+      - ./data/data_tmp_txt_transformed/ELTeC-deu/level1/:/veld/output/
+    environment: *var_environment
+
+  veld_preprocess_eng:
+    extends: *var_extends
+    volumes: 
+      - ./data/veld_data__eltec_original_selection/data/ELTeC-eng/level1/:/veld/input/xml/
+      - ./data/xsl/:/veld/input/xsl/
+      - ./data/data_tmp_txt_transformed/ELTeC-eng/level1/:/veld/output/
+    environment: *var_environment
+  
+  veld_preprocess_fra:
+    extends: *var_extends
+    volumes: 
+      - ./data/veld_data__eltec_original_selection/data/ELTeC-fra/level1/:/veld/input/xml/
+      - ./data/xsl/:/veld/input/xsl/
+      - ./data/data_tmp_txt_transformed/ELTeC-fra/level1/:/veld/output/
+    environment: *var_environment
+  
+  veld_preprocess_spa:
+    extends: *var_extends
+    volumes: 
+      - ./data/veld_data__eltec_original_selection/data/ELTeC-spa/level1/:/veld/input/xml/
+      - ./data/xsl/:/veld/input/xsl/
+      - ./data/data_tmp_txt_transformed/ELTeC-spa/level1/:/veld/output/
+    environment: *var_environment
+

@@ -1,0 +1,19 @@
+x-veld:
+  chain:
+
+services:
+  veld_preprocess_sample:
+    extends:
+      file: ./code/veld_code__wordembeddings_preprocessing/veld_preprocess_sample.yaml
+      service: veld_preprocess_sample
+    volumes:
+      - ./data/veld_data__amc_we_training_data/data/203_vert_rftt_inhalt_nodup__uniq__stripped/:/veld/input/:z
+      - ./exp_bert_tmp/:/veld/output/:z
+    environment:
+      in_file: "data.txt"
+      out_file: "data.txt"
+      out_data_description: "10% of AMC"
+      percentage_sample: 0.01
+      sample_random_seed: 42
+      buffer_segments: 100
+

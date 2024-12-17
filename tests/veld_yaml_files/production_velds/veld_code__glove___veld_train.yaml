@@ -1,0 +1,97 @@
+x-veld:
+  code:
+    description: "This code repo encapsulates the original code from
+      https://github.com/stanfordnlp/GloVe/tree/master"
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "word embeddings"
+
+    inputs:
+      - volume: /veld/input/
+        environment: in_corpus_file
+        description: "In the txt file, each line must be one sentence"
+        file_type: "txt"
+        contents: "natural text"
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_vocab_file
+        file_type: "bin"
+        contents: 
+          - "GloVe global word cooccurrence matrix"
+          - "GloVe vectors"
+      - volume: /veld/output/
+        environment: out_cooccurrence_file
+        file_type: "bin"
+        contents: 
+          - "GloVe global word cooccurrence matrix"
+          - "GloVe vectors"
+      - volume: /veld/output/
+        environment: out_cooccurrence_shuf_file
+        file_type: "bin"
+        contents: 
+          - "GloVe global word cooccurrence matrix"
+          - "GloVe vectors"
+      - volume: /veld/output/
+        environment: out_vector_file
+        file_type: "bin"
+        contents: 
+          - "GloVe global word cooccurrence matrix"
+          - "GloVe vectors"
+
+    settings:
+      - environment: verbose
+        env_type: "int"
+        default: 2
+      - environment: memory
+        env_type: "float"
+        default: 4.0
+      - environment: vocab_min_count
+        env_type: "int"
+        default: 5
+      - environment: vector_size
+        env_type: "int"
+        default: 50
+      - environment: max_iter
+        env_type: "int"
+        default: 15
+      - environment: window_size
+        env_type: "int"
+        default: 15
+      - environment: binary
+        env_type: "int"
+        default: 2
+      - environment: num_threads
+        env_type: "int"
+        default: 8
+      - environment: x_max
+        env_type: "int"
+        default: 10
+
+services:
+  veld_train:
+    build: .
+    volumes:
+      - ./src/main/train/:/veld/code/:z
+      - ./data/training_data/:/veld/input/:z                                                        
+      - ./data/models/:/veld/output/:z       
+    command: /veld/code/train.sh
+    environment:
+      in_corpus_file: null
+      out_vocab_file: null
+      out_cooccurrence_file: null
+      out_cooccurrence_shuf_file: null
+      out_vector_file: null
+      model_id: null
+      model_description: null
+      verbose: 2
+      memory: 4.0
+      vocab_min_count: 5
+      vector_size: 50
+      max_iter: 15
+      window_size: 15
+      binary: 2
+      num_threads: 8
+      x_max: 10
+

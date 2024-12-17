@@ -1,0 +1,26 @@
+x-veld:
+  data:
+    file_type: spacy model
+    contents:
+    - spacy model
+    - NLP model
+    additional:
+      performance:
+        ents_f: 0.7813646368
+        ents_p: 0.7971556886
+        ents_r: 0.7661870504
+        ents_per_type:
+          LOC:
+            p: 0.8352713178
+            r: 0.808630394
+            f: 0.8217349857
+          ORG:
+            p: 0.7250996016
+            r: 0.7123287671
+            f: 0.7186574531
+          PER:
+            p: 0.8490566038
+            r: 0.7803468208
+            f: 0.813253012
+        tok2vec_loss: 120.6995862189
+        ner_loss: 3537.5532226562

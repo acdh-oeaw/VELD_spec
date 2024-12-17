@@ -1,0 +1,26 @@
+x-veld:
+  chain:
+    description: "A NER trainig setup, utilizing spaCy 3's config system."
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "Named entity recognition"
+
+services:
+  veld_train:
+    extends:
+      file: ./code/veld_code__spacy/veld_train.yaml
+      service: veld_train
+    volumes:
+      - ./data/docbin/:/veld/input/docbin/
+      - ./data/configs/:/veld/input/config/
+      - ./data/veld_data__apis_spacy_ner_models/m2/:/veld/output/
+    environment:
+      in_train_docbin_file: "train.spacy"
+      in_dev_docbin_file: "dev.spacy"
+      in_eval_docbin_file: "eval.spacy"
+      in_spacy_config: "config_2.cfg"
+      model_base: "de_core_news_lg"
+      out_train_log_file: "train.log"
+      out_eval_log_file: "eval.log"
+

@@ -1,0 +1,26 @@
+x-veld:
+  data:
+    description: 1% AMC model
+    file_type:
+    - bin
+    - txt
+    contents:
+    - word embeddings model
+    - glove model
+    additional:
+      model_id: m3
+      train_data_description: 1% of AMC
+      training_architecture: glove
+      train_data_size: 552M
+      train_data_md5_hash: 05514cc05c6d61fcb3b20076372e2b8a
+      verbose: '2'
+      memory: '4.0'
+      vocab_min_count: '5'
+      vector_size: '200'
+      max_iter: '10'
+      window_size: '15'
+      binary: '2'
+      num_threads: '14'
+      x_max: '10'
+      training_duration (minutes): 24.8
+      model_data_size: 9.1G

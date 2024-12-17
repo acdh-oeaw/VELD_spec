@@ -1,0 +1,22 @@
+x-veld:
+  chain:
+    description: "evaluate fasttext model against evaluation gold data"
+    topics: "NLP"
+
+services:
+  veld_eval_fasttext:
+    extends:
+      file: ./code/veld_code__wordembeddings_evaluation/veld_eval_fasttext.yaml
+      service: veld_eval_fasttext
+    volumes:
+      - ./data/models/fasttext/m1/:/veld/input/model/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_gold_data/lowercase/:/veld/input/eval_data/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/:/veld/output/summary/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/logs/fasttext/:/veld/output/log/:z
+    environment:
+      in_model_file: "m1.bin"
+      in_model_metadata_file: "veld.yaml"
+      in_eval_gold_data_file: "eval_data_lowercase.yaml"
+      out_eval_summary_file: "summary.yaml"
+      out_eval_log_file: "m1.txt"
+

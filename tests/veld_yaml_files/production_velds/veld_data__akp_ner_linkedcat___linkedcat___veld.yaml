@@ -1,0 +1,14 @@
+x-veld:
+  data:
+    file_type: "csv"
+    description: "Prefered dataset is not this one, but linkedcat2! This dataset was created by
+      applying a custom trained SpaCy NER model an APIS / ÖBL data, on data set 'linkedcat2' at our
+      solr index. The csv file is split into id column, character start index of recognized entity,
+      character end index of entity, label of entity type, and a small context window."
+    topics:
+      - "NLP"
+      - "Named Entity Recognition"
+    contents:
+      - "NER data"
+      - "inferenced NLP data"
+

@@ -1,0 +1,38 @@
+x-veld:
+  chain:
+    description: "preprocessing by removing punctuation of the entire text."
+    topics: "NLP"
+
+services:
+
+  veld_preprocess_remove_punctuation_articles:
+    extends:
+      file: ./code/veld_code__wordembeddings_preprocessing/veld_preprocess_remove_punctuation.yaml
+      service: veld_preprocess_remove_punctuation
+    volumes:
+      - ./data/training_data/extracted__txt_article_per_line__lowercased/:/veld/input/:z
+      - ./data/training_data/extracted__txt_article_per_line__lowercased__removed_punctuation/:/veld/output/txt/:z
+    environment:
+      in_txt_file: "data.txt"
+      out_txt_file: "data.txt"
+      out_data_description: "all data lowercased, punctuation removed"
+      cpu_count: 14
+      buffer_segments: 100
+
+  veld_preprocess_remove_punctuation_sentences:
+    extends:
+      file: ./code/veld_code__wordembeddings_preprocessing/veld_preprocess_remove_punctuation.yaml
+      service: veld_preprocess_remove_punctuation
+    volumes:
+      - ./data/training_data/extracted__txt_sentence_per_line__lowercased/:/veld/input/:z
+      - ./data/training_data/extracted__txt_sentence_per_line__lowercased__removed_punctuation/:/veld/output/txt/:z
+    environment:
+      in_txt_file: "data.txt"
+      out_txt_file: "data.txt"
+      out_data_description: "all data lowercased, punctuation removed"
+      cpu_count: 14
+      buffer_segments: 100
+    depends_on:
+      veld_preprocess_remove_punctuation_articles:
+        condition: service_completed_successfully
+

@@ -1,0 +1,25 @@
+x-veld:
+  chain:
+    description: "demo word2vec training on the bible"
+    topics:
+      - "NLP"
+      - "Machine Learning"
+      - "word embeddings"
+
+services:
+  veld_train:
+    extends:
+      file: ./code/veld_code__word2vec/veld_train.yaml
+      service: veld_train
+    volumes:
+      - ./data/training_data/:/veld/input/
+      - ./data/models/word2vec/m1/:/veld/output/
+    environment:
+      in_train_data_file: bible.txt
+      out_model_file: m1.bin
+      model_description: "trained on bible with simple hyperparams"
+      epochs: 20
+      vector_size: 200
+      window: 5
+      min_count: 5
+

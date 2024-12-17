@@ -1,0 +1,12 @@
+x-veld:
+  data:
+    description: 'Entire AMC: unique sentences, stripped from non-alphanumeric lines, lowercased.'
+    file_type: txt
+    contents:
+      - raw text
+      - newspaper texts
+    topics: NLP
+    additional:
+      data size: 58G
+      number of lines: 521726064
+

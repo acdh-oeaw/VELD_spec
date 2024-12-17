@@ -1,0 +1,16 @@
+x-veld:
+  code:
+    description: "template veld code repo for a juptyer notebook"
+
+services:
+  veld:
+    build: .
+    command: jupyter notebook --allow-root --ip='*' --NotebookApp.token='' --NotebookApp.password=''
+    ports:
+      - 8888:8888
+    working_dir: /veld/code/
+    volumes:
+      - ./src:/veld/code/
+      - ./volumes/input/:/veld/input/
+      - ./volumes/output/:/veld/output/
+

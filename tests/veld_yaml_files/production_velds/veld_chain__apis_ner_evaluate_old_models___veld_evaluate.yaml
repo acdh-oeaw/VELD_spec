@@ -1,0 +1,19 @@
+x-veld:
+  chain:
+    description: "hard-coded evaluation of several spaCy 2.2.4 models."
+    topics: 
+      - "NLP"
+      - "Machine learning"
+      - "Named entity recognition"
+
+services:
+  veld_evaluate:
+    extends:
+      file: ./code/veld_code__apis_ner_evaluate_old_models/veld_evaluate.yaml
+      service: veld_evaluate
+    volumes:
+      - ./data/spacy-ner/:/veld/input/
+      - ./data/spacy-ner/:/veld/output/
+    environment:
+      out_eval_result_file: "reevaluations_all.md"
+

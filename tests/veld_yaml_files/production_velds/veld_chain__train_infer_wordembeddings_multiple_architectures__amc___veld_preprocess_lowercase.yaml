@@ -1,0 +1,16 @@
+x-veld:
+  chain:
+
+services:
+  veld_preprocess_lowercase:
+    extends:
+      file: ./code/veld_code__wordembeddings_preprocessing/veld_preprocess_lowercase.yaml
+      service: veld_preprocess_lowercase
+    volumes:
+      - ./data/veld_data__amc_we_training_data/data/203_vert_rftt_inhalt_nodup__uniq__stripped__sampled/:/veld/input/:z
+      - ./data/veld_data__amc_we_training_data/data/203_vert_rftt_inhalt_nodup__uniq__stripped__sampled__lowercased/:/veld/output/:z
+    environment:
+      in_txt_file: "data.txt"
+      out_txt_file: "data.txt"
+      out_data_description: "AMC data: stripped from non-alphanumeric lines, 10% sampled, lowercased."
+

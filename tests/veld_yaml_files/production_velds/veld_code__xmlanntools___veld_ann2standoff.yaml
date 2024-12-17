@@ -1,0 +1,48 @@
+x-veld:
+  code:
+    description: "A demo code veld, integrating the ann2standoff script. For more documentation, 
+      see: https://github.com/czcorpus/xmlanntools?tab=readme-ov-file#ann2standoff"
+    topics:
+      - NLP
+      - ETL
+
+    inputs:
+      - volume: /veld/input/data/
+        environment: in_conllu_file
+        file_type: 
+          - conllu
+          - tsv
+      - volume: /veld/input/data/
+        environment: in_txt_file
+        file_type: txt
+      - volume: /veld/input/config/
+        environment: in_ann2standoff_ini_file
+        file_type: ini
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_json_file
+        file_type: json
+
+    settings:
+      - environment: profile_name
+        env_type: str
+        default: DEFAULT
+        optional: true
+
+services:
+  veld_ann2standoff:
+    build: .
+    volumes:
+      - ./:/veld/code/
+      - ./data/ann2standoff/in/data/:/veld/input/data/
+      - ./data/ann2standoff/in/config/:/veld/input/config/
+      - ./data/ann2standoff/out/:/veld/output/
+    command: ./veld_ann2standoff.sh
+    environment:
+      in_conllu_file: null
+      in_txt_file: null
+      in_ann2standoff_ini_file: null
+      out_json_file: null
+      profile_name: DEFAULT
+

@@ -1,0 +1,15 @@
+x-veld:
+  data:
+    description: '10% AMC: stripped from non-alphanumeric lines, 10% sampled, lowercased,
+      punctuation removed, removed sentences with too many non-alphanumeric characters.'
+    file_type: txt
+    contents:
+      - raw text
+      - newspaper texts
+    topics: NLP
+    path: data.txt
+    additional:
+      data size: 5.4G
+      number of clean lines: 48582220
+      number of dirty removed lines: 3590390
+      minimum number of characters in percentage of each line: 80.0

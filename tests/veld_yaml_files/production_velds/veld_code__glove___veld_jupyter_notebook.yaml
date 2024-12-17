@@ -1,0 +1,19 @@
+x-veld:
+  code:
+    description: "A jupyter notebook that loads GloVe vectors and provides some convenient
+      functions to use them."
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "word embeddings"
+
+services:
+  veld_jupyter_notebook:
+    build: .
+    command: jupyter notebook --allow-root --ip='*' --NotebookApp.token='' --NotebookApp.password=''
+    ports:
+      - 8888:8888
+    volumes:
+      - ./src/main/jupyter_notebook/:/veld/code/:z
+      - ./data/:/veld/storage/:z
+

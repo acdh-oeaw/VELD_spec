@@ -1,0 +1,112 @@
+x-veld:
+  data:
+    file_type: json
+    description: The original, but united, data coming from APIS / ÖBL.
+    contents:
+    - gold data
+    - NER gold data
+    - NLP gold data
+    topics:
+    - NLP
+    - Named entity recognition
+    additional:
+      total count of entities: 27729
+      individual count of entities:
+        ORG: 5620
+        ORG-5398: 848
+        PER: 3637
+        PER-5421: 146
+        PER-5420: 2120
+        PER-5422: 21
+        LOC: 6224
+        LOC-5388: 1808
+        PER-5424: 144
+        PER-5418: 1077
+        ORG-5611: 592
+        LOC-5391: 925
+        PER-5715: 35
+        LOC-5399: 325
+        ORG-5622: 585
+        ORG-5642: 670
+        ORG-5630: 28
+        PER-5412: 589
+        PER-5414: 127
+        PER-5413: 214
+        ORG-5682: 10
+        PER-5432: 324
+        LOC-5390: 333
+        ORG-5686: 43
+        ORG-5689: 58
+        ORG-5657: 52
+        ORG-5791: 3
+        ORG-5697: 70
+        ORG-5612: 75
+        PER-5775: 109
+        ORG-5634: 67
+        ORG-5648: 16
+        ORG-5395: 1
+        ORG-5683: 61
+        PER-5411: 80
+        ORG-5776: 12
+        ORG-5675: 13
+        PER-5781: 57
+        ORG-5658: 69
+        ORG-5643: 5
+        ORG-5616: 17
+        ORG-5679: 6
+        ORG-5396: 31
+        PER-5428: 34
+        PER-5769: 2
+        PER-5415: 58
+        ORG-5667: 7
+        PER-5801: 6
+        PER-5800: 16
+        ORG-5812: 1
+        PER-5417: 97
+        ORG-5660: 3
+        PER-5423: 7
+        ORG-5806: 8
+        ORG-5677: 54
+        ORG-5760: 7
+        ORG-5688: 7
+        ORG-5662: 22
+        PER-5783: 8
+        ORG-5690: 10
+        ORG-5652: 1
+        ORG-5646: 20
+        ORG-5691: 3
+        ORG-5613: 3
+        ORG-5792: 8
+        LOC-5787: 3
+        ORG-5645: 9
+        LOC-5403: 1
+        ORG-5659: 6
+        LOC-5400: 2
+        ORG-5610: 5
+        ORG-5651: 1
+        ORG-5777: 2
+        ORG-5617: 2
+        ORG-5618: 2
+        ORG-5778: 4
+        PER-5785: 5
+        ORG-5631: 7
+        ORG-5701: 1
+        ORG-5656: 2
+        PER-5759: 1
+        ORG-5624: 3
+        PER-5430: 5
+        ORG-5621: 1
+        ORG-5640: 6
+        LOC-5401: 2
+        ORG-5676: 3
+        ORG-5639: 4
+        ORG-5674: 3
+        PER-5416: 1
+        LOC-5392: 1
+        LOC-5402: 2
+        ORG-5654: 4
+        ORG-5620: 1
+        ORG-5672: 5
+        ORG-5879: 1
+        PER-5425: 3
+        ORG-5698: 2

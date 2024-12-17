@@ -1,0 +1,244 @@
+x-veld:
+  chain:
+    description: "An entire multi chain, going through everything (fetching, preprocessing, 
+      training, evaluation in one service. This chain is composed of the other chains and is rather 
+      meant as a demonstration of the entire setup"
+    topics: "NLP"
+
+services:
+
+  #veld_preprocess_download_and_extract:
+  #  extends:
+  #    file: ./veld_code_20_wikipedia_nlp_preprocessing/veld_download_and_extract.yaml
+  #    service: veld_download_and_extract
+  #  volumes:
+  #    - ./data_local/training_data/extracted/local/:/veld/output/:z
+  #  environment:
+  #    wikipedia_dump_url: https://dumps.wikimedia.org/dewiki/latest/dewiki-latest-pages-articles.xml.bz2
+
+  veld_preprocess_transform_wiki_json_to_txt_fasttext-word2vec:
+    extends:
+      file: ./veld_code_20_wikipedia_nlp_preprocessing/veld_transform_wiki_json_to_txt.yaml
+      service: veld_transform_wiki_json_to_txt
+    volumes:
+      - ./data_local/training_data/extracted/:/veld/input/:z
+      - ./data_local/training_data/extracted__txt_sentence_per_line/:/veld/output/:z
+    environment:
+      in_json_folder: "data"
+      out_txt_file: "de_wiki_sample.txt"
+      out_data_description: "sample wikipedia, transformed from json files into one txt file, each json file's content is split into sentences and persisted per line. Best for fastText and word2vec."
+      sample_size_percentage: 10
+      set_split_sentences: true
+      cpu_count: 14
+      sample_random_seed: 42
+      info_interval: 100
+    #depends_on:
+    #  veld_preprocess_download_and_extract:
+    #    condition: service_completed_successfully
+
+  veld_preprocess_transform_wiki_json_to_txt_glove:
+    extends:
+      file: ./veld_code_20_wikipedia_nlp_preprocessing/veld_transform_wiki_json_to_txt.yaml
+      service: veld_transform_wiki_json_to_txt
+    volumes:
+      - ./data_local/training_data/extracted/:/veld/input/:z
+      - ./data_local/training_data/extracted__txt_article_per_line/:/veld/output/:z
+    environment:
+      in_json_folder: "data"
+      out_txt_file: "de_wiki_sample.txt"
+      out_data_description: "sample wikipedia, transformed from json files into one txt file, each json file's content is persisted per line. Best for GloVe."
+      sample_size_percentage: 10
+      set_split_sentences: false
+      cpu_count: 14
+      sample_random_seed: 42
+      info_interval: 100
+    depends_on:
+      veld_preprocess_transform_wiki_json_to_txt_fasttext-word2vec:
+        condition: service_completed_successfully
+
+  veld_preprocess_lowercase_fasttext-word2vec:
+    extends:
+      file: ./veld_code_19_we_preprocessing/veld_preprocess_lowercase.yaml
+      service: veld_preprocess_lowercase
+    volumes:
+      - ./data_local/training_data/extracted__txt_sentence_per_line/:/veld/input/:z
+      - ./data_local/training_data/extracted__txt_sentence_per_line__lowercased/:/veld/output/:z
+    environment:
+      in_txt_file: "de_wiki_sample.txt"
+      out_txt_file: "de_wiki_sample.txt"
+      out_data_description: "sample wikipedia, single txt, one sentence per line, lowercased,"
+    depends_on:
+      veld_preprocess_transform_wiki_json_to_txt_glove:
+        condition: service_completed_successfully
+
+  veld_preprocess_lowercase_glove:
+    extends:
+      file: ./veld_code_19_we_preprocessing/veld_preprocess_lowercase.yaml
+      service: veld_preprocess_lowercase
+    volumes:
+      - ./data_local/training_data/extracted__txt_article_per_line/:/veld/input/:z
+      - ./data_local/training_data/extracted__txt_article_per_line__lowercased/:/veld/output/:z
+    environment:
+      in_txt_file: "de_wiki_sample.txt"
+      out_txt_file: "de_wiki_sample.txt"
+      out_data_description: "sample wikipedia, single txt, one article per line, lowercased"
+    depends_on:
+      veld_preprocess_lowercase_fasttext-word2vec:
+        condition: service_completed_successfully
+
+  veld_preprocess_remove_punctuation_fasttext-word2vec:
+    extends:
+      file: ./veld_code_19_we_preprocessing/veld_preprocess_remove_punctuation.yaml
+      service: veld_preprocess_remove_punctuation
+    volumes:
+      - ./data_local/training_data/extracted__txt_sentence_per_line__lowercased/:/veld/input/:z
+      - ./data_local/training_data/extracted__txt_sentence_per_line__lowercased__removed_punctuation/:/veld/output/:z
+    environment:
+      in_txt_file: "de_wiki_sample.txt"
+      out_txt_file: "de_wiki_sample.txt"
+      out_data_description: "sample wikipedia, single txt, one sentence per line, lowercased, removed punctuation"
+      cpu_count: 14
+      info_interval: 100
+    depends_on:
+      veld_preprocess_lowercase_glove:
+        condition: service_completed_successfully
+
+  veld_preprocess_remove_punctuation_glove:
+    extends:
+      file: ./veld_code_19_we_preprocessing/veld_preprocess_remove_punctuation.yaml
+      service: veld_preprocess_remove_punctuation
+    volumes:
+      - ./data_local/training_data/extracted__txt_article_per_line__lowercased/:/veld/input/:z
+      - ./data_local/training_data/extracted__txt_article_per_line__lowercased__removed_punctuation/:/veld/output/:z
+    environment:
+      in_txt_file: "de_wiki_sample.txt"
+      out_txt_file: "de_wiki_sample.txt"
+      out_data_description: "sample wikipedia, single txt, one article per line, lowercased, removed punctuation"
+      cpu_count: 14
+      info_interval: 100
+    depends_on:
+      veld_preprocess_remove_punctuation_fasttext-word2vec:
+        condition: service_completed_successfully
+
+  veld_train_fasttext:
+    extends:
+      file: ./veld_code_12_fasttext/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./data_local/training_data/extracted__txt_sentence_per_line__lowercased__removed_punctuation/:/veld/input/:z
+      - ./data_local/models/fasttext/m1/:/veld/output/:z
+    environment:
+      in_train_data_file: "de_wiki_sample.txt"
+      model_id: "m1"
+      model_description: "fasttext test model"
+      vector_size: 200
+      epochs: 10
+    depends_on:
+      veld_preprocess_remove_punctuation_glove:
+        condition: service_completed_successfully
+
+  veld_train_word2vec:
+    extends:
+      file: ./veld_code_13_word2vec/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./data_local/training_data/extracted__txt_sentence_per_line__lowercased__removed_punctuation/:/veld/input/:z
+      - ./data_local/models/word2vec/m1/:/veld/output/:z
+    environment:
+      in_train_data_file: "de_wiki_sample.txt"
+      model_id: "m1"
+      model_description: "word2vec test model"
+      epochs: 10
+      vector_size: 200
+      window: 5
+      min_count: 5
+    depends_on:
+      veld_train_fasttext:
+        condition: service_completed_successfully
+
+  veld_train_glove:
+    extends:
+      file: ./veld_code_17_glove/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./data_local/training_data/extracted__txt_article_per_line__lowercased__removed_punctuation/:/veld/input/:z
+      - ./data_local/models/glove/m1/:/veld/output/:z
+    environment:
+      in_corpus_file: "de_wiki_sample.txt"
+      out_vocab_file: "m1_vocab.txt"
+      out_cooccurrence_file: "m1_cooccurrence.bin"
+      out_cooccurrence_shuf_file: "m1_cooccurrence_shuf.bin"
+      out_vector_file: "m1_vector"
+      model_id: "m1"
+      model_description: "glove test model"
+      verbose: 2
+      memory: 4.0
+      vocab_min_count: 5
+      vector_size: 200
+      max_iter: 10
+      window_size: 15
+      binary: 2
+      num_threads: 14
+      x_max: 10
+    depends_on:
+      veld_train_word2vec:
+        condition: service_completed_successfully
+
+  veld_eval_fasttext:
+    extends:
+      file: ./veld_code_14_we_evaluation/veld_eval_fasttext.yaml
+      service: veld_eval_fasttext
+    volumes:
+      - ./data_local/models/fasttext/m1/:/veld/input/1/:z
+      - ./veld_data_10_we_evaluation/evaluation_gold_data/lowercase/:/veld/input/2/:z
+      - ./veld_data_10_we_evaluation/evaluation_results/:/veld/output/1/:z
+      - ./veld_data_10_we_evaluation/evaluation_results/logs/fasttext/:/veld/output/2:z
+    environment:
+      in_model_file: m1.bin
+      in_model_metadata_file: veld.yaml
+      in_eval_gold_data_file: eval_data_lowercase.yaml
+      out_eval_summary_file: summary.yaml
+      out_eval_log_file: m1.txt
+    depends_on:
+      veld_train_glove:
+        condition: service_completed_successfully
+
+  veld_eval_word2vec:
+    extends:
+      file: ./veld_code_14_we_evaluation/veld_eval_word2vec.yaml
+      service: veld_eval_word2vec
+    volumes:
+      - ./data_local/models/word2vec/m1/:/veld/input/1/:z
+      - ./veld_data_10_we_evaluation/evaluation_gold_data/lowercase/:/veld/input/2/:z
+      - ./veld_data_10_we_evaluation/evaluation_results/:/veld/output/1/:z
+      - ./veld_data_10_we_evaluation/evaluation_results/logs/word2vec/:/veld/output/2:z
+    environment:
+      in_model_file: m1.bin
+      in_model_metadata_file: veld.yaml
+      in_eval_gold_data_file: eval_data_lowercase.yaml
+      out_eval_summary_file: summary.yaml
+      out_eval_log_file: m1.txt
+    depends_on:
+      veld_eval_fasttext:
+        condition: service_completed_successfully
+
+  veld_eval_glove:
+    extends:
+      file: ./veld_code_14_we_evaluation/veld_eval_glove.yaml
+      service: veld_eval_glove
+    volumes:
+      - ./data_local/models/glove/m1/:/veld/input/1/:z
+      - ./veld_data_10_we_evaluation/evaluation_gold_data/lowercase/:/veld/input/2/:z
+      - ./veld_data_10_we_evaluation/evaluation_results/:/veld/output/1/:z
+      - ./veld_data_10_we_evaluation/evaluation_results/logs/glove/:/veld/output/2/:z
+    environment:
+      in_vector_file: m1_vector.txt
+      model_id: m1
+      in_model_metadata_file: veld.yaml
+      in_eval_gold_data_file: eval_data_lowercase.yaml
+      out_eval_summary_file: summary.yaml
+      out_eval_log_file: m1.txt
+    depends_on:
+      veld_eval_word2vec:
+        condition: service_completed_successfully
+

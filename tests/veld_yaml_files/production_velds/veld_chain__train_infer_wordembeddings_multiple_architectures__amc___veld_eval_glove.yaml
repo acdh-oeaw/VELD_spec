@@ -1,0 +1,21 @@
+x-veld:
+  chain:
+
+services:
+  veld_eval_glove:
+    extends:
+      file: ./code/veld_code__wordembeddings_evaluation/veld_eval_glove.yaml
+      service: veld_eval_glove
+    volumes:
+      - ./data/veld_data__glove_models/data/m3/:/veld/input/1/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_gold_data/lowercase/:/veld/input/2/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/:/veld/output/1/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/logs/glove/:/veld/output/2/:z
+    environment:
+      in_1_vector_file: m3_vector.txt
+      model_id: m3
+      in_1_model_metadata_file: veld.yaml
+      in_2_eval_gold_data_file: eval_data_lowercase.yaml
+      out_1_eval_summary_file: summary.yaml
+      out_2_eval_log_file: m3.txt
+

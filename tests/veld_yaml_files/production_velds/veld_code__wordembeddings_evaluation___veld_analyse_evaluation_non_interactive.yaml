@@ -1,0 +1,41 @@
+x-veld:
+  code:
+    description: "data visualization of all evaluation data. non-interactive version of the juypter
+      code."
+    topics:
+      - "NLP"
+      - "word embeddings"
+      - "data visualization"
+
+    inputs:
+      - volume: /veld/
+        environment: in_evaluation_summary_file
+        description: "summary of the custom evaluation logic on word embeddings"
+        file_type: "yaml"
+        contents: "evaluation data"
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_visualization_html_file
+        description: "data visualization of all evaluation data, expressed as interactive html"
+        file_type: "html"
+        contents: "data visualization"
+      - volume: /veld/output/
+        environment: out_visualization_png_file
+        description: "data visualization of all evaluation data, expressed as png"
+        file_type: "png"
+        contents: "data visualization"
+
+services:
+  veld_analyse_evaluation:
+    build: 
+      context: .
+      dockerfile: ./build_analyse.dockerfile
+    command: ./analyse.sh
+    volumes:
+      - ./src/analyse/:/veld/code/:z
+    environment:
+      in_evaluation_summary_file: null
+      out_visualization_html_file: null
+      out_visualization_png_file: null
+

@@ -1,0 +1,34 @@
+x-veld:
+  code:
+    description: ""
+    topics:
+      - "NLP"
+      - "Machine learning"
+      - "tokenization"
+      - "lemmatization"
+      - "part of speech"
+      - "dependency parsing"
+      - "universal dependencies"
+      - "grammatical annotation"
+
+    inputs:
+      - volume: "/veld/input/"
+        file_type: "conllu"
+
+    outputs:
+      - volume: "/veld/output/"
+        file_type: "json"
+        contents: 
+          - "statistics"
+          - "NLP statistics"
+
+services:
+  veld:
+    build: .
+    command: jupyter notebook --allow-root --ip='*' --NotebookApp.token='' --NotebookApp.password=''
+    ports:
+      - 8888:8888
+    working_dir: /veld/code/
+    volumes:
+      - ./src:/veld/code/
+

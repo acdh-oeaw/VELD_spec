@@ -1,0 +1,16 @@
+x-veld:
+  chain:
+    description: "demo word2vec jupyter notebook"
+    topics:
+      - "NLP"
+      - "Machine Learning"
+      - "word embeddings"
+
+services:
+  veld_jupyter_notebook:
+    extends:
+      file: ./code/veld_code__word2vec/veld_jupyter_notebook.yaml
+      service: veld_jupyter_notebook
+    volumes:
+      - ./data/models/word2vec/:/veld/input/:z
+

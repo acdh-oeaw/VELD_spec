@@ -1,0 +1,33 @@
+x-veld:
+  chain:
+    description: "Download and preprocessing of the bible"
+    topics:
+      - "ETL"
+      - "NLP"
+      - "bible studies"
+
+services:
+  veld_downloader:
+    extends:
+      file: ./code/veld_code__downloader/veld.yaml
+      service: veld_downloader
+    volumes:
+      - ./data/training_data/:/veld/output/
+    environment:
+      url: "https://raw.githubusercontent.com/mxw/grmr/master/src/finaltests/bible.txt"
+      out_file: "bible.txt"
+
+  veld_bible_preprocess:
+    build: ./code/bible_preprocess/
+    command: python /veld/code/bible_preprocess.py
+    volumes:
+      - ./code/bible_preprocess/bible_preprocess.py:/veld/code/bible_preprocess.py
+      - ./data/training_data/:/veld/input/
+      - ./data/training_data/:/veld/output/
+    environment:
+      in_file: "bible.txt"
+      out_file: "bible.txt"
+    depends_on:
+      veld_downloader:
+        condition: service_completed_successfully
+

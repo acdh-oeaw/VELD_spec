@@ -1,0 +1,28 @@
+x-veld:
+  code:
+    description: "A very simple curl call. Since many veld chains need to download data, it makes
+      sense to encapsulate the download functionality into a dedicated downloader veld code"
+    topics: ETL
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_file
+        description: "environment var is optional. If unset, this script will fetch the file name
+          from the resource."
+
+    settings:
+      - environment: url
+        env_type: str
+        description: "The url where some resource is located and should be downloaded from."
+
+services:
+  veld_downloader:
+    build: .
+    command: sh /veld/code/downloader.sh
+    volumes: 
+      - ./downloader.sh:/veld/code/downloader.sh
+    environment:
+      url: null
+      out_file: null
+
+

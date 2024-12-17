@@ -1,0 +1,16 @@
+x-veld:
+  chain:
+
+services:
+  veld_analyse_evaluation:
+    extends:
+      file: ./code/veld_code__wordembeddings_evaluation/veld_analyse_evaluation.yaml
+      service: veld_analyse_evaluation
+    volumes:
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/:/veld/input/:z
+      - ./data/veld_data__wordembeddings_evaluation/evaluation_results/:/veld/output/:z
+    environment:
+      in_evaluation_summary_file: "summary.yaml"
+      out_visualization_html_file: "summary_visualized.html"
+      out_visualization_png_file: "summary_visualized.png"
+

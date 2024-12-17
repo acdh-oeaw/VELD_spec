@@ -1,0 +1,46 @@
+x-veld:
+  code:
+    description: "simple service to push spacy models to huggingface. IMPORTANT: Only works from 
+      spacy v3.* onwards!"
+    topics:
+      - "NLP"
+      - "ETL"
+
+    inputs:
+      - volume: /veld/input/
+        file_type: "spacy model"
+        contents: "NLP model"
+
+    settings:
+      - environment: model_name
+        description: "name of the model, to be used for huggingface metadata. IMPORTANT: do not put 
+          double underscores into the model name, as this crashes spacy while publishing."
+        env_type: "str"
+        optional: true
+      - environment: version
+        description: "version of the model, to be used for huggingface metadata. IMPORTANT: spacy 
+          crashes when the version tag contains the character `v` in front of numeric+dot version 
+          identifiers: E.g. `v1.1` crashes, while `1.1` works."
+        env_type: "str"
+        optional: true
+      - environment: hf_token
+        description: "huggingface authentication token. IMPORTANT: It is advised to not hardcode 
+          that directly into the yaml file but rather define the environment variable yourself, 
+          before calling this docker compose service. On linux and mac, this can be done with 
+          `export hf_token=<TOKEN>` before launching a docker compose service, or persist it in a
+          `.env` (with the content simply being `hf_token=<TOKEN>`) file next to the chain veld 
+          yaml file, where docker compose would load it from (take care to not commit that to git! 
+          Best to add the `.env` to `.gitignore`)."
+        env_type: "str"
+
+services:
+  veld_publish_to_hf:
+    build: .
+    command: bash /veld/code/publish_to_hf.sh
+    volumes:
+      - ./src/:/veld/code/
+    environment:
+      model_name: null
+      version: null
+      hf_token: $hf_token
+

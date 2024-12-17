@@ -1,0 +1,19 @@
+x-veld:
+  data:
+    description: test training
+    file_type: bin
+    contents:
+    - word embeddings model
+    - fasttext model
+    additional:
+      model_id: m1
+      train_data_description: sample wikipedia, single txt, one sentence per line,
+        lowercased, removed punctuation
+      training_architecture: fasttext
+      train_data_size: 686M
+      train_data_md5_hash: 05e9002eeaab646a6d82af02eaf86a13
+      training_epochs: 10
+      training_vector_size: 200
+      training_window_size: 5
+      training_duration (minutes): 37.4
+      model_data_size: 4.0G

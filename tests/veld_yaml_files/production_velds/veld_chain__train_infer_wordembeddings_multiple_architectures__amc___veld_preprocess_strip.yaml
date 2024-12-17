@@ -1,0 +1,17 @@
+x-veld:
+  chain:
+
+services:
+  veld_preprocess_strip:
+    extends:
+      file: ./code/veld_code__wordembeddings_preprocessing/veld_preprocess_strip.yaml
+      service: veld_preprocess_strip
+    volumes:
+      - ./data/veld_data__amc_we_training_data/data/203_vert_rftt_inhalt_nodup__uniq/:/veld/input/:z
+      - ./data/veld_data__amc_we_training_data/data/203_vert_rftt_inhalt_nodup__uniq__stripped/:/veld/output/:z
+    environment:
+      in_file: "data.txt"
+      out_file: "data.txt"
+      line_start: 54993
+      line_end: 521781020
+

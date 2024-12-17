@@ -1,0 +1,14 @@
+x-veld:
+  chain:
+    description: "jupyter notebook for playing with word2vec models"
+    topics: "NLP"
+
+services:
+  veld_jupyter_notebook_word2vec:
+    extends:
+      file: ./code/veld_code__word2vec/veld_jupyter_notebook.yaml
+      service: veld_jupyter_notebook
+    volumes:
+      - ./data/training_data/:/veld/storage/training_data/:z
+      - ./data/models/word2vec/:/veld/storage/models/:z
+

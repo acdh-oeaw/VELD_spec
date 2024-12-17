@@ -1,0 +1,14 @@
+x-veld:
+  chain:
+
+services:
+  veld_jupyter_notebook_fasttext:
+    extends:
+      file: ./code/veld_code__fasttext/veld_jupyter_notebook.yaml
+      service: veld_jupyter_notebook
+    ports:
+      - 8889:8888
+    volumes:
+      - ./data/veld_data__amc_we_training_data/:/veld/storage/data/veld_data__amc_we_training_data/:z
+      - ./data/veld_data__fasttext_models/:/veld/storag./data/veld_data__fasttext_models/:z
+

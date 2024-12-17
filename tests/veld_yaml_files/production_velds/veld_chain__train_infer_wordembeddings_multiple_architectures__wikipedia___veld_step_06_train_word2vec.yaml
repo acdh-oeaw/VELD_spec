@@ -1,0 +1,21 @@
+x-veld:
+  chain:
+    description: "training a word2vec model on wikipediaa"
+    topics: "NLP"
+
+services:
+  veld_train_word2vec:
+    extends:
+      file: ./code/veld_code__word2vec/veld_train.yaml
+      service: veld_train 
+    volumes:
+      - ./data/training_data/extracted__txt_sentence_per_line__lowercased__removed_punctuation/:/veld/input/:z
+      - ./data/models/word2vec/m1/:/veld/output/:z
+    environment:
+      in_train_data_file: "data.txt"
+      out_model_file: "m1.bin"
+      model_description: "10% wikipedia test model"
+      epochs: 5
+      vector_size: 200
+      window: 5
+

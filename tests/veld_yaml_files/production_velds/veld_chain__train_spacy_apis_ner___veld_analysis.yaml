@@ -1,0 +1,11 @@
+x-veld:
+  chain:
+
+services:
+  veld_analysis:
+    extends:
+      file: ./code/analysis/compose.yaml
+      service: veld_analysis
+    volumes:
+      - ./data/:/veld/input/
+

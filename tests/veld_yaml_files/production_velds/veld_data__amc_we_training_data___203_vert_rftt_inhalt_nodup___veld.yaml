@@ -1,0 +1,13 @@
+x-veld:
+  data:
+    description: "Entire AMC: no metadata, only text, one sentence per line; Created by Hannes
+      Pirker." 
+    file_type: txt
+    contents:
+      - raw text
+      - newspaper texts
+    topics: NLP
+    additional:
+      data size: 63G
+      number of lines: 652802789
+

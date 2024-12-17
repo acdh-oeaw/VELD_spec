@@ -1,0 +1,13 @@
+x-veld:
+  data:
+    description: "Entire AMC: unique sentence data, cleaned from non-alphanumeric junk before 'A'
+      (anything before line number 54,993) and after 'Z' (anything after line number 521,781,020)"
+    file_type: txt
+    contents:
+      - raw text
+      - newspaper texts
+    topics: NLP
+    additional:
+      data size: 58G
+      number of lines: 521726028
+

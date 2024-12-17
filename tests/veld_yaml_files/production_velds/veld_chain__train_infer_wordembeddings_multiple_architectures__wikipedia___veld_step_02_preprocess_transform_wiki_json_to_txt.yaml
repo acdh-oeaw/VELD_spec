@@ -1,0 +1,45 @@
+x-veld:
+  chain:
+    description: "transforming wikipedia jsons to a single txt file."
+    topics:
+      - "NLP"
+      - "Machine Learning"
+      - "ETL"
+
+services:
+
+  veld_preprocess_transform_wiki_json_to_txt_articles:
+    extends:
+      file: ./code/veld_code__wikipedia_nlp_preprocessing/veld_transform_wiki_json_to_txt.yaml
+      service: veld_transform_wiki_json_to_txt
+    volumes:
+      - ./data/training_data/extracted/data/:/veld/input/:z
+      - ./data/training_data/extracted__txt_article_per_line/:/veld/output/:z
+    environment:
+      out_txt_file: "data.txt"
+      out_data_description: "10% german wikipedia, transformed from json files into one txt file, 
+        each json file's content persisted with each each article in a single line."
+      set_split_sentences: false
+      sample_size_percentage: 10
+      cpu_count: 14
+      buffer_segments: 10
+
+  veld_preprocess_transform_wiki_json_to_txt_sentences:
+    extends:
+      file: ./code/veld_code__wikipedia_nlp_preprocessing/veld_transform_wiki_json_to_txt.yaml
+      service: veld_transform_wiki_json_to_txt
+    volumes:
+      - ./data/training_data/extracted/data/:/veld/input/:z
+      - ./data/training_data/extracted__txt_sentence_per_line/:/veld/output/:z
+    environment:
+      out_txt_file: "data.txt"
+      out_data_description: "10% german wikipedia, transformed from json files into one txt file, 
+        each json file's content persisted with each sentence in a single line."
+      set_split_sentences: true
+      sample_size_percentage: 10
+      cpu_count: 14
+      buffer_segments: 10
+    depends_on:
+      veld_preprocess_transform_wiki_json_to_txt_articles:
+        condition: service_completed_successfully
+

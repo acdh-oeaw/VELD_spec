@@ -1,0 +1,17 @@
+x-veld:
+  chain:
+
+services:
+  veld_create_config:
+    extends:
+      file: ./code/veld_code__spacy/veld_create_config.yaml
+      service: veld_create_config
+    volumes:
+      - ./data/configs/:/veld/output/
+    environment:
+      out_config_file: "config_1.cfg"
+      lang: de
+      ner: true
+      optimize_accuracy: true
+      pretraining: true
+
