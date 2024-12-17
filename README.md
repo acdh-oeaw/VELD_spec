@@ -450,7 +450,7 @@ x-veld:
   data:
   
     # the file type of the data; the only mandatory element
-    file_type: <FILE_TYPE>
+    file_type: <FILE_TYPE> | {<FILE_TYPE>}
     
     # optional: path to the data, relative to the veld yaml file 
     [path: <PATH>]
@@ -1130,7 +1130,7 @@ field. Note that the entire section `<INPUT_OR_OUTPUT>` is to be an element of a
 ```
 <INPUT_OR_OUTPUT> ::=
   volume: <CONTAINER_PATH>
-  file_type: <FILE_TYPE> | {<FILE_TYPE>}
+  [file_type: <FILE_TYPE> | {<FILE_TYPE>}]
   [environment: <ENVIRONMENT_VAR_NAME>]
   [contents: <CONTENT> | {<CONTENT>}]
   [description: <DESCRIPTION>] 
