@@ -14,6 +14,7 @@ class Node:
 class Node:
     is_optional: bool = False
     is_variable: bool = False
+    is_scalar: bool = False
     content: Union[str, None] = None
     
     def copy(self):
@@ -32,7 +33,10 @@ class Node:
     
     def __repr__(self):
         if self.content is None:
-            repr_str = "<SCALAR>"
+            if self.is_scalar:
+                repr_str = "<SCALAR>"
+            else:
+                repr_str = "<ANY>"
         else:
             repr_str = str(self.content)
         if self.is_optional:
@@ -137,7 +141,15 @@ def read_schema():
                 if cs.char == "<" or cs.char == ">":
                     is_variable = True
                 elif cs.char in [":", "]", "}", " ", "\n"]:
-                    node = Node(content=symbol, is_variable=is_variable)
+                    if symbol == "true":
+                        symbol = True
+                    elif symbol == "false":
+                        symbol = False
+                    node = Node(
+                        content=symbol,
+                        is_variable=is_variable,
+                        is_scalar=(symbol == "SCALAR")
+                    )
                     return node
                 else:
                     symbol += cs.char
@@ -170,6 +182,7 @@ def read_schema():
                         cs.next()
                         if cs.char == "=":
                             cs.next()
+                            node.is_variable = False
                             node = NodeVariableDefinition(content=node)
                             node.content.is_variable = False
                             node_next = state_next()
@@ -417,10 +430,19 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
         
         def handle_node(obj_to_validate, node: Node, path):
             obj_type = type(obj_to_validate)
-            if obj_type in [dict, list]:
+            if node.is_scalar and obj_type in [dict, list]:
                 return (False, f"is not primitive type, but {obj_type}, at: {path}/")
             elif obj_type is None and not node.is_optional:
                 return (False, f"non-optional value is empty at: {path}/")
+            elif (
+                not node.is_scalar
+                and node.content is not None
+                and node.content != obj_to_validate
+            ):
+                return (
+                    False,
+                    f"single content mismatch: expected: '{node.content}', found: {obj_to_validate}, at: {path}/"
+                )
             return (True, None)
         
         def validate_dict_main(obj_to_validate, node: Node, path):

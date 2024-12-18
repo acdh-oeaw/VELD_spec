@@ -141,7 +141,7 @@ root:
 
 variable definition:
 
-The value `<SOME_VALUE>` can be replaced with any yaml scalar, e.g. string, integer, boolean etc.
+The value `<SOME_VALUE>` can be replaced with any yaml scalar, e.g. string, integer, bool etc.
 But no complex type like lists or mappings are allowed.
 
 ```
@@ -343,7 +343,7 @@ A root element `root` must exist, containing two mappings. The first mapping wit
 must contain a scalar. The second mapping `sub_2` is entirely optional and may contain either a
 single scalar or a list of the variable `<SUB_CONTENT>`. The variable `<SUB_CONTENT>` contains two
 more mappings, where the key `sub_sub_1` must exist, but its value is optional and references the
-variable `<BOOLEAN>` which must be either `true` or `false`. The other mapping
+variable `<BOOL>` which must be either `true` or `false`. The other mapping
 `sub_sub_2` is optional entirely, and it contains a single mapping `sub_sub_sub` to a list of
 scalars.
 
@@ -355,14 +355,14 @@ root:
 
 ```
 <SUB_CONTENT> ::= 
-  sub_sub_1: [<BOOLEAN>]
+  sub_sub_1: [<BOOL>]
   [sub_sub_2: 
     sub_sub_sub: {<SCALAR>}
   ] 
 ```
 
 ```
-<BOOLEAN> ::= true | false
+<BOOL> ::= true | false
 ```
 
 valid:
@@ -666,7 +666,7 @@ x-veld:
       - environment: set_split_sentences
         description: "Should the resulting txt be split by newlines at each sentence boundary? If 
           not, then newlines will be set at the end of each article."
-        env_type: "boolean"
+        env_type: "bool"
         optional: true
         default: false
       - environment: sample_size_percentage
@@ -893,12 +893,12 @@ x-veld:
           - "raw text" # <CONTENT>
 ```
 
-#### \<BOOLEAN>
+#### \<BOOL>
 
-A boolean flag, that can only take the yaml data type of `true` or `false`.
+A bool flag, that can only take the yaml data type of `true` or `false`.
 
 ```
-<BOOLEAN> ::= true | false
+<BOOL> ::= true | false
 ```
 
 Example:
@@ -910,7 +910,7 @@ x-veld:
     settings:
       - environment: out_data_description
         env_type: "str"
-        optional: true # <BOOLEAN>
+        optional: true # <BOOL>
 ```
 
 #### \<DESCRIPTION>
@@ -1065,7 +1065,7 @@ If an environment variable is defined within the `settings` section of a code ve
 assigned a type as well, and it can be one of the following values:
 
 ```
-<ENV_TYPE> ::= str | boolean | int | float
+<ENV_TYPE> ::= str | bool | int | float
 ```
 
 Example:
@@ -1078,7 +1078,7 @@ x-veld:
       - environment: cpu_count
         env_type: "int" # <ENV_TYPE>
       - environment: set_split_sentences
-        env_type: "boolean" # <ENV_TYPE>
+        env_type: "bool" # <ENV_TYPE>
 ```
 
 #### \<FILE_TYPE>
@@ -1224,7 +1224,7 @@ docker compose definition at `environment`), `optional` whether this variable is
   [description: <DESCRIPTION>]
   [env_type: <ENV_TYPE>]
   [default: <SCALAR>]
-  [optional: <BOOLEAN>]
+  [optional: <BOOL>]
 ```
 
 Example:
