@@ -1,0 +1,21 @@
+x-veld:
+  chain:
+    description: "transforming wikipedia raw jsons to a single txt file."
+    topics:
+      - NLP
+      - ETL
+
+services:
+  veld_preprocess_transform_wiki_json_to_txt:
+    extends:
+      file: ./veld_code_20_wikipedia_nlp_preprocessing/veld_transform_wiki_json_to_txt.yaml
+      service: veld_transform_wiki_json_to_txt
+    volumes:
+      - ./data_local/training_data/extracted/:/veld/input/
+      - ./data_local/training_data/extracted__txt_sentence_per_line/:/veld/output/
+    environment:
+      in_json_folder: "data"
+      out_txt_file: "de_wiki_sample.txt"
+      set_split_sentences: true
+      cpu_count: 14
+      buffer_segments: 10

@@ -1,0 +1,14 @@
+x-veld:
+  data:
+    file_type: bin
+    description: self-trained fasttext word embeddings model on wikipedia data
+    contents:
+      - word embeddings model
+      - fasttext model
+    path: model_data/m3.bin
+    topics:
+      - NLP
+      - word embeddings
+    additional:
+      generated_on: 2024-09-15
+      by: SteffRhes
