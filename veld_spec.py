@@ -424,7 +424,7 @@ def validate(dict_to_validate: dict = None, yaml_to_validate: str = None):
                         other_elements_allowed = True
                 if len(obj_to_validate) != 0 and not other_elements_allowed:
                     unmatched_keys = ",".join(k for k in obj_to_validate.keys())
-                    return (False, f"elements not matching anything at: {path + '/' + unmatched_keys}")
+                    return (False, f"elements not allowed: {path + '/' + unmatched_keys}")
             return (True, None)
         
         def handle_node_mapping(obj_to_validate, node: NodeMapping, path):
