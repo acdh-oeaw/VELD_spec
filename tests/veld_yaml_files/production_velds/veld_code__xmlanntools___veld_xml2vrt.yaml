@@ -2,61 +2,61 @@ x-veld:
   code:
     description: "A demo code veld, integrating the xml2vrt script. For more documentation, 
       see: https://github.com/czcorpus/xmlanntools?tab=readme-ov-file#xml2vrt"
-    topics:
+    topic:
       - NLP
       - ETL
 
-    inputs:
+    input:
       - volume: /veld/input/data/
-        environment: in_ann_xml_file
+        environment_var: in_ann_xml_file
         file_type: xml
       - volume: /veld/input/config/
-        environment: in_ann2standoff_ini_file
+        environment_var: in_ann2standoff_ini_file
         file_type: ini
 
-    outputs:
+    output:
       - volume: /veld/output/
-        environment: out_conlluish_xml_file
+        environment_var: out_conlluish_xml_file
         file_type: xml
 
-    settings:
-      - environment: attributes
-        env_type: str
+    config:
+      - environment_var: attributes
+        var_type: str
         optional: true
-      - environment: token_element
-        env_type: str
+      - environment_var: token_element
+        var_type: str
         optional: true
-      - environment: include_elements
-        env_type: str
+      - environment_var: include_elements
+        var_type: str
         optional: true
-      - environment: exclude_elements
-        env_type: str
+      - environment_var: exclude_elements
+        var_type: str
         optional: true
-      - environment: keep_token_tags
-        env_type: bool
+      - environment_var: keep_token_tags
+        var_type: bool
         default: false
         optional: true
-      - environment: keep_empty
-        env_type: bool
+      - environment_var: keep_empty
+        var_type: bool
         default: false
         optional: true
-      - environment: discard_freetext
-        env_type: bool
+      - environment_var: discard_freetext
+        var_type: bool
         default: false
         optional: true
-      - environment: no_glue
-        env_type: bool
+      - environment_var: no_glue
+        var_type: bool
         default: false
         optional: true
-      - environment: glue
-        env_type: str
+      - environment_var: glue
+        var_type: str
         optional: true
-      - environment: fragment
-        env_type: bool
+      - environment_var: fragment
+        var_type: bool
         default: false
         optional: true
-      - environment: no_flattening
-        env_type: bool
+      - environment_var: no_flattening
+        var_type: bool
         default: false
         optional: true
 

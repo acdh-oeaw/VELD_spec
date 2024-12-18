@@ -2,7 +2,7 @@ x-veld:
   chain:
     description: "A demonstration of a VELD chain inferencing on a txt with a self-trained udpipe
       model"
-    topics:
+    topic:
     - NLP
     - universal dependencies
 

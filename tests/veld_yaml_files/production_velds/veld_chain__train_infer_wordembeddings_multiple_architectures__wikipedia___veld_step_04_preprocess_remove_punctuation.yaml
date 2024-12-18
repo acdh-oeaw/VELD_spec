@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "preprocessing by removing punctuation of the entire text."
-    topics: "NLP"
+    topic: "NLP"
 
 services:
 

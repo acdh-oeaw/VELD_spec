@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "jupyter notebook for playing with glove models"
-    topics: "NLP"
+    topic: "NLP"
 
 services:
   veld_jupyter_notebook_glove:

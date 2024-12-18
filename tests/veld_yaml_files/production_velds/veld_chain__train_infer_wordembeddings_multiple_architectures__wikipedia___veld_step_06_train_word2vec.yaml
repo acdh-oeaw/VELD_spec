@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "training a word2vec model on wikipediaa"
-    topics: "NLP"
+    topic: "NLP"
 
 services:
   veld_train_word2vec:

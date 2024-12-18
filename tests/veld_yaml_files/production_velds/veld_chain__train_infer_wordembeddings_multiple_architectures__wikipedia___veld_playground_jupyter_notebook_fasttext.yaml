@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "jupyter notebook for playing with fasttext models"
-    topics: "NLP"
+    topic: "NLP"
 
 services:
   veld_jupyter_notebook_fasttext:

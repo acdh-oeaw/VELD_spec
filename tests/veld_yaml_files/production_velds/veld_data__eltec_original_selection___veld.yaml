@@ -3,7 +3,7 @@ x-veld:
     description: "parent git repo that integrates various ELTeC corpora as submodules for 
       downstream processing."
     file_type: "xml"
-    contents:
+    content:
       - TEI
       - annotated literature
 

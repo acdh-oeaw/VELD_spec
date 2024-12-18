@@ -1,29 +1,29 @@
 x-veld:
   code:
     description: "data visualization of all evaluation data. In a jupyter notebook."
-    topics:
+    topic:
       - "NLP"
       - "word embeddings"
       - "data visualization"
 
-    inputs:
+    input:
       - volume: /veld/
-        environment: in_evaluation_summary_file
+        environment_var: in_evaluation_summary_file
         description: "summary of the custom evaluation logic on word embeddings"
         file_type: "yaml"
-        contents: "evaluation data"
+        content: "evaluation data"
 
-    outputs:
+    output:
       - volume: /veld/output/
-        environment: out_visualization_html_file
+        environment_var: out_visualization_html_file
         description: "data visualization of all evaluation data, expressed as interactive html"
         file_type: "html"
-        contents: "data visualization"
+        content: "data visualization"
       - volume: /veld/output/
-        environment: out_visualization_png_file
+        environment_var: out_visualization_png_file
         description: "data visualization of all evaluation data, expressed as png"
         file_type: "png"
-        contents: "data visualization"
+        content: "data visualization"
 
 services:
   veld_analyse_evaluation:

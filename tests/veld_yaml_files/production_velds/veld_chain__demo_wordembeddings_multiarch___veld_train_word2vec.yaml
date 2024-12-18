@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "demo word2vec training on the bible"
-    topics:
+    topic:
       - "NLP"
       - "Machine Learning"
       - "word embeddings"

@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "xml / xslt transformation of ELTeC data"
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "tokenization"

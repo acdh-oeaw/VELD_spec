@@ -2,7 +2,7 @@ x-veld:
   data:
     description: test training
     file_type: bin
-    contents:
+    content:
     - word embeddings model
     - fasttext model
     additional:

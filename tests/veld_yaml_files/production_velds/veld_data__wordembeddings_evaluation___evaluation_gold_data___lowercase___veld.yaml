@@ -2,11 +2,11 @@ x-veld:
   data:
     description: "custom evaluation data for evaluating word embeddings models. Words are all
       lowercase."
-    topics:
+    topic:
       - "NLP"
       - "word embeddings"
     file_type: "yaml"
-    contents:
+    content:
       - "evaluation data"
       - "NLP gold data"
 

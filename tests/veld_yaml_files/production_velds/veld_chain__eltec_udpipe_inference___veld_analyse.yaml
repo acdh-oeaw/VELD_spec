@@ -2,7 +2,7 @@ x-veld:
   chain:
     description: "chain to analyse the conllu data which was inferenced by udpipe on several ELTeC
       corpora."
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "tokenization"

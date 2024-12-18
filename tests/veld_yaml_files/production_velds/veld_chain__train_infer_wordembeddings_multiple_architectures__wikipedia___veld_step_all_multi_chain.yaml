@@ -3,7 +3,7 @@ x-veld:
     description: "An entire multi chain, going through everything (fetching, preprocessing, 
       training, evaluation in one service. This chain is composed of the other chains and is rather 
       meant as a demonstration of the entire setup"
-    topics: "NLP"
+    topic: "NLP"
 
 services:
 

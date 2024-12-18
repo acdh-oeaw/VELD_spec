@@ -2,31 +2,31 @@ x-veld:
   code:
     description: "A demo code veld, integrating the tag_ud script. For more documentation, 
       see: https://github.com/czcorpus/xmlanntools?tab=readme-ov-file#tag_ud"
-    topics:
+    topic:
       - NLP
       - ETL
 
-    inputs:
+    input:
       - volume: /veld/input/
-        environment: in_txt_file
+        environment_var: in_txt_file
         file_type: txt
 
-    outputs:
+    output:
       - volume: /veld/output/
-        environment: out_conllu_file
+        environment_var: out_conllu_file
         file_type:
           - tsv
           - conllu
 
-    settings:
-      - environment: model
-        env_type: str
-      - environment: batch
-        env_type: int
+    config:
+      - environment_var: model
+        var_type: str
+      - environment_var: batch
+        var_type: int
         default: 1000
         optional: true
-      - environment: verbose
-        env_type: bool
+      - environment_var: verbose
+        var_type: bool
         default: false
         optional: true
 

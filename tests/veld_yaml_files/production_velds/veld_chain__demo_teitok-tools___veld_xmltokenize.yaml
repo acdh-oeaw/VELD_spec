@@ -3,7 +3,7 @@ x-veld:
     description: "This chain veld exemplifies usage of the respective code veld. For more 
       information on the underlying tool and its usage, see: 
       https://github.com/ufal/teitok-tools?tab=readme-ov-file#xmltokenize"
-    topics:
+    topic:
       - NLP
       - ETL
       - tokenization

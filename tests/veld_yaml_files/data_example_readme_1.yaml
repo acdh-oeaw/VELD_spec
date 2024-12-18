@@ -3,4 +3,4 @@ x-veld:
     file_type: txt
     description: The entire german wikipedia, in a single txt file, where each line is a single 
       sentence
-    contents: raw text
+    content: raw text

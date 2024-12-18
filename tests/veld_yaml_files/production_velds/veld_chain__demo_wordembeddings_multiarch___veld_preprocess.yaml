@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "Download and preprocessing of the bible"
-    topics:
+    topic:
       - "ETL"
       - "NLP"
       - "bible studies"

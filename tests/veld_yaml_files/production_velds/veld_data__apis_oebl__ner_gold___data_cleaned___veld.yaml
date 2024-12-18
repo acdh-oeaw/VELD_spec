@@ -9,11 +9,11 @@ x-veld:
       entity types are suffixed with numbers (e.g. `PER-1337`). These were used for
       identifying entities in a project context, but are probably of less use for
       NER NLP training. This dataset keeps the identifiers.
-    contents:
+    content:
     - gold data
     - NER gold data
     - NLP gold data
-    topics:
+    topic:
     - NLP
     - Named entity recognition
     additional:

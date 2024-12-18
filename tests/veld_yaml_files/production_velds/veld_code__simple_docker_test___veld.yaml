@@ -1,7 +1,7 @@
 x-veld:
   code:
     description: "prints information about the python intepreter within the docker container."
-    topics: "testing"
+    topic: "testing"
 
 services:
   veld:

@@ -1,7 +1,7 @@
 x-veld:
   code:
     description: ""
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "tokenization"
@@ -11,14 +11,14 @@ x-veld:
       - "universal dependencies"
       - "grammatical annotation"
 
-    inputs:
+    input:
       - volume: "/veld/input/"
         file_type: "conllu"
 
-    outputs:
+    output:
       - volume: "/veld/output/"
         file_type: "json"
-        contents: 
+        content: 
           - "statistics"
           - "NLP statistics"
 

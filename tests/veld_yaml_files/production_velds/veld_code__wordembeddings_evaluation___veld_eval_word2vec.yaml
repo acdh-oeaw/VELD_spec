@@ -1,39 +1,37 @@
 x-veld:
   code:
     description: "custom evaluation logic on word2vec word embeddings."
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "evaluation"
 
-    inputs:
+    input:
       - volume: /veld/input/model/
-        environment: in_model_file
+        environment_var: in_model_file
         description: "word2vec model file to be evaluated"
         file_type: "word2vec model"
-        contents:
+        content:
           - "NLP model"
           - "word embeddings model"
       - volume: /veld/input/model/
-        environment: in_model_metadata_file
+        environment_var: in_model_metadata_file
         description: "word2vec model metadata"
         file_type: "yaml"
-        contents: "metadata"
+        content: "metadata"
       - volume: /veld/input/eval_data/
-        environment: in_eval_gold_data_file
+        environment_var: in_eval_gold_data_file
         file_type: "yaml"
-        contents: "NLP gold data"
+        content: "NLP gold data"
 
-    outputs:
+    output:
       - volume: /veld/output/summary/
-        environment: out_eval_summary_file
+        environment_var: out_eval_summary_file
         file_type: "yaml"
-        description: ""
-        contents: ""
       - volume: /veld/output/log/
-        environment: out_eval_log_file
+        environment_var: out_eval_log_file
         file_type: "txt"
-        contents: "logs"
+        content: "logs"
 
 services:
   veld_eval_word2vec:

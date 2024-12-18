@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "Conversion of apis ner model data to harmonized custom json format."
-    topics:
+    topic:
       - "ETL"
       - "data cleaning"
 

@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "training a glove model on wikipediaa"
-    topics: "NLP"
+    topic: "NLP"
 
 services:
   veld_train_glove:

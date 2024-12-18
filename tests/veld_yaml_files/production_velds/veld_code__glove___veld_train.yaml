@@ -2,71 +2,71 @@ x-veld:
   code:
     description: "This code repo encapsulates the original code from
       https://github.com/stanfordnlp/GloVe/tree/master"
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "word embeddings"
 
-    inputs:
+    input:
       - volume: /veld/input/
-        environment: in_corpus_file
+        environment_var: in_corpus_file
         description: "In the txt file, each line must be one sentence"
         file_type: "txt"
-        contents: "natural text"
+        content: "natural text"
 
-    outputs:
+    output:
       - volume: /veld/output/
-        environment: out_vocab_file
+        environment_var: out_vocab_file
         file_type: "bin"
-        contents: 
+        content: 
           - "GloVe global word cooccurrence matrix"
           - "GloVe vectors"
       - volume: /veld/output/
-        environment: out_cooccurrence_file
+        environment_var: out_cooccurrence_file
         file_type: "bin"
-        contents: 
+        content: 
           - "GloVe global word cooccurrence matrix"
           - "GloVe vectors"
       - volume: /veld/output/
-        environment: out_cooccurrence_shuf_file
+        environment_var: out_cooccurrence_shuf_file
         file_type: "bin"
-        contents: 
+        content: 
           - "GloVe global word cooccurrence matrix"
           - "GloVe vectors"
       - volume: /veld/output/
-        environment: out_vector_file
+        environment_var: out_vector_file
         file_type: "bin"
-        contents: 
+        content: 
           - "GloVe global word cooccurrence matrix"
           - "GloVe vectors"
 
-    settings:
-      - environment: verbose
-        env_type: "int"
+    config:
+      - environment_var: verbose
+        var_type: "int"
         default: 2
-      - environment: memory
-        env_type: "float"
+      - environment_var: memory
+        var_type: "float"
         default: 4.0
-      - environment: vocab_min_count
-        env_type: "int"
+      - environment_var: vocab_min_count
+        var_type: "int"
         default: 5
-      - environment: vector_size
-        env_type: "int"
+      - environment_var: vector_size
+        var_type: "int"
         default: 50
-      - environment: max_iter
-        env_type: "int"
+      - environment_var: max_iter
+        var_type: "int"
         default: 15
-      - environment: window_size
-        env_type: "int"
+      - environment_var: window_size
+        var_type: "int"
         default: 15
-      - environment: binary
-        env_type: "int"
+      - environment_var: binary
+        var_type: "int"
         default: 2
-      - environment: num_threads
-        env_type: "int"
+      - environment_var: num_threads
+        var_type: "int"
         default: 8
-      - environment: x_max
-        env_type: "int"
+      - environment_var: x_max
+        var_type: "int"
         default: 10
 
 services:

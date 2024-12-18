@@ -1,7 +1,7 @@
 x-veld:
   chain:
     description: "udpipe inference setup, reading in preprocessed ELTeC data"
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "tokenization"

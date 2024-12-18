@@ -1,7 +1,7 @@
 x-veld:
   data:
     file_type: spacy model
-    contents:
+    content:
     - spacy model
     - NLP model
     additional:

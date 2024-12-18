@@ -2,10 +2,10 @@ x-veld:
   data:
     file_type: conllu
     description: "A single conllu file, used to train a updipe model as a demonstration"
-    topics:
+    topic:
       - NLP
       - universal dependencies
-    contents:
+    content:
       - linguistically enriched text
       - tokenized text
       - lemmatized text

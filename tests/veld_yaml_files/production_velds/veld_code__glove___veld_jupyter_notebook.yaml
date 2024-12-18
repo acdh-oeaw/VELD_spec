@@ -2,7 +2,7 @@ x-veld:
   code:
     description: "A jupyter notebook that loads GloVe vectors and provides some convenient
       functions to use them."
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "word embeddings"

@@ -1,7 +1,7 @@
 x-veld:
   code:
     description: "udpipe training setup"
-    topics:
+    topic:
       - "NLP"
       - "Machine learning"
       - "tokenization"
@@ -11,248 +11,248 @@ x-veld:
       - "universal dependencies"
       - "grammatical annotation"
 
-    inputs:
+    input:
       - volume: /veld/input/
-        environment: train_data_path 
+        environment_var: train_data_path 
         file_type: "conllu"
-        contents:
+        content:
           - "tokenized text"
           - "enriched text"
           - "linguistic data"
 
-    outputs:
+    output:
       - volume: /veld/output/
-        environment: model_path
+        environment_var: model_path
         file_type: "udpipe model"
-        contents:
+        content:
           - "NLP model"
           - "tokenizer"
           - "lemmatizer"
 
-    settings:
+    config:
       # tokenizer options (see https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tokenizer )
-      - environment: tokenizer
+      - environment_var: tokenizer
         description: "if tokenizer config should be read or not"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true
-      - environment: tokenizer_tokenize_url
+      - environment_var: tokenizer_tokenize_url
         description: "tokenize URLs and emails using a manually implemented recognizer"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true
-      - environment: tokenizer_allow_spaces
+      - environment_var: tokenizer_allow_spaces
         description: "allow tokens to contain spaces"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true # true if any token contains a space, false otherwise
-      - environment: tokenizer_dimension
+      - environment_var: tokenizer_dimension
         description: "dimension of character embeddings and of the per-character bidirectional GRU. Note that inference time is quadratic in this parameter. Supported values are only 16, 24 and 64, with 64 needed for languages with complicated tokenization like Japanese, Chinese or Vietnamese or complicated segmentation."
-        env_type: int
+        var_type: int
         optional: true
         default: 24
-      - environment: tokenizer_segment_size
+      - environment_var: tokenizer_segment_size
         description: "length of character segment used to predict token and sentence breaks. Larger values like 200 are needed for languges with complicated segmentation"
-        env_type: int
+        var_type: int
         optional: true
         default: 50
-      - environment: tokenizer_epochs
+      - environment_var: tokenizer_epochs
         description: "the number of epochs to train the tokenizer for"
-        env_type: int
+        var_type: int
         optional: true
         default: 100
-      - environment: tokenizer_batch_size
+      - environment_var: tokenizer_batch_size
         description: "batch size (number of segments) used during tokenizer training"
-        env_type: int
+        var_type: int
         optional: true
         default: 50
-      - environment: tokenizer_learning_rate
+      - environment_var: tokenizer_learning_rate
         description: "the learning rate used during tokenizer training"
-        env_type: float
+        var_type: float
         optional: true
         default: 0.005
-      - environment: tokenizer_learning_rate_final
+      - environment_var: tokenizer_learning_rate_final
         description: "if not zero, use exponential learning rate decay so that last epoch uses this learning rate"
-        env_type: float
+        var_type: float
         optional: true
         default: 0
-      - environment: tokenizer_dropout
+      - environment_var: tokenizer_dropout
         description: "dropout used during tokenizer training"
-        env_type: float
+        var_type: float
         optional: true
         default: 0.1
-      - environment: tokenizer_early_stopping
+      - environment_var: tokenizer_early_stopping
         description: "perform early stopping, choosing training iteration maximizing sentences F1 score plus tokens F1 score on heldout data"
-        env_type: bool
+        var_type: bool
         optional: true
         default: 1
 
       # tagger options (see https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_tagger )
-      - environment: tagger
+      - environment_var: tagger
         description: "if tagger config should be read or not"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true
-      - environment: tagger_use_lemma
+      - environment_var: tagger_use_lemma
         description: "use the lemma field internally to perform disambiguation; the lemma may be not outputted"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true # default for the second model and also if there is only one model
-      - environment: tagger_provide_lemma
+      - environment_var: tagger_provide_lemma
         description: "produce the disambiguated lemma on output"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true # default for the second model and also if there is only one model
-      - environment: tagger_use_xpostag
+      - environment_var: tagger_use_xpostag
         description: "use the XPOS tags internally to perform disambiguation; it may not be outputted"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true # default for the first model
-      - environment: tagger_provide_xpostag
+      - environment_var: tagger_provide_xpostag
         description: "produce the disambiguated XPOS tag on output"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true # default for the first model
-      - environment: tagger_use_feats
+      - environment_var: tagger_use_feats
         description: "use the Feats internally to perform disambiguation; it may not be outputted"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true # default for the first model
-      - environment: tagger_provide_feats
+      - environment_var: tagger_provide_feats
         description: "produce the disambiguated Feats field on output"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true # default for the first model
-      - environment: tagger_dictionary_max_form_analyses
+      - environment_var: tagger_dictionary_max_form_analyses
         description: "the maximum number of (most frequent) form analyses from UD training data that are to be kept in the morphological dictionary"
-        env_type: int
+        var_type: int
         optional: true
         default: 0 # default 0 - unlimited
-      - environment: tagger_dictionary_file
+      - environment_var: tagger_dictionary_file
         description: "use a given custom morphological dictionary, where each line contains 5 tab-separated fields FORM, LEMMA, UPOSTAG, XPOSTAG and FEATS. Note that this dictionary data is appended to the dictionary created from the UD training data, not replacing it."
-        env_type: str
+        var_type: str
         optional: true
         default: null
-      - environment: tagger_guesser_suffix_rules
+      - environment_var: tagger_guesser_suffix_rules
         description: "number of rules generated for every suffix"
-        env_type: int
+        var_type: int
         optional: true
         default: 8
-      - environment: tagger_guesser_prefixes_max
+      - environment_var: tagger_guesser_prefixes_max
         description: "maximum number of form-generating prefixes to use in the guesser"
-        env_type: int
+        var_type: int
         optional: true
         default: 4 # default 4 if `provide_lemma`, 0 otherwise
-      - environment: tagger_guesser_prefix_min_count
+      - environment_var: tagger_guesser_prefix_min_count
         description: "minimum number of occurrences of form-generating prefix to consider using it in the guesser"
-        env_type: int
+        var_type: int
         optional: true
         default: 10
-      - environment: tagger_guesser_enrich_dictionary
+      - environment_var: tagger_guesser_enrich_dictionary
         description: "number of rules generated for forms present in training data (assuming that the analyses from the training data may not be all)"
-        env_type: int
+        var_type: int
         optional: true
         default: 6 # default 6 if no dictionary_file is passed, 0 otherwise
-      - environment: tagger_iterations
+      - environment_var: tagger_iterations
         description: "number of training iterations to perform"
-        env_type: int
+        var_type: int
         optional: true
         default: 20
-      - environment: tagger_early_stopping
+      - environment_var: tagger_early_stopping
         description: "perform early stopping, choosing training iteration maximizing tagging accuracy on the heldout data"
-        env_type: bool
+        var_type: bool
         optional: true
         default: 0 # default 1 if heldout is given, 0 otherwise
-      - environment: tagger_templates
+      - environment_var: tagger_templates
         description: "MorphoDiTa feature templates to use, either lemmatizer which focuses more on lemmas, or tagger which focuses more on UPOS/XPOS/FEATS"
-        env_type: str
+        var_type: str
         optional: true
         default: null # default lemmatizer for second model, tagger otherwise
 
       # parser options (see https://ufal.mff.cuni.cz/udpipe/1/users-manual#model_training_parser )
-      - environment: parser
+      - environment_var: parser
         description: "if parser config should be read or not"
-        env_type: bool
+        var_type: bool
         optional: true
         default: true
-      - environment: parser_use_gold_tags
+      - environment_var: parser_use_gold_tags
         description: "if false and a tagger exists, the Lemmas/UPOS/XPOS/FEATS for both the training and heldout data are generated by the tagger, otherwise they are taken from the gold data"
-        env_type: bool
+        var_type: bool
         optional: true
         default: false
-      - environment: parser_embedding_upostag
+      - environment_var: parser_embedding_upostag
         description: "the dimension of the UPos embedding used in the parser"
-        env_type: int
+        var_type: int
         optional: true
         default: 20
-      - environment: parser_embedding_feats
+      - environment_var: parser_embedding_feats
         description: "the dimension of the Feats embedding used in the parser"
-        env_type: int
+        var_type: int
         optional: true
         default: 20
-      - environment: parser_embedding_xpostag
+      - environment_var: parser_embedding_xpostag
         description: "the dimension of the XPos embedding used in the parser"
-        env_type: int
+        var_type: int
         optional: true
         default: 0
-      - environment: parser_embedding_form
+      - environment_var: parser_embedding_form
         description: "the dimension of the Form embedding used in the parser"
-        env_type: int
+        var_type: int
         optional: true
         default: 50
-      - environment: parser_embedding_lemma
+      - environment_var: parser_embedding_lemma
         description: "the dimension of the Lemma embedding used in the parser"
-        env_type: int
+        var_type: int
         optional: true
         default: 0
-      - environment: parser_embedding_deprel
+      - environment_var: parser_embedding_deprel
         description: "the dimension of the Deprel embedding used in the parser"
-        env_type: int
+        var_type: int
         optional: true
         default: 20
-      - environment: parser_embedding_form_mincount
+      - environment_var: parser_embedding_form_mincount
         description: "for forms not present in the pre-trained embeddings, generate random embeddings if the form appears at least this number of times in the trainig data (forms not present in the pre-trained embeddings and appearing less number of times are considered OOV)"
-        env_type: int
+        var_type: int
         optional: true
         default: 2
-      - environment: parser_embedding_lemma_mincount
+      - environment_var: parser_embedding_lemma_mincount
         description: "for lemmas not present in the pre-trained embeddings, generate random embeddings if the lemma appears at least this number of times in the trainig data (lemmas not present in the pre-trained embeddings and appearing less number of times are considered OOV)"
-        env_type: int
+        var_type: int
         optional: true
         default: 2
-      - environment: parser_iterations
+      - environment_var: parser_iterations
         description: "number of training iterations to use"
-        env_type: int
+        var_type: int
         optional: true
         default: 10
-      - environment: parser_hidden_layer
+      - environment_var: parser_hidden_layer
         description: "the size of the hidden layer"
-        env_type: int
+        var_type: int
         optional: true
         default: 200
-      - environment: parser_batch_size
+      - environment_var: parser_batch_size
         description: "batch size used during neural-network training"
-        env_type: int
+        var_type: int
         optional: true
         default: 10
-      - environment: parser_learning_rate
+      - environment_var: parser_learning_rate
         description: "the learning rate used during neural-network training"
-        env_type: float
+        var_type: float
         optional: true
         default: 0.02
-      - environment: parser_learning_rate_final
+      - environment_var: parser_learning_rate_final
         description: "the final learning rate used during neural-network training"
-        env_type: float
+        var_type: float
         optional: true
         default: 0.001
-      - environment: parser_l2
+      - environment_var: parser_l2
         description: "the L2 regularization used during neural-network training"
-        env_type: float
+        var_type: float
         optional: true
         default: 0.5
-      - environment: parser_early_stopping
+      - environment_var: parser_early_stopping
         description: "perform early stopping, choosing training iteration maximizing LAS on heldout data"
-        env_type: bool
+        var_type: bool
         optional: true
         default: false # default 1 if heldout is given, 0 otherwise
       

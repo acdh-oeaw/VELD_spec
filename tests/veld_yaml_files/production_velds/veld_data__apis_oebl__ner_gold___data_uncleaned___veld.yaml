@@ -2,11 +2,11 @@ x-veld:
   data:
     file_type: json
     description: The original, but united, data coming from APIS / ÖBL.
-    contents:
+    content:
     - gold data
     - NER gold data
     - NLP gold data
-    topics:
+    topic:
     - NLP
     - Named entity recognition
     additional:
