@@ -116,10 +116,18 @@ def read_schema():
                 self.indentation_level_previous = 0
                 
             def __repr__(self):
-                i_end = self.i + 10
-                if i_end == len(self.data_block):
+                i_start = self.i - 20
+                if i_start <= 0:
+                    i_start = 0
+                i_end = self.i + 20
+                if i_end >= len(self.data_block):
                     i_end = len(self.data_block) - 1
-                return f"{self.i, self.data_block[self.i], self.data_block[self.i:i_end]}"
+                segment = (
+                    self.data_block[i_start:self.i] + ">>>"
+                    + self.char + "<<<"
+                    + self.data_block[self.i + 1:i_end]
+                )
+                return f"{self.i, self.char, segment}"
             
             @property
             def char(self):
