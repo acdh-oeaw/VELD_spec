@@ -512,6 +512,89 @@ additional:
   by: SteffRhes
 ```
 
+#### \<CONFIG>
+
+To configure a code veld's behaviour, variables can be set. This section serves as a
+contxtualization on the `<ENVIRONMENT>` and `<ENVIRONMENT_VAR>` sections. With `<CONFIG>`,
+`environment` refers to the variable name, `description` explains the variable's purpose and
+functionality, `var_type` the type, `default` any default value (which should be set in code veld's
+docker compose definition at `environment`), `optional` whether this variable is optional.
+
+```
+<CONFIG> ::= 
+  environment_var: <ENVIRONMENT_VAR>
+  [description: <DESCRIPTION>]
+  [var_type: <var_type>]
+  [default: <SCALAR>]
+  [optional: <BOOL>]
+```
+
+Example:
+
+In the first code veld:
+
+```
+x-veld:
+  code:
+    ...
+    config: # <CONFIG>
+      - environment_var: wikipedia_dump_url # <ENVIRONMENT_VAR>
+        description: "url to a wikipdedia dump download, from https://dumps.wikimedia.org/"
+        var_type: "str"
+
+services:
+    ...
+    environment:
+      wikipedia_dump_url: null # <ENVIRONMENT_VAR>
+```
+
+And the variables being set in the respective chain veld:
+
+```
+x-veld:
+  chain:
+    ...
+
+services:
+    ...
+    environment:
+      wikipedia_dump_url: https://dumps.wikimedia.org/dewiki/latest/dewiki-latest-pages-articles.xml.bz2
+```
+
+In the second code veld, there are several more:
+
+```
+x-veld:
+  code:
+    ...
+    config: # <CONFIG>
+      - environment_var: sample_random_seed
+        description: "a random seed in case a random sample is drawn and its randomness should be 
+          fixed."
+        var_type: "str"
+        optional: true
+        default: null
+      - environment_var: buffer_segments
+        description: "The interval at which progress should be printed. E.g. 100 means to print 
+          hundred times during processing."
+        var_type: "int"
+        optional: true 
+        default: 100
+```
+
+Filled out by the second chain veld, where only one is filled out, namely `buffer_segments`,
+while `sample_random_seed` is left out as it's not needed by the chain.
+
+```
+x-veld:
+  chain:
+    ...
+services:
+    ...
+    environment: # <CONFIG>
+      buffer_segments: 10
+```
+
 #### \<CONTAINER_PATH>
 
 The target folder inside a container of a code veld. Used within `<VOLUME>`. 
@@ -885,89 +968,6 @@ description: self-trained fasttext word embeddings model on wikipedia data # <SC
 
 ```
 buffer_segments: 10 # <SCALAR>
-```
-
-#### \<CONFIG>
-
-To configure a code veld's behaviour, variables can be set. This section serves as a
-contxtualization on the `<ENVIRONMENT>` and `<ENVIRONMENT_VAR>` sections. With `<CONFIG>`,
-`environment` refers to the variable name, `description` explains the variable's purpose and
-functionality, `var_type` the type, `default` any default value (which should be set in code veld's
-docker compose definition at `environment`), `optional` whether this variable is optional.
-
-```
-<CONFIG> ::= 
-  environment_var: <ENVIRONMENT_VAR>
-  [description: <DESCRIPTION>]
-  [var_type: <var_type>]
-  [default: <SCALAR>]
-  [optional: <BOOL>]
-```
-
-Example:
-
-In the first code veld:
-
-```
-x-veld:
-  code:
-    ...
-    config: # <CONFIG>
-      - environment_var: wikipedia_dump_url # <ENVIRONMENT_VAR>
-        description: "url to a wikipdedia dump download, from https://dumps.wikimedia.org/"
-        var_type: "str"
-
-services:
-    ...
-    environment:
-      wikipedia_dump_url: null # <ENVIRONMENT_VAR>
-```
-
-And the variables being set in the respective chain veld:
-
-```
-x-veld:
-  chain:
-    ...
-
-services:
-    ...
-    environment:
-      wikipedia_dump_url: https://dumps.wikimedia.org/dewiki/latest/dewiki-latest-pages-articles.xml.bz2
-```
-
-In the second code veld, there are several more:
-
-```
-x-veld:
-  code:
-    ...
-    config: # <CONFIG>
-      - environment_var: sample_random_seed
-        description: "a random seed in case a random sample is drawn and its randomness should be 
-          fixed."
-        var_type: "str"
-        optional: true
-        default: null
-      - environment_var: buffer_segments
-        description: "The interval at which progress should be printed. E.g. 100 means to print 
-          hundred times during processing."
-        var_type: "int"
-        optional: true 
-        default: 100
-```
-
-Filled out by the second chain veld, where only one is filled out, namely `buffer_segments`,
-while `sample_random_seed` is left out as it's not needed by the chain.
-
-```
-x-veld:
-  chain:
-    ...
-services:
-    ...
-    environment: # <CONFIG>
-      buffer_segments: 10
 ```
 
 #### \<TOPIC>
