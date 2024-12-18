@@ -1,6 +1,6 @@
 # VELD spec
 
-**version v1.0**
+**version v1.0.1**
 
 This is the formal specification of the VELD metadata schema.
 
