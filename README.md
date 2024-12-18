@@ -10,18 +10,18 @@ here: https://zenodo.org/records/13322913
 **table of contents:**
 
 - [pip installable validator](#pip-installable-validator)
-- [Primer on yaml+BNF metasyntax of the specification](#primer-on-yamlbnf-metasyntax-of-the-specification)
+- [VELD specification](#VELD-specification)
+    - [data veld](#data-veld)
+    - [code veld](#code-veld)
+    - [chain veld](#chain-veld)
+    - [VELD variables](#veld-variables)
+- [Definition of the yaml+BNF metasyntax for the specification](#definition-of-the-yamlbnf-metasyntax-for-the-specification)
     - [non-variable](#non-variable)
     - [variable](#variable)
     - [optional](#optional)
     - [list](#list)
     - [disjunction](#disjunction)
     - [composition](#composition)
-- [VELD specification](#VELD-specification)
-    - [data veld](#data-veld)
-    - [code veld](#code-veld)
-    - [chain veld](#chain-veld)
-    - [VELD variables](#veld-variables)
 
 ## pip installable validator
 
@@ -63,349 +63,10 @@ It will return a tuple which:
 (False, 'root node x-veld missing')
 ```
 
-## Primer on yaml+BNF metasyntax of the specification
-
-This section is a primer on how to read the metasyntax of the VELD specification, which is expressed
-in yaml syntax with [BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form).
-Any yaml file adhering to this schema becomes a valid representation of a VELD object.
-
-This is the exhaustive list of components that make up the VELD specification:
-
-- [non-variable](#non-variable)
-- [variable](#variable)
-- [optional](#optional)
-- [list](#list)
-- [disjunction](#disjunction)
-- [composition](#composition)
-
-### non-variable
-
-Anything that is not a variable or marked with special syntax as described below must exist as-is.
-
-Example:
-
-A yaml file adhering to the example schema below must have a [mapping](https://yaml.org/spec/1.2.
-2/#nodes) at the root named `root` containing a child mapping `sub` which must be empty
-
-```
-root:
-  sub:
-```
-
-valid:
-
-is identical to the simple schema above.
-
-```
-root:
-  sub:
-```
-
-invalid:
-
-is missing the mapping `sub`
-
-```
-root:
-```
-
-invalid:
-
-contains a non-defined additional element `root_2`
-
-```
-root:
-  sub:
-root_2:
-```
-
-### variable
-
-Variables are marked with `<` and `>` and defined with `::=`. They may nest other variables but must
-ultimately resolve to a basic [yaml scalar](https://yaml.org/spec/1.2.2/#scalars).
-
-Example:
-
-In this yaml content, a variable `<SOME_VALUE>` is used as a placeholder, indicating that it can be
-replaced with any content that fits its definition somewhere else: `<SOME_VALUE> ::= `, while the
-other non-variable yaml keys `root` and `sub` need to be present exactly in such structure with
-identical naming. (Note that `<SCALAR>` is the only variable not defined within this document as it
-refers to the yaml scalar type, defined in [yaml 1.2.2](https://yaml.org/spec/1.2.2/) itself)
-
-variable usage:
-
-```
-root:
-  sub: <SOME_VALUE>
-```
-
-variable definition:
-
-The value `<SOME_VALUE>` can be replaced with any yaml scalar, e.g. string, integer, bool etc.
-But no complex type like lists or mappings are allowed.
-
-```
-<SOME_VALUE> ::= <SCALAR>
-```
-
-valid:
-
-`foo` is a simple yaml scalar
-
-```
-root:
-  sub: foo 
-```
-
-invalid:
-
-`foo` is not a scalar, but a mapping
-
-```
-root:
-  sub: 
-    foo: bar 
-```
-
-### optional
-
-Content that is optional is marked with `[` and `]`. Inside can be any other components or
-compositions. If a collection of yaml objects is marked as optional, it must be either absent or
-present fully; partial objects are invalid.
-
-Example:
-
-A single value may be present or not, but the key of its mapping must be present
-
-```
-root:
-  sub: [<SCALAR>]
-```
-
-valid:
-
-optional value does not exist
-
-```
-root:
-  sub: 
-```
-
-valid:
-
-optional value does exist
-
-```
-root:
-  sub: foo 
-```
-
-invalid:
-
-non-optional key of the mapping does not exist
-
-```
-root:
-```
-
-Example:
-
-An entire mapping is marked as optional
-
-```
-root:
-  [sub: <SCALAR>]
-```
-
-valid:
-
-optional mapping does not exist
-
-```
-root:
-```
-
-valid:
-
-optional mapping does exist
-
-```
-root:
-  sub: foo 
-```
-
-invalid:
-
-Only the key of the optional mapping exists, but not its value.
-
-```
-root:
-  sub: 
-```
-
-### list
-
-Lists are defined with `{` and `}`. Within can be any content, complex or not, variables or not, and
-any nestings of such. A valid list is where all its elements adhere to the definition, and it can be
-of any cardinality, including zero.
-
-Example:
-
-The content of the mapping with key `sub` must be a list of simple scalars.
-
-```
-root:
-  sub: {<SCALAR>}
-```
-
-valid:
-
-A list with only scalars
-
-```
-root:
-  sub:
-    - foo
-    - bar
-```
-
-valid:
-
-No value at all, which can also be interpreted as an empty list
-
-```
-root:
-  sub:
-```
-
-invalid:
-
-A list with a scalar and a mapping
-
-```
-root:
-  sub:
-    - foo
-    - bar: baz
-```
-
-### disjunction
-
-Indicating a range of possibilities with `|` in between the options, of which precisely one must be
-fulfilled.
-
-Example:
-
-content of `sub` must be either a single scalar or a list of scalars.
-
-```
-root:
-  sub: <SCALAR> | {<SCALAR>} 
-```
-
-valid:
-
-is a single scalar
-
-```
-root:
-  sub: foo 
-```
-
-valid:
-
-is a list of scalars
-
-```
-root:
-  sub:
-    - foo
-    - bar 
-```
-
-invalid:
-
-is neither a scalar nor a list of scalars, but a mapping
-
-```
-root:
-  sub:
-    foo: bar 
-```
-
-### composition
-
-Any components described above can be arbitrarily combined and nested.
-
-Example:
-
-A root element `root` must exist, containing two mappings. The first mapping with key `sub_1`
-must contain a scalar. The second mapping `sub_2` is entirely optional and may contain either a
-single scalar or a list of the variable `<SUB_CONTENT>`. The variable `<SUB_CONTENT>` contains two
-more mappings, where the key `sub_sub_1` must exist, but its value is optional and references the
-variable `<BOOL>` which must be either `true` or `false`. The other mapping
-`sub_sub_2` is optional entirely, and it contains a single mapping `sub_sub_sub` to a list of
-scalars.
-
-```
-root:
-  sub_1: <SCALAR> 
-  [sub_2: <SCALAR> | {<SUB_CONTENT>}]
-```
-
-```
-<SUB_CONTENT> ::= 
-  sub_sub_1: [<BOOL>]
-  [sub_sub_2: 
-    sub_sub_sub: {<SCALAR>}
-  ] 
-```
-
-```
-<BOOL> ::= true | false
-```
-
-valid:
-
-```
-root:
-  sub_1: foo
-```
-
-valid:
-
-```
-root:
-  sub_1: foo
-  sub_2: 
-    - foo_1
-    - foo_2
-    - foo_3
-```
-
-valid:
-
-```
-root:
-  sub_1: foo
-  sub_2:
-    sub_sub_1:
-```
-
-valid:
-
-```
-root:
-  sub_1: foo
-  sub_2:
-    sub_sub_1: true
-    sub_sub_2:
-      sub_sub_sub:
-        - foo_1
-        - foo_2
-```
 
 ## VELD specification
+
+Note: See [Definition of the yaml+BNF metasyntax for the specification](#definition-of-the-yamlbnf-metasyntax-for-the-specification) on how to read the specification.
 
 The following sections contain the specifications for the three VELD objects and their variables:
 
@@ -1426,4 +1087,348 @@ services:
     ...
     volumes: # <VOLUME>
       - ./data_local/training_data/extracted/:/veld/output/ <HOST_PATH>:<CONTAINER_PATH>
+```
+
+
+## Definition of the yaml+BNF metasyntax for the specification
+
+This section is a definition of the metasyntax for the VELD specification, which is 
+expressed in yaml syntax with 
+[BNF-like metasyntax](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form). Any yaml file 
+adhering to this schema becomes a valid representation of a VELD object.
+
+This is the exhaustive list of components that make up the VELD specification:
+
+- [non-variable](#non-variable)
+- [variable](#variable)
+- [optional](#optional)
+- [list](#list)
+- [disjunction](#disjunction)
+- [composition](#composition)
+
+### non-variable
+
+Anything that is not a variable or marked with special syntax as described below must exist as-is.
+
+Example:
+
+A yaml file adhering to the example schema below must have a [mapping](https://yaml.org/spec/1.2.
+2/#nodes) at the root named `root` containing a child mapping `sub` which must be empty
+
+```
+root:
+  sub:
+```
+
+valid:
+
+is identical to the simple schema above.
+
+```
+root:
+  sub:
+```
+
+invalid:
+
+is missing the mapping `sub`
+
+```
+root:
+```
+
+invalid:
+
+contains a non-defined additional element `root_2`
+
+```
+root:
+  sub:
+root_2:
+```
+
+### variable
+
+Variables are marked with `<` and `>` and defined with `::=`. They may nest other variables but must
+ultimately resolve to a basic [yaml scalar](https://yaml.org/spec/1.2.2/#scalars).
+
+Example:
+
+In this yaml content, a variable `<SOME_VALUE>` is used as a placeholder, indicating that it can be
+replaced with any content that fits its definition somewhere else: `<SOME_VALUE> ::= `, while the
+other non-variable yaml keys `root` and `sub` need to be present exactly in such structure with
+identical naming. (Note that `<SCALAR>` is the only variable not defined within this document as it
+refers to the yaml scalar type, defined in [yaml 1.2.2](https://yaml.org/spec/1.2.2/) itself)
+
+variable usage:
+
+```
+root:
+  sub: <SOME_VALUE>
+```
+
+variable definition:
+
+The value `<SOME_VALUE>` can be replaced with any yaml scalar, e.g. string, integer, bool etc.
+But no complex type like lists or mappings are allowed.
+
+```
+<SOME_VALUE> ::= <SCALAR>
+```
+
+valid:
+
+`foo` is a simple yaml scalar
+
+```
+root:
+  sub: foo 
+```
+
+invalid:
+
+`foo` is not a scalar, but a mapping
+
+```
+root:
+  sub: 
+    foo: bar 
+```
+
+### optional
+
+Content that is optional is marked with `[` and `]`. Inside can be any other components or
+compositions. If a collection of yaml objects is marked as optional, it must be either absent or
+present fully; partial objects are invalid.
+
+Example:
+
+A single value may be present or not, but the key of its mapping must be present
+
+```
+root:
+  sub: [<SCALAR>]
+```
+
+valid:
+
+optional value does not exist
+
+```
+root:
+  sub: 
+```
+
+valid:
+
+optional value does exist
+
+```
+root:
+  sub: foo 
+```
+
+invalid:
+
+non-optional key of the mapping does not exist
+
+```
+root:
+```
+
+Example:
+
+An entire mapping is marked as optional
+
+```
+root:
+  [sub: <SCALAR>]
+```
+
+valid:
+
+optional mapping does not exist
+
+```
+root:
+```
+
+valid:
+
+optional mapping does exist
+
+```
+root:
+  sub: foo 
+```
+
+invalid:
+
+Only the key of the optional mapping exists, but not its value.
+
+```
+root:
+  sub: 
+```
+
+### list
+
+Lists are defined with `{` and `}`. Within can be any content, complex or not, variables or not, and
+any nestings of such. A valid list is where all its elements adhere to the definition, and it can be
+of any cardinality, including zero.
+
+Example:
+
+The content of the mapping with key `sub` must be a list of simple scalars.
+
+```
+root:
+  sub: {<SCALAR>}
+```
+
+valid:
+
+A list with only scalars
+
+```
+root:
+  sub:
+    - foo
+    - bar
+```
+
+valid:
+
+No value at all, which can also be interpreted as an empty list
+
+```
+root:
+  sub:
+```
+
+invalid:
+
+A list with a scalar and a mapping
+
+```
+root:
+  sub:
+    - foo
+    - bar: baz
+```
+
+### disjunction
+
+Indicating a range of possibilities with `|` in between the options, of which precisely one must be
+fulfilled.
+
+Example:
+
+content of `sub` must be either a single scalar or a list of scalars.
+
+```
+root:
+  sub: <SCALAR> | {<SCALAR>} 
+```
+
+valid:
+
+is a single scalar
+
+```
+root:
+  sub: foo 
+```
+
+valid:
+
+is a list of scalars
+
+```
+root:
+  sub:
+    - foo
+    - bar 
+```
+
+invalid:
+
+is neither a scalar nor a list of scalars, but a mapping
+
+```
+root:
+  sub:
+    foo: bar 
+```
+
+### composition
+
+Any components described above can be arbitrarily combined and nested.
+
+Example:
+
+A root element `root` must exist, containing two mappings. The first mapping with key `sub_1`
+must contain a scalar. The second mapping `sub_2` is entirely optional and may contain either a
+single scalar or a list of the variable `<SUB_CONTENT>`. The variable `<SUB_CONTENT>` contains two
+more mappings, where the key `sub_sub_1` must exist, but its value is optional and references the
+variable `<BOOL>` which must be either `true` or `false`. The other mapping
+`sub_sub_2` is optional entirely, and it contains a single mapping `sub_sub_sub` to a list of
+scalars.
+
+```
+root:
+  sub_1: <SCALAR> 
+  [sub_2: <SCALAR> | {<SUB_CONTENT>}]
+```
+
+```
+<SUB_CONTENT> ::= 
+  sub_sub_1: [<BOOL>]
+  [sub_sub_2: 
+    sub_sub_sub: {<SCALAR>}
+  ] 
+```
+
+```
+<BOOL> ::= true | false
+```
+
+valid:
+
+```
+root:
+  sub_1: foo
+```
+
+valid:
+
+```
+root:
+  sub_1: foo
+  sub_2: 
+    - foo_1
+    - foo_2
+    - foo_3
+```
+
+valid:
+
+```
+root:
+  sub_1: foo
+  sub_2:
+    sub_sub_1:
+```
+
+valid:
+
+```
+root:
+  sub_1: foo
+  sub_2:
+    sub_sub_1: true
+    sub_sub_2:
+      sub_sub_sub:
+        - foo_1
+        - foo_2
 ```
