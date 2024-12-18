@@ -205,7 +205,7 @@ x-veld:
     [output: <INPUT_OR_OUTPUT> | {<INPUT_OR_OUTPUT>}]
     
     # optional: describes the various configs that can modify the code veld's behavior
-    [config: {<CONFIG>}]
+    [config: <CONFIG> | {<CONFIG>}]
     
 # mandatory: docker compose service section
 services:
