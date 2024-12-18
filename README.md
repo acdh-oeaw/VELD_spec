@@ -549,7 +549,7 @@ x-veld:
 # mandatory: docker compose service section
 services:
 
-  # mandatory: name of the compose service, naming it either or prefixing it `veld` is recommended 
+  # mandatory: name of the compose service, must be either `veld` or prefixed with `veld_` 
   <VELD_SERVICE_NAME>:
   
     # mandatory: any kind of compose service definition, necessary for functionality
