@@ -271,11 +271,17 @@ def read_schema():
                 node.content = resolve_variables_recursively(node.content)
                 node.target = resolve_variables_recursively(node.target)
             elif type(node) is NodeDict:
+                content_new = []
                 for node_sub in node.content:
                     node_sub = resolve_variables_recursively(node_sub)
+                    content_new.append(node_sub)
+                node.content = content_new
             elif type(node) is NodeDisjunction:
+                content_new = []
                 for node_sub in node.content:
                     node_sub = resolve_variables_recursively(node_sub)
+                    content_new.append(node_sub)
+                node.content = content_new
             elif type(node) is NodeList:
                 node.content = resolve_variables_recursively(node.content)
             elif type(node) is Node:
