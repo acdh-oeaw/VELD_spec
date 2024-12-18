@@ -1,6 +1,6 @@
 # VELD spec
 
-**version v1.0.1**
+**version v24.12.18**
 
 This is the formal specification of the VELD metadata schema.
 
@@ -120,10 +120,10 @@ x-veld:
     [description: <DESCRIPTION>]
     
     # optional, either single value or list: the content within the files
-    [contents: <CONTENT> | {<CONTENT>}]
+    [content: <CONTENT> | {<CONTENT>}]
     
     # optional, either single value or list: what broader topics does this touch upon? 
-    [topics: <TOPIC> | {<TOPIC>}]
+    [topic: <TOPIC> | {<TOPIC>}]
     
     # optional: any kind of non-VELD data in any yaml structure, meant for ad-hoc usage
     [additional: <ADDITIONAL>] 
@@ -141,7 +141,7 @@ x-veld:
     file_type: txt
     description: The entire german wikipedia, in a single txt file, where each line is a single 
       sentence
-    contents: raw text
+    content: raw text
 ```
 
 This data veld yaml describes a fasttext model which is a binary file, epxressed as `file_type:
@@ -156,11 +156,11 @@ x-veld:
   data:
     file_type: bin
     description: self-trained fasttext word embeddings model on wikipedia data
-    contents:
+    content:
       - word embeddings model
       - fasttext model
     path: model_data/m3.bin
-    topics:
+    topic:
       - NLP
       - word embeddings
     additional:
@@ -193,7 +193,7 @@ x-veld:
     [description: <DESCRIPTION>]
     
     # optional, either single value or list: what broader topics does this touch upon? 
-    [topics: <TOPIC> | {<TOPIC>}]
+    [topic: <TOPIC> | {<TOPIC>}]
     
     # optional: any kind of non-VELD data in any yaml structure, meant for ad-hoc usage
     [additional: <ADDITIONAL>]   
@@ -204,8 +204,8 @@ x-veld:
     # optional: describes the various output this code veld can produce
     [output: <INPUT_OR_OUTPUT> | {<INPUT_OR_OUTPUT>}]
     
-    # optional: describes the various settings that can modify the code veld's behavior
-    [settings: {<SETTING>}]
+    # optional: describes the various configs that can modify the code veld's behavior
+    [config: {<CONFIG>}]
     
 # mandatory: docker compose service section
 services:
@@ -220,7 +220,7 @@ services:
     [volumes: {<VOLUME>}]
     
     # optional: environment variables, which might be necessary and or referenced by other parts 
-    [environment_var: <ENVIRONMENT>]
+    [environment: <ENVIRONMENT>]
     
 # anything further that a running compose file might need, e.g. networks, yaml variables.
 [<FURTHER_COMPOSE_DEFINITION>]
@@ -238,7 +238,7 @@ interoperability.
 x-veld:
   code:
     description: "downloading wikipedia archive and extracting each article to a json file."
-    topics:
+    topic:
       - "NLP"
       - "Machine Learning"
       - "ETL"
@@ -248,18 +248,18 @@ x-veld:
         description: "a folder containing json files, where each file contains the contents of a
           wikipedia article"
         file_type: "json"
-        contents:
+        content:
           - "NLP training data"
           - "raw text"
 
-    settings:
+    config:
       - environment_var: wikipedia_dump_url
         description: "url to a wikipdedia dump download, from https://dumps.wikimedia.org/"
-        env_type: "str"
+        var_type: "str"
       - environment_var: out_data_description
         description: "short human description for the data and its purpose, will be persisted in a
           data veld yaml"
-        env_type: "str"
+        var_type: "str"
         optional: true
 
 
@@ -280,7 +280,7 @@ docker container internal path `/veld/input/` and `in_json_folder`)
 and aggregates their content into a single txt file (mounted to container path `/veld/output/` and a
 name provided by the environment variable `out_txt_file`), with each line either being a sentence (
 done by SpaCy's sentence split) or an entire article depending on the setting
-`set_split_sentences`. Additionally, there are various ETL specific settings such as `cpu_count`
+`set_split_sentences`. Additionally, there are various ETL specific configs such as `cpu_count`
 which allocates the number of CPU cores for this service, `sample_size_percentage` which sets the
 percentage of potential sample data to be generated, `sample_random_seed` setting a reproducible
 randomness seed, `buffer_segments` which defines the segments in between which data is persisted
@@ -290,7 +290,7 @@ into temporary checkpoints, should the preprocessing crash and continue from a s
 x-veld:
   code:
     description: "transforming wikipedia raw jsons to a single txt file."
-    topics:
+    topic:
       - "NLP"
       - "Machine Learning"
       - "ETL"
@@ -301,7 +301,7 @@ x-veld:
           wikipedia article"
         environment_var: in_json_folder
         file_type: "json"
-        contents:
+        content:
           - "NLP training data"
           - "raw text"
 
@@ -312,44 +312,44 @@ x-veld:
             testing."
         environment_var: out_txt_file
         file_type: "txt"
-        contents:
+        content:
           - "NLP training data"
           - "raw text"
 
-    settings:
+    config:
       - environment_var: out_data_description
         description: "short human description for the data and its purpose, will be persisted in a
           data veld yaml"
-        env_type: "str"
+        var_type: "str"
         optional: true
       - environment_var: cpu_count
         description: "number of cpu cores to be used for parallel processing"
-        env_type: "int"
+        var_type: "int"
         optional: true
         default: "maximum number of available cpu cores"
       - environment_var: set_split_sentences
         description: "Should the resulting txt be split by newlines at each sentence boundary? If 
           not, then newlines will be set at the end of each article."
-        env_type: "bool"
+        var_type: "bool"
         optional: true
         default: false
       - environment_var: sample_size_percentage
         description: "As percentage, can be used to transform only a sample of the data, for 
           testing purpose most likely. The sample is randomly picked, and a random seed can also 
          be set with `sample_random_seed`"
-        env_type: "float"
+        var_type: "float"
         optional: true
         default: 100
       - environment_var: sample_random_seed
         description: "a random seed in case a random sample is drawn and its randomness should be 
           fixed."
-        env_type: "str"
+        var_type: "str"
         optional: true
         default: null
       - environment_var: buffer_segments
         description: "The interval at which progress should be printed. E.g. 100 means to print 
           hundred times during processing."
-        env_type: "int"
+        var_type: "int"
         optional: true
         default: 100
 
@@ -384,7 +384,7 @@ compose's [extends functionality](https://docs.docker.
 com/compose/how-tos/multiple-compose-files/extends/). And within the `volumes` section the chain
 veld would preferably use a data veld's path as input or output. Under the section `environment`
 all environment variables must be set as declared by the code veld, which is either file names or
-settings.
+config.
 
 ```
 # mandatory: the x-veld tag marks this yaml file as a VELD object
@@ -397,7 +397,7 @@ x-veld:
     [description: <DESCRIPTION>]
     
     # optional, either single value or list: what broader topics does this touch upon? 
-    [topics: <TOPIC> | {<TOPIC>}]
+    [topic: <TOPIC> | {<TOPIC>}]
     
     # optional: any kind of non-VELD data in any yaml structure, meant for ad-hoc usage
     [additional: <ADDITIONAL>]
@@ -446,7 +446,7 @@ url where the code veld should download from.
 x-veld:
   chain:
     description: "downloading wikipedia archive and extracting each article to a json file."
-    topics:
+    topic:
       - NLP
       - ETL
 
@@ -467,14 +467,14 @@ mapping: `./data_local/training_data/extracted/:/veld/input/`) and produces a ne
 mapping `./data_local/training_data/extracted__txt_sentence_per_line /:/veld/output/` and file
 name `out_txt_file: "de_wiki_sample.txt"`). Note that the resulting txt is split into sentences each
 with their own line, set by `set_split_sentences: true` and described in the code veld above
-under `settings`. Equally, there are the settings `cpu_count: 14` allocating 14 CPU cores to this
+under `config`. Equally, there are the configs `cpu_count: 14` allocating 14 CPU cores to this
 task, and `buffer_segments: 10`, setting the code veld to save its state in 10 intermediate steps.
 
 ```
 x-veld:
   chain:
     description: "transforming wikipedia raw jsons to a single txt file."
-    topics:
+    topic:
       - NLP
       - ETL
 
@@ -550,7 +550,7 @@ Example:
 ```
 x-veld:
   data:
-    contents: raw text
+    content: raw text
 ```
 
 ```
@@ -559,7 +559,7 @@ x-veld:
     ... 
     output:
         ...
-        contents:
+        content:
           - "NLP training data" # <CONTENT>
           - "raw text" # <CONTENT>
 ```
@@ -578,9 +578,9 @@ Example:
 x-veld:
   code:
     ...
-    settings:
+    config:
       - environment_var: out_data_description
-        env_type: "str"
+        var_type: "str"
         optional: true # <BOOL>
 ```
 
@@ -621,7 +621,7 @@ ports:
 While `<ENVIRONMENT>` is also defined within the [docker compose specification](https://docs.docker.
 com/compose/how-tos/environment-variables/set-environment-variables/), it still is explicitly
 defined here, since a part of it, `<ENVIRONMENT_VAR>`, shares an overlap with other VELD
-sections that are referenced in `<INPUT_OR_OUTPUT>` and `<SETTING>`. Essentially, the
+sections that are referenced in `<INPUT_OR_OUTPUT>` and `<CONFIG>`. Essentially, the
 `environment` section is used to pass variables into the code veld container, either filenames of
 input and output, or setttings that modify the code veld's behavior. Within the code veld
 container, these variables are accessible as shell environment variables (e.g. in bash simply with
@@ -667,7 +667,7 @@ x-veld:
 #### \<ENVIRONMENT_VAR>
 
 The name of an environment variable. The value is set within the `environment` section, and it is
-referenced in `<INPUT_OR_OUTPUT>` and `<SETTING>`.
+referenced in `<INPUT_OR_OUTPUT>` and `<CONFIG>`.
 
 ```
 <ENVIRONMENT_VAR> ::= <SCALAR>
@@ -682,10 +682,10 @@ In the first code veld there is a setting defined, which describes the variable
 x-veld:
   code:
     ...
-    settings:
+    config:
       - environment_var: wikipedia_dump_url # <ENVIRONMENT_VAR> referencing variable wikipedia_dump_url
         description: "url to a wikipdedia dump download, from https://dumps.wikimedia.org/"
-        env_type: "str"
+        var_type: "str"
 ```
 
 This variable then is filled out in chain veld within the `environment` section.
@@ -699,7 +699,7 @@ x-veld:
       wikipedia_dump_url: https://dumps.wikimedia.org/dewiki/latest/dewiki-latest-pages-articles.xml.bz2
 ```
 
-Besides being used for settings, environment variables are also used to define file names (note that
+Besides being used for config, environment variables are also used to define file names (note that
 file-based input and output differentiates between folders (defined via volumes) and files
 (defined via environment variables) due to docker constraints). In the following example in the
 second code veld there is such an output defined.
@@ -730,13 +730,13 @@ x-veld:
       out_txt_file: "de_wiki_sample.txt" # <ENVIRONMENT_VAR> is out_txt_file, assigning a value
 ```
 
-#### \<ENV_TYPE>
+#### \<var_type>
 
-If an environment variable is defined within the `settings` section of a code veld, it should be
+If an environment variable is defined within the `config` section of a code veld, it should be
 assigned a type as well, and it can be one of the following values:
 
 ```
-<ENV_TYPE> ::= str | bool | int | float
+<var_type> ::= str | bool | int | float
 ```
 
 Example:
@@ -745,11 +745,11 @@ Example:
 x-veld:
   code:
     ...
-    settings:
+    config:
       - environment_var: cpu_count
-        env_type: "int" # <ENV_TYPE>
+        var_type: "int" # <var_type>
       - environment_var: set_split_sentences
-        env_type: "bool" # <ENV_TYPE>
+        var_type: "bool" # <var_type>
 ```
 
 #### \<FILE_TYPE>
@@ -808,7 +808,7 @@ field. Note that the entire section `<INPUT_OR_OUTPUT>` is to be an element of a
   volume: <CONTAINER_PATH>
   [file_type: <FILE_TYPE> | {<FILE_TYPE>}]
   [environment_var: <ENVIRONMENT_VAR>]
-  [contents: <CONTENT> | {<CONTENT>}]
+  [content: <CONTENT> | {<CONTENT>}]
   [description: <DESCRIPTION>]
   [optional: <BOOL>]
 ```
@@ -827,7 +827,7 @@ x-veld:
         description: "a folder containing json files, where each file contains the contents of a
           wikipedia article"
         file_type: "json"
-        contents: 
+        content: 
           - "NLP training data"
           - "raw text"
 ```
@@ -887,19 +887,19 @@ description: self-trained fasttext word embeddings model on wikipedia data # <SC
 buffer_segments: 10 # <SCALAR>
 ```
 
-#### \<SETTING>
+#### \<CONFIG>
 
 To configure a code veld's behaviour, variables can be set. This section serves as a
-contxtualization on the `<ENVIRONMENT>` and `<ENVIRONMENT_VAR>` sections. With `<SETTING>`,
+contxtualization on the `<ENVIRONMENT>` and `<ENVIRONMENT_VAR>` sections. With `<CONFIG>`,
 `environment` refers to the variable name, `description` explains the variable's purpose and
-functionality, `env_type` the type, `default` any default value (which should be set in code veld's
+functionality, `var_type` the type, `default` any default value (which should be set in code veld's
 docker compose definition at `environment`), `optional` whether this variable is optional.
 
 ```
-<SETTING> ::= 
+<CONFIG> ::= 
   environment_var: <ENVIRONMENT_VAR>
   [description: <DESCRIPTION>]
-  [env_type: <ENV_TYPE>]
+  [var_type: <var_type>]
   [default: <SCALAR>]
   [optional: <BOOL>]
 ```
@@ -912,10 +912,10 @@ In the first code veld:
 x-veld:
   code:
     ...
-    settings: # <SETTING>
+    config: # <CONFIG>
       - environment_var: wikipedia_dump_url # <ENVIRONMENT_VAR>
         description: "url to a wikipdedia dump download, from https://dumps.wikimedia.org/"
-        env_type: "str"
+        var_type: "str"
 
 services:
     ...
@@ -942,17 +942,17 @@ In the second code veld, there are several more:
 x-veld:
   code:
     ...
-    settings: # <SETTING>
+    config: # <CONFIG>
       - environment_var: sample_random_seed
         description: "a random seed in case a random sample is drawn and its randomness should be 
           fixed."
-        env_type: "str"
+        var_type: "str"
         optional: true
         default: null
       - environment_var: buffer_segments
         description: "The interval at which progress should be printed. E.g. 100 means to print 
           hundred times during processing."
-        env_type: "int"
+        var_type: "int"
         optional: true 
         default: 100
 ```
@@ -966,7 +966,7 @@ x-veld:
     ...
 services:
     ...
-    environment: # <SETTING>
+    environment: # <CONFIG>
       buffer_segments: 10
 ```
 
@@ -985,14 +985,14 @@ Example:
 x-veld:
   data:
     ...
-    topics: NLP
+    topic: NLP
 ```
 
 ```
 x-veld:
   chain:
     ...
-    topics:
+    topic:
       - NLP
       - ETL
 ```
