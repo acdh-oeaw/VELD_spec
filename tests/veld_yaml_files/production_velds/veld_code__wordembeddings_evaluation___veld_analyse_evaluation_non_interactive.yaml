@@ -8,7 +8,7 @@ x-veld:
       - "data visualization"
 
     inputs:
-      - volume: /veld/
+      - volume: /veld/input/
         environment: in_evaluation_summary_file
         description: "summary of the custom evaluation logic on word embeddings"
         file_type: "yaml"

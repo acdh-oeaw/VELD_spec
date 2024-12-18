@@ -46,46 +46,46 @@ x-veld:
       # tokenizer options (see https://ufal.mff.cuni.cz/udpipe/1/users-manual#run_udpipe_tokenizer )
       - environment: tokenizer
         description: "if tokenizer config should be read or not"
-        env_type: boolean
+        env_type: bool
         optional: true
         default: true
       - environment: tokenizer_normalized_spaces
         description: "by default, UDPipe uses custom MISC fields to exactly encode spaces in the original document (as described below). If true, only the standard CoNLL-U v2 markup (SpaceAfter=No and # newpar) is used."
-        env_type: boolean
+        env_type: bool
         optional: true
         default: false
       - environment: tokenizer_presegmented
         description: "the input file is assumed to be already segmented, with each sentence on a separate line, and is only tokenized (respecting sentence breaks)"
-        env_type: boolean
+        env_type: bool
         optional: true
         default: false
       - environment: tokenizer_ranges
         description: "for each token, a range in the original document is stored in the format described below."
-        env_type: boolean
+        env_type: bool
         optional: true
         default: false
       - environment: tokenizer_joint_with_parsing
         description: "an experimental mode performing sentence segmentation jointly using the tokenizer and the parser (see Milan Straka and Jana Straková: Tokenizing, POS Tagging, Lemmatizing and Parsing UD 2.0 with UDPipe paper for details)."
-        env_type: boolean
+        env_type: bool
         optional: true
         default: false
       - environment: tokenizer_joint_change_boundary_logprob
         description: "for every sentence boundary not returned by the tokenizer (i.e., either 0, 1 or 2 times). The joint sentence segmentation chooses such a segmentation, where every sentence has length at most joint_max_sentence_len and the sum of logprobs of all sentences is as large as possible."
-        env_type: boolean
+        env_type: bool
         optional: true
         default: false
 
       # tagger options (see https://ufal.mff.cuni.cz/udpipe/1/users-manual#run_udpipe_tagger )
       - environment: tagger
         description: "if tagger config should be read or not"
-        env_type: boolean
+        env_type: bool
         optional: true
         default: true
 
       # parser options (see https://ufal.mff.cuni.cz/udpipe/1/users-manual#run_udpipe_parser )
       - environment: parser
         description: "if parser config should be read or not"
-        env_type: boolean
+        env_type: bool
         optional: true
         default: true
 
