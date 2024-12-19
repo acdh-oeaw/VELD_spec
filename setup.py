@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="veld_spec",
-    version="24.12.18",
+    version="24.12.19",
     author="Stefan Resch",
     author_email="stefan.resch@oeaw.ac.at",
     description="VELD specification",
-    long_description=open("README.md").read(),
+    long_description=open("README_pypi.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/acdh-oeaw/VELD_spec",
     classifiers=[

@@ -1,6 +1,6 @@
 # VELD spec
 
-**version v24.12.18**
+**version v24.12.19**
 
 This is the formal specification of the VELD metadata schema.
 
@@ -515,8 +515,8 @@ additional:
 #### \<CONFIG>
 
 To configure a code veld's behaviour, variables can be set. This section serves as a
-contxtualization on the `<ENVIRONMENT>` and `<ENVIRONMENT_VAR>` sections. With `<CONFIG>`,
-`environment` refers to the variable name, `description` explains the variable's purpose and
+contxtualization on the `<ENVIRONMENT>` section. Within `<CONFIG>`,
+`environment_var` refers to the variable name, `description` explains the variable's purpose and
 functionality, `var_type` the type, `default` any default value (which should be set in code veld's
 docker compose definition at `environment`), `optional` whether this variable is optional.
 
