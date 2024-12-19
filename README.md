@@ -512,6 +512,26 @@ additional:
   by: SteffRhes
 ```
 
+#### \<BOOL>
+
+A bool flag, that can only take the yaml data type of `true` or `false`.
+
+```
+<BOOL> ::= true | false
+```
+
+Example:
+
+```
+x-veld:
+  code:
+    ...
+    config:
+      - environment_var: out_data_description
+        var_type: "str"
+        optional: true # <BOOL>
+```
+
 #### \<CONFIG>
 
 To configure a code veld's behaviour, variables can be set. This section serves as a
@@ -524,7 +544,7 @@ docker compose definition at `environment`), `optional` whether this variable is
 <CONFIG> ::= 
   environment_var: <ENVIRONMENT_VAR>
   [description: <DESCRIPTION>]
-  [var_type: <var_type>]
+  [var_type: <VAR_TYPE>]
   [default: <SCALAR>]
   [optional: <BOOL>]
 ```
@@ -645,26 +665,6 @@ x-veld:
         content:
           - "NLP training data" # <CONTENT>
           - "raw text" # <CONTENT>
-```
-
-#### \<BOOL>
-
-A bool flag, that can only take the yaml data type of `true` or `false`.
-
-```
-<BOOL> ::= true | false
-```
-
-Example:
-
-```
-x-veld:
-  code:
-    ...
-    config:
-      - environment_var: out_data_description
-        var_type: "str"
-        optional: true # <BOOL>
 ```
 
 #### \<DESCRIPTION>
@@ -813,13 +813,13 @@ x-veld:
       out_txt_file: "de_wiki_sample.txt" # <ENVIRONMENT_VAR> is out_txt_file, assigning a value
 ```
 
-#### \<var_type>
+#### \<VAR_TYPE>
 
 If an environment variable is defined within the `config` section of a code veld, it should be
 assigned a type as well, and it can be one of the following values:
 
 ```
-<var_type> ::= str | bool | int | float
+<VAR_TYPE> ::= str | bool | int | float
 ```
 
 Example:
@@ -830,9 +830,9 @@ x-veld:
     ...
     config:
       - environment_var: cpu_count
-        var_type: "int" # <var_type>
+        var_type: "int" # <VAR_TYPE>
       - environment_var: set_split_sentences
-        var_type: "bool" # <var_type>
+        var_type: "bool" # <VAR_TYPE>
 ```
 
 #### \<FILE_TYPE>
@@ -868,7 +868,22 @@ x-veld:
 
 #### \<FURTHER_COMPOSE_DEFINITION>
 
+Anything that is not the definition of a service itself, but needed by the encompassing compose 
+definition. For example networks or separately managed volumes. Also, yaml variables could be used 
+this way too.
 
+Example:
+```
+x-veld:
+  code:
+    ...
+
+service:
+  ...
+  
+networks:
+  veld_network
+```
 
 #### \<INPUT_OR_OUTPUT>
 
